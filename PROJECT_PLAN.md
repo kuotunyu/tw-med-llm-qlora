@@ -24,7 +24,7 @@
 | 2 Smoke test | 完成 | 100 筆／10 steps 無 OOM/NaN，adapter 可重載，完成成本估算；使用者確認 |
 | 3 完整訓練 | 完成 | checkpoint 可恢復、adapter/曲線/manifest 完整、validation 指標完成；使用者已確認跨 Phase |
 | 4 雙軌評估 | 完成；28,758 requests、公開／私人封存與本機證據驗證均通過 | MedQA 三模型表、TMMLU+ 分科／穩定度／遺忘判定完成 |
-| 5 本機與發布 | 進行中；step-700 adapter、RTX 4090 acceptance、GitHub hosted CI 與 HF 私人目標已驗證，等待 dry-run、上傳與 receipt | 4090 推論通過、模型卡完成、使用者核准目標與可見性、GitHub hosted CI 通過、HF publication receipt 驗證通過 |
+| 5 本機與發布 | 完成；step-700 adapter、RTX 4090 acceptance、GitHub hosted CI、HF 私人發布、遠端逐檔雜湊與 publication receipt 均已驗證 | 4090 推論通過、模型卡完成、使用者核准目標與可見性、GitHub hosted CI 通過、HF publication receipt 驗證通過 |
 
 ## 鎖定決策
 
@@ -107,11 +107,12 @@
 | Phase 5 Windows 推論 CLI | 已建立；單題、互動、固定 acceptance probe、adapter/base 核對、NF4/BF16/SDPA 與無法繞過的 4090 gate | [src/tw_med_qlora/local_inference.py](src/tw_med_qlora/local_inference.py) |
 | Phase 5 4090 證據驗證器 | 已建立；驗證硬體、CUDA/BF16、模型 revision、adapter、量化、VRAM、TTFT、總延遲、可解析答案與隱私欄位 | [src/tw_med_qlora/cli/validate_phase5_evidence.py](src/tw_med_qlora/cli/validate_phase5_evidence.py) |
 | Phase 5 移轉／驗收入口 | 已建立；先驗 Phase 3 full ZIP SHA-256、安全解出 step-700 adapter，再於桌機安裝官方 wheel、預檢與固定 probe | [scripts/run_phase5_acceptance.ps1](scripts/run_phase5_acceptance.ps1) |
-| GitHub CPU CI | 已實測通過；root commit `180e544` 的 Windows／Linux、Python 3.11 matrix 全部成功，維持唯讀權限、無 secrets，執行 locked sync、Ruff、pytest 與 notebook freshness | [.github/workflows/ci.yml](.github/workflows/ci.yml)／[hosted run #1](https://github.com/kuotunyu/tw-med-llm-qlora/actions/runs/29937271766) |
+| GitHub CPU CI | 已實測通過；root commit `180e544` 與 publication 換行修正 `e804526` 的 Windows／Linux、Python 3.11 matrix 全部成功，維持唯讀權限、無 secrets，執行 locked sync、Ruff、pytest 與 notebook freshness | [.github/workflows/ci.yml](.github/workflows/ci.yml)／[hosted run #1](https://github.com/kuotunyu/tw-med-llm-qlora/actions/runs/29937271766)／[hosted run #4](https://github.com/kuotunyu/tw-med-llm-qlora/actions/runs/29940013658) |
 | Phase 5 完成度稽核器 | 已建立；逐項檢查 clean source、必要產物、step-700 adapter、4090 manifest、發布目標／origin 與 HF receipt，GGUF 明列為 optional | [src/tw_med_qlora/cli/phase5_status.py](src/tw_med_qlora/cli/phase5_status.py) |
 | Phase 5 RTX 4090 acceptance | 已驗證；Windows、RTX 4090、PyTorch 2.10+cu128、NF4/BF16/SDPA、step-700 adapter、strict probe、VRAM 與延遲均通過 | [manifest](reports/phase5/20260722T131736Z-acceptance.json)／[validation](reports/phase5/20260722T131736Z-validation.json) |
-| Adapter 模型卡 | 已完成草稿；包含基底條款、資料授權差異、研究用途、非醫療建議、正式結果與限制，發布目標仍保留變數 | [model_card/README.md](model_card/README.md) |
-| Adapter 發布工具 | 已建立；預設 dry-run、檔案 allowlist、模型卡渲染與綁定 repo/visibility 的確認碼，外部寫入仍關閉 | [src/tw_med_qlora/cli/publish_adapter.py](src/tw_med_qlora/cli/publish_adapter.py) |
+| Adapter 模型卡 | 已完成並隨 private adapter 發布；包含基底條款、資料授權差異、研究用途、非醫療建議、正式結果與限制 | [model_card/README.md](model_card/README.md) |
+| Adapter 發布工具 | 已完成 dry-run 與實際 private 上傳；allowlist、模型卡渲染、4090 manifest 與綁定 repo/visibility 的確認碼均通過 | [src/tw_med_qlora/cli/publish_adapter.py](src/tw_med_qlora/cli/publish_adapter.py) |
+| Phase 5 publication receipt／遠端驗證 | 已驗證；HF revision `c2830d37…0aa4`、private=true、11/11 檔案共 191,661,898 bytes 逐檔 SHA-256 相符、token 未記錄 | [receipt](reports/phase5/20260722T165957Z-publication-receipt.json)／[validation](reports/phase5/20260722T170446Z-publication-validation.json) |
 | 選配 GGUF／Ollama | 已建立雙重關閉的 A100 export notebook 與 Windows Ollama 驗收；不阻塞 adapter 交付 | [notebooks/export_gguf.ipynb](notebooks/export_gguf.ipynb) |
 | Phase 4 首次 calibration manifest | 證據完整；結果因協定問題不作成績解讀 | [reports/phase4/calibration/20260722T052039Z-run-manifest.json](reports/phase4/calibration/20260722T052039Z-run-manifest.json) |
 | Phase 4 首次 calibration 驗證摘要 | integrity pass；recalibration required | [reports/phase4/calibration/20260722T052039Z-validation.json](reports/phase4/calibration/20260722T052039Z-validation.json) |
@@ -133,7 +134,7 @@
 | Phase 3 full 訓練曲線 | 已驗證 | [reports/phase3/full/20260722T014216Z-training_curves.png](reports/phase3/full/20260722T014216Z-training_curves.png) |
 | Phase 3 full 驗證摘要 | 13 項不變量通過 | [reports/phase3/full/20260722T014216Z-validation.json](reports/phase3/full/20260722T014216Z-validation.json) |
 | 評估結果 | 正式 MedQA／TMMLU+ 結果與統計均已完成 | [reports/phase4/full/public/phase4-results.json](reports/phase4/full/public/phase4-results.json) |
-| Adapter | step 700 已完成並通過正式評估；私人目標與 write token 已驗證，尚未上傳 | `steven0226/tw-med-llm-qlora-adapter` |
+| Adapter | step 700 已完成並通過正式評估；已發布至 private repository，receipt 與遠端 11 個檔案均驗證通過 | `steven0226/tw-med-llm-qlora-adapter` revision `c2830d37…0aa4` |
 
 ## 執行紀錄
 
@@ -247,6 +248,9 @@
 | 2026-07-23 | 5 | 建立乾淨公開歷史並驗證 hosted CI | 使用者以無 parent 的 root commit `180e544 chore: 建立可重現研究專案` 推送 `main`；公開 repository 僅包含清理後快照。本機 `archive/pre-public-history` 未推送。GitHub Actions run #1 的 `windows-latest` 與 `ubuntu-latest` 均成功 | 記錄 hosted CI 證據；確認可寫入的 HF 私人 namespace |
 | 2026-07-23 | 5 | 建立並驗證 HF 私人目標 | 使用者建立 `steven0226/tw-med-llm-qlora-adapter`，頁面標示 private；以 `.env` token 呼叫 `whoami` 與 `repo_info`，回報 account `steven0226`、role `write`、repo ID 相符且 private=true，全程未輸出 token | 設定精確目標、重建 notebooks 並完成發布前本機驗收 |
 | 2026-07-23 | 5 | 上傳 adapter 並執行遠端逐檔驗證 | HF commit `7826d0e...e9337` 已建立且維持 private；adapter 與 tokenizer 的遠端 SHA-256 全部一致。模型卡文字相同，但 Windows 暫存寫檔把 LF 轉成 CRLF，使遠端 README 比 dry-run 多 100 bytes，receipt 的 README hash 因而不精確 | 強制暫存模型卡與 receipt 使用 LF，加入 staged bytes 回歸測試；修正後重新 dry-run 與上傳 |
+| 2026-07-23 | 5 | 修正模型卡換行並完成 private publication 驗證 | HF HEAD 與 receipt 均為 `c2830d37...0aa4`；repository 維持 private。下載指定 revision 後重算 11/11 個 allowlist 檔案、共 191,661,898 bytes，大小與 SHA-256 全部相符；額外 `.gitattributes` 為 HF 自動產生，receipt 未記錄 token | 保存內容安全 receipt 與遠端驗證摘要；執行 Phase 5 完成度稽核 |
+| 2026-07-23 | 5 | 完成 Phase 5 最終稽核 | 在 clean commit `e8045263b1fd7d39e7b7fdff52fe114405cf210e` 執行 `phase5_status --require-complete`；13 項必要條件全數 `pass`，`ready_for_handoff=true`、`ready_for_publication=true`、`phase5_complete=true`；GGUF 明列 optional | 提交 Phase 5 收尾證據並確認 hosted CI；未另行核准前 adapter 維持 private |
+| 2026-07-23 | 5 | 歸檔 publication 證據並完成收尾驗收 | 保存內容安全 receipt 與獨立遠端驗證摘要；publication／readiness 聚焦測試 13 passed、完整 `pytest` 178 passed、Ruff 與 `uv lock --check` 通過，歸檔 receipt 再次由正式驗證器確認 valid、private、11 files、token absent | 由使用者建立聚焦 commit 並 push；確認最後一次 hosted CI |
 
 ## 已知風險
 
@@ -272,6 +276,6 @@
 
 ## 下一步
 
-Phase 5 的 Windows RTX 4090 base + adapter acceptance 已完成，內容安全 manifest 與獨立驗證均通過。Windows CUDA wheel 路由已固定在 `uv.lock`，模型卡、發布 dry-run、完成度稽核器與選配 GGUF／Ollama 仍維持既有安全閘門。
+Phase 5 已完成。Windows RTX 4090 base + adapter acceptance、內容安全 manifest、GitHub hosted Windows／Linux CPU CI、HF private publication、publication receipt 與遠端 11 個 allowlist 檔案的逐檔 SHA-256 均已驗證。最終完成度稽核的 13 項必要條件全部通過，`phase5_complete=true`。
 
-GitHub `kuotunyu/tw-med-llm-qlora` 已以乾淨 root commit 公開，hosted Windows／Linux CPU CI 均通過。Hugging Face 私人目標 `steven0226/tw-med-llm-qlora-adapter` 與 write token 也已驗證，`adapter_repo_id` 已固定並重新開啟 publication gate。下一個必要動作是重建 notebooks、完成本機驗收並提交設定，再執行 adapter dry-run、展示 allowlist 與一次性確認碼，最後上傳並驗證 publication receipt。GGUF export 保持關閉；HF adapter 未另行核准前不改為公開。
+GitHub `kuotunyu/tw-med-llm-qlora` 維持公開；Hugging Face `steven0226/tw-med-llm-qlora-adapter` 維持 private，未另行核准前不得改為 public。選配 GGUF／Ollama 不屬於 Phase 5 退出條件，雙重 gate 保持關閉；未來若要執行，須重新查核 API、估算資源並取得新的明確核准。
