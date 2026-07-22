@@ -246,6 +246,7 @@
 | 2026-07-22 | 5 | 完成公開版清理驗收 | 移除 13 個公開雜訊檔案；四份 notebook 依安全設定重建。`pytest` 177 passed、Ruff、`uv lock --check`、四份 notebook freshness、Markdown 本機連結、credential shape 與公開 report 禁止欄位掃描全部通過 | 停在 Git 閘門；由使用者檢視變更並建立乾淨公開歷史 |
 | 2026-07-23 | 5 | 建立乾淨公開歷史並驗證 hosted CI | 使用者以無 parent 的 root commit `180e544 chore: 建立可重現研究專案` 推送 `main`；公開 repository 僅包含清理後快照。本機 `archive/pre-public-history` 未推送。GitHub Actions run #1 的 `windows-latest` 與 `ubuntu-latest` 均成功 | 記錄 hosted CI 證據；確認可寫入的 HF 私人 namespace |
 | 2026-07-23 | 5 | 建立並驗證 HF 私人目標 | 使用者建立 `steven0226/tw-med-llm-qlora-adapter`，頁面標示 private；以 `.env` token 呼叫 `whoami` 與 `repo_info`，回報 account `steven0226`、role `write`、repo ID 相符且 private=true，全程未輸出 token | 設定精確目標、重建 notebooks 並完成發布前本機驗收 |
+| 2026-07-23 | 5 | 上傳 adapter 並執行遠端逐檔驗證 | HF commit `7826d0e...e9337` 已建立且維持 private；adapter 與 tokenizer 的遠端 SHA-256 全部一致。模型卡文字相同，但 Windows 暫存寫檔把 LF 轉成 CRLF，使遠端 README 比 dry-run 多 100 bytes，receipt 的 README hash 因而不精確 | 強制暫存模型卡與 receipt 使用 LF，加入 staged bytes 回歸測試；修正後重新 dry-run 與上傳 |
 
 ## 已知風險
 

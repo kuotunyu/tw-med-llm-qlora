@@ -200,7 +200,11 @@ def _stage_folder(plan: PublicationPlan, destination: Path) -> None:
         if name == "README.md":
             continue
         shutil.copy2(adapter_dir / name, destination / name)
-    (destination / "README.md").write_text(plan.rendered_model_card, encoding="utf-8")
+    (destination / "README.md").write_text(
+        plan.rendered_model_card,
+        encoding="utf-8",
+        newline="\n",
+    )
 
 
 def execute_publication(
@@ -268,6 +272,8 @@ def execute_publication(
     output_dir.mkdir(parents=True, exist_ok=True)
     destination = output_dir / "phase5-publication-receipt.json"
     destination.write_text(
-        json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+        json.dumps(receipt, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+        newline="\n",
     )
     return receipt
