@@ -1,3 +1,4 @@
+import hashlib
 import json
 from pathlib import Path
 
@@ -6,6 +7,7 @@ import pytest
 from tw_med_qlora.config import load_project_config
 from tw_med_qlora.publication import (
     PublicationError,
+    _stage_folder,
     assert_publication_execution_gate,
     build_publication_plan,
     publication_confirmation_code,
@@ -61,6 +63,18 @@ def test_publication_plan_is_dry_and_allowlisted(tmp_path: Path) -> None:
     assert "ignored-secret.txt" not in plan.files
     assert "{{" not in plan.rendered_model_card
     assert "researcher/tw-med-adapter" in plan.rendered_model_card
+
+
+def test_staged_publication_bytes_match_dry_run_hashes(tmp_path: Path) -> None:
+    plan = build_plan(tmp_path)
+    destination = tmp_path / "stage"
+
+    _stage_folder(plan, destination)
+
+    for name, expected in plan.files.items():
+        payload = (destination / name).read_bytes()
+        assert len(payload) == expected["bytes"]
+        assert hashlib.sha256(payload).hexdigest() == expected["sha256"]
 
 
 def test_model_card_requires_target_and_disclosures() -> None:
