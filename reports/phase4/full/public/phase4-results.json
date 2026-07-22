@@ -1,0 +1,1335 @@
+{
+  "schema_version": 1,
+  "phase": 4,
+  "run_mode": "full",
+  "contract_fingerprint": "bd654c530af218684315b98a25568b046f32a8e768c78489e00f4b69b8c21143",
+  "generation_requests": 28758,
+  "generation_contract": {
+    "parser": "standalone_A-D_or_exactly_one_simple_boxed_A-D",
+    "scorer": "Twinkle Eval exact_match audit",
+    "max_tokens": 256,
+    "minimum_calibration_parse_rate": 0.8,
+    "temperature": 0.0,
+    "token_limit_hits_count_as_incorrect": true,
+    "token_limit_hits_fail_calibration": false,
+    "top_p": 1.0
+  },
+  "medqa": {
+    "split": "test",
+    "subject_breakdown": "not_reported_source_has_no_native_subject_labels",
+    "models": {
+      "original-instruct": {
+        "total": 1413,
+        "parsed": 1412,
+        "parse_failures": 1,
+        "correct": 935,
+        "accuracy": 0.6617126680820948,
+        "parse_rate": 0.9992922859164898,
+        "max_token_limit_hits": 0
+      },
+      "localized-base": {
+        "total": 1413,
+        "parsed": 1120,
+        "parse_failures": 293,
+        "correct": 797,
+        "accuracy": 0.5640481245576787,
+        "parse_rate": 0.7926397735314933,
+        "max_token_limit_hits": 280
+      },
+      "localized-medical-adapter": {
+        "total": 1413,
+        "parsed": 1413,
+        "parse_failures": 0,
+        "correct": 1018,
+        "accuracy": 0.7204529370134466,
+        "parse_rate": 1.0,
+        "max_token_limit_hits": 0
+      }
+    },
+    "adapter_minus_localized_base": {
+      "iterations": 10000,
+      "seed": 3407,
+      "stratified_by_subject": false,
+      "observed_difference_percentage_points": 15.640481245576787,
+      "ci_lower_percentage_points": 13.375796178343949,
+      "ci_upper_percentage_points": 17.97593772116065
+    },
+    "mcnemar_adapter_vs_localized_base": {
+      "base_wrong_adapter_correct": 264,
+      "base_correct_adapter_wrong": 43,
+      "discordant_pairs": 307,
+      "two_sided_exact_p_value": 6.113147021247119e-40
+    },
+    "representative_cases": [
+      {
+        "example_id": "8d7dacbc6545ae4d3e8d",
+        "subject": "medqa_total",
+        "gold": "A",
+        "base_prediction": "C",
+        "adapter_prediction": "A",
+        "category": "improved"
+      },
+      {
+        "example_id": "5d8f13a1123bc6bcf1e0",
+        "subject": "medqa_total",
+        "gold": "B",
+        "base_prediction": "B",
+        "adapter_prediction": "C",
+        "category": "regressed"
+      },
+      {
+        "example_id": "39dd0171d910eceeaa51",
+        "subject": "medqa_total",
+        "gold": "B",
+        "base_prediction": "D",
+        "adapter_prediction": "D",
+        "category": "both_wrong"
+      },
+      {
+        "example_id": "b79e11a3eb4df284caa7",
+        "subject": "medqa_total",
+        "gold": "B",
+        "base_prediction": null,
+        "adapter_prediction": "B",
+        "category": "parse_failure"
+      },
+      {
+        "example_id": "22f337cc63259ccc24ec",
+        "subject": "medqa_total",
+        "gold": "D",
+        "base_prediction": "D",
+        "adapter_prediction": "D",
+        "category": "both_correct"
+      },
+      {
+        "example_id": "70a6d2a6a7a28300da6b",
+        "subject": "medqa_total",
+        "gold": "B",
+        "base_prediction": "D",
+        "adapter_prediction": "B",
+        "category": "improved"
+      },
+      {
+        "example_id": "87edbf76ca788f47c680",
+        "subject": "medqa_total",
+        "gold": "D",
+        "base_prediction": "D",
+        "adapter_prediction": "B",
+        "category": "regressed"
+      },
+      {
+        "example_id": "346631002fdbb27b62ce",
+        "subject": "medqa_total",
+        "gold": "A",
+        "base_prediction": "D",
+        "adapter_prediction": "D",
+        "category": "both_wrong"
+      },
+      {
+        "example_id": "f4f4376f3ccd2e4d713d",
+        "subject": "medqa_total",
+        "gold": "B",
+        "base_prediction": null,
+        "adapter_prediction": "B",
+        "category": "parse_failure"
+      },
+      {
+        "example_id": "fe83253dcd03b91e0e7b",
+        "subject": "medqa_total",
+        "gold": "B",
+        "base_prediction": "B",
+        "adapter_prediction": "B",
+        "category": "both_correct"
+      }
+    ]
+  },
+  "tmmluplus": {
+    "split": "test",
+    "option_seed": 3407,
+    "models": {
+      "original-instruct": {
+        "overall": {
+          "total": 5573,
+          "parsed": 5567,
+          "parse_failures": 6,
+          "correct": 2980,
+          "accuracy": 0.5347209761349363,
+          "parse_rate": 0.9989233805849632
+        },
+        "by_subject": {
+          "basic_medical_science": {
+            "total": 954,
+            "parsed": 954,
+            "parse_failures": 0,
+            "correct": 593,
+            "accuracy": 0.6215932914046122,
+            "parse_rate": 1.0
+          },
+          "chinese_language_and_literature": {
+            "total": 199,
+            "parsed": 199,
+            "parse_failures": 0,
+            "correct": 87,
+            "accuracy": 0.4371859296482412,
+            "parse_rate": 1.0
+          },
+          "clinical_psychology": {
+            "total": 125,
+            "parsed": 125,
+            "parse_failures": 0,
+            "correct": 81,
+            "accuracy": 0.648,
+            "parse_rate": 1.0
+          },
+          "computer_science": {
+            "total": 174,
+            "parsed": 174,
+            "parse_failures": 0,
+            "correct": 126,
+            "accuracy": 0.7241379310344828,
+            "parse_rate": 1.0
+          },
+          "dentistry": {
+            "total": 399,
+            "parsed": 399,
+            "parse_failures": 0,
+            "correct": 206,
+            "accuracy": 0.5162907268170426,
+            "parse_rate": 1.0
+          },
+          "general_principles_of_law": {
+            "total": 106,
+            "parsed": 106,
+            "parse_failures": 0,
+            "correct": 50,
+            "accuracy": 0.4716981132075472,
+            "parse_rate": 1.0
+          },
+          "geography_of_taiwan": {
+            "total": 768,
+            "parsed": 768,
+            "parse_failures": 0,
+            "correct": 467,
+            "accuracy": 0.6080729166666666,
+            "parse_rate": 1.0
+          },
+          "logic_reasoning": {
+            "total": 139,
+            "parsed": 133,
+            "parse_failures": 6,
+            "correct": 48,
+            "accuracy": 0.34532374100719426,
+            "parse_rate": 0.9568345323741008
+          },
+          "occupational_therapy_for_psychological_disorders": {
+            "total": 543,
+            "parsed": 543,
+            "parse_failures": 0,
+            "correct": 355,
+            "accuracy": 0.6537753222836096,
+            "parse_rate": 1.0
+          },
+          "optometry": {
+            "total": 920,
+            "parsed": 920,
+            "parse_failures": 0,
+            "correct": 362,
+            "accuracy": 0.3934782608695652,
+            "parse_rate": 1.0
+          },
+          "pharmacology": {
+            "total": 577,
+            "parsed": 577,
+            "parse_failures": 0,
+            "correct": 342,
+            "accuracy": 0.5927209705372617,
+            "parse_rate": 1.0
+          },
+          "pharmacy": {
+            "total": 391,
+            "parsed": 391,
+            "parse_failures": 0,
+            "correct": 151,
+            "accuracy": 0.38618925831202044,
+            "parse_rate": 1.0
+          },
+          "traditional_chinese_medicine_clinical_medicine": {
+            "total": 278,
+            "parsed": 278,
+            "parse_failures": 0,
+            "correct": 112,
+            "accuracy": 0.4028776978417266,
+            "parse_rate": 1.0
+          }
+        },
+        "medical_subject_macro_accuracy": 0.5268656910082298,
+        "control_subject_macro_accuracy": 0.5172837263128264
+      },
+      "localized-base": {
+        "overall": {
+          "total": 5573,
+          "parsed": 4500,
+          "parse_failures": 1073,
+          "correct": 2608,
+          "accuracy": 0.46797057240265566,
+          "parse_rate": 0.8074645612775884
+        },
+        "by_subject": {
+          "basic_medical_science": {
+            "total": 954,
+            "parsed": 720,
+            "parse_failures": 234,
+            "correct": 516,
+            "accuracy": 0.5408805031446541,
+            "parse_rate": 0.7547169811320755
+          },
+          "chinese_language_and_literature": {
+            "total": 199,
+            "parsed": 182,
+            "parse_failures": 17,
+            "correct": 74,
+            "accuracy": 0.37185929648241206,
+            "parse_rate": 0.914572864321608
+          },
+          "clinical_psychology": {
+            "total": 125,
+            "parsed": 111,
+            "parse_failures": 14,
+            "correct": 74,
+            "accuracy": 0.592,
+            "parse_rate": 0.888
+          },
+          "computer_science": {
+            "total": 174,
+            "parsed": 143,
+            "parse_failures": 31,
+            "correct": 92,
+            "accuracy": 0.5287356321839081,
+            "parse_rate": 0.8218390804597702
+          },
+          "dentistry": {
+            "total": 399,
+            "parsed": 308,
+            "parse_failures": 91,
+            "correct": 187,
+            "accuracy": 0.46867167919799496,
+            "parse_rate": 0.7719298245614035
+          },
+          "general_principles_of_law": {
+            "total": 106,
+            "parsed": 87,
+            "parse_failures": 19,
+            "correct": 47,
+            "accuracy": 0.44339622641509435,
+            "parse_rate": 0.8207547169811321
+          },
+          "geography_of_taiwan": {
+            "total": 768,
+            "parsed": 696,
+            "parse_failures": 72,
+            "correct": 477,
+            "accuracy": 0.62109375,
+            "parse_rate": 0.90625
+          },
+          "logic_reasoning": {
+            "total": 139,
+            "parsed": 130,
+            "parse_failures": 9,
+            "correct": 39,
+            "accuracy": 0.2805755395683453,
+            "parse_rate": 0.935251798561151
+          },
+          "occupational_therapy_for_psychological_disorders": {
+            "total": 543,
+            "parsed": 439,
+            "parse_failures": 104,
+            "correct": 289,
+            "accuracy": 0.5322283609576427,
+            "parse_rate": 0.8084714548802947
+          },
+          "optometry": {
+            "total": 920,
+            "parsed": 725,
+            "parse_failures": 195,
+            "correct": 321,
+            "accuracy": 0.34891304347826085,
+            "parse_rate": 0.7880434782608695
+          },
+          "pharmacology": {
+            "total": 577,
+            "parsed": 432,
+            "parse_failures": 145,
+            "correct": 252,
+            "accuracy": 0.43674176776429807,
+            "parse_rate": 0.7487001733102253
+          },
+          "pharmacy": {
+            "total": 391,
+            "parsed": 318,
+            "parse_failures": 73,
+            "correct": 132,
+            "accuracy": 0.3375959079283887,
+            "parse_rate": 0.8132992327365729
+          },
+          "traditional_chinese_medicine_clinical_medicine": {
+            "total": 278,
+            "parsed": 209,
+            "parse_failures": 69,
+            "correct": 108,
+            "accuracy": 0.38848920863309355,
+            "parse_rate": 0.7517985611510791
+          }
+        },
+        "medical_subject_macro_accuracy": 0.4556900588880416,
+        "control_subject_macro_accuracy": 0.44913208892995193
+      },
+      "localized-medical-adapter": {
+        "overall": {
+          "total": 5573,
+          "parsed": 5573,
+          "parse_failures": 0,
+          "correct": 3429,
+          "accuracy": 0.6152879956935223,
+          "parse_rate": 1.0
+        },
+        "by_subject": {
+          "basic_medical_science": {
+            "total": 954,
+            "parsed": 954,
+            "parse_failures": 0,
+            "correct": 710,
+            "accuracy": 0.7442348008385744,
+            "parse_rate": 1.0
+          },
+          "chinese_language_and_literature": {
+            "total": 199,
+            "parsed": 199,
+            "parse_failures": 0,
+            "correct": 100,
+            "accuracy": 0.5025125628140703,
+            "parse_rate": 1.0
+          },
+          "clinical_psychology": {
+            "total": 125,
+            "parsed": 125,
+            "parse_failures": 0,
+            "correct": 89,
+            "accuracy": 0.712,
+            "parse_rate": 1.0
+          },
+          "computer_science": {
+            "total": 174,
+            "parsed": 174,
+            "parse_failures": 0,
+            "correct": 129,
+            "accuracy": 0.7413793103448276,
+            "parse_rate": 1.0
+          },
+          "dentistry": {
+            "total": 399,
+            "parsed": 399,
+            "parse_failures": 0,
+            "correct": 245,
+            "accuracy": 0.6140350877192983,
+            "parse_rate": 1.0
+          },
+          "general_principles_of_law": {
+            "total": 106,
+            "parsed": 106,
+            "parse_failures": 0,
+            "correct": 72,
+            "accuracy": 0.6792452830188679,
+            "parse_rate": 1.0
+          },
+          "geography_of_taiwan": {
+            "total": 768,
+            "parsed": 768,
+            "parse_failures": 0,
+            "correct": 556,
+            "accuracy": 0.7239583333333334,
+            "parse_rate": 1.0
+          },
+          "logic_reasoning": {
+            "total": 139,
+            "parsed": 139,
+            "parse_failures": 0,
+            "correct": 38,
+            "accuracy": 0.2733812949640288,
+            "parse_rate": 1.0
+          },
+          "occupational_therapy_for_psychological_disorders": {
+            "total": 543,
+            "parsed": 543,
+            "parse_failures": 0,
+            "correct": 391,
+            "accuracy": 0.7200736648250461,
+            "parse_rate": 1.0
+          },
+          "optometry": {
+            "total": 920,
+            "parsed": 920,
+            "parse_failures": 0,
+            "correct": 412,
+            "accuracy": 0.44782608695652176,
+            "parse_rate": 1.0
+          },
+          "pharmacology": {
+            "total": 577,
+            "parsed": 577,
+            "parse_failures": 0,
+            "correct": 364,
+            "accuracy": 0.6308492201039861,
+            "parse_rate": 1.0
+          },
+          "pharmacy": {
+            "total": 391,
+            "parsed": 391,
+            "parse_failures": 0,
+            "correct": 166,
+            "accuracy": 0.42455242966751916,
+            "parse_rate": 1.0
+          },
+          "traditional_chinese_medicine_clinical_medicine": {
+            "total": 278,
+            "parsed": 278,
+            "parse_failures": 0,
+            "correct": 157,
+            "accuracy": 0.564748201438849,
+            "parse_rate": 1.0
+          }
+        },
+        "medical_subject_macro_accuracy": 0.6072899364437243,
+        "control_subject_macro_accuracy": 0.5840953568950256
+      }
+    },
+    "catastrophic_forgetting": {
+      "iterations": 10000,
+      "seed": 3407,
+      "stratified_by_subject": true,
+      "observed_difference_percentage_points": 13.496326796507363,
+      "ci_lower_percentage_points": 10.410205461219727,
+      "ci_upper_percentage_points": 16.649866491182983,
+      "noninferiority_margin_percentage_points": 2.0,
+      "required_ci_lower_bound_above": -2.0,
+      "conclusion": "no_material_forgetting"
+    }
+  },
+  "stability": {
+    "split": "test",
+    "sample_seed": 3407,
+    "option_seeds": [
+      3407,
+      3408,
+      3409
+    ],
+    "models": {
+      "localized-base": {
+        "basic_medical_science": {
+          "seeds": {
+            "3407": {
+              "total": 100,
+              "parsed": 71,
+              "parse_failures": 29,
+              "correct": 56,
+              "accuracy": 0.56,
+              "parse_rate": 0.71
+            },
+            "3408": {
+              "total": 100,
+              "parsed": 72,
+              "parse_failures": 28,
+              "correct": 51,
+              "accuracy": 0.51,
+              "parse_rate": 0.72
+            },
+            "3409": {
+              "total": 100,
+              "parsed": 70,
+              "parse_failures": 30,
+              "correct": 51,
+              "accuracy": 0.51,
+              "parse_rate": 0.7
+            }
+          },
+          "accuracy_mean": 0.5266666666666667,
+          "accuracy_population_std": 0.023570226039551605
+        },
+        "clinical_psychology": {
+          "seeds": {
+            "3407": {
+              "total": 100,
+              "parsed": 87,
+              "parse_failures": 13,
+              "correct": 62,
+              "accuracy": 0.62,
+              "parse_rate": 0.87
+            },
+            "3408": {
+              "total": 100,
+              "parsed": 89,
+              "parse_failures": 11,
+              "correct": 65,
+              "accuracy": 0.65,
+              "parse_rate": 0.89
+            },
+            "3409": {
+              "total": 100,
+              "parsed": 84,
+              "parse_failures": 16,
+              "correct": 55,
+              "accuracy": 0.55,
+              "parse_rate": 0.84
+            }
+          },
+          "accuracy_mean": 0.6066666666666667,
+          "accuracy_population_std": 0.04189935029992177
+        },
+        "dentistry": {
+          "seeds": {
+            "3407": {
+              "total": 100,
+              "parsed": 73,
+              "parse_failures": 27,
+              "correct": 51,
+              "accuracy": 0.51,
+              "parse_rate": 0.73
+            },
+            "3408": {
+              "total": 100,
+              "parsed": 72,
+              "parse_failures": 28,
+              "correct": 44,
+              "accuracy": 0.44,
+              "parse_rate": 0.72
+            },
+            "3409": {
+              "total": 100,
+              "parsed": 77,
+              "parse_failures": 23,
+              "correct": 46,
+              "accuracy": 0.46,
+              "parse_rate": 0.77
+            }
+          },
+          "accuracy_mean": 0.47000000000000003,
+          "accuracy_population_std": 0.029439202887759492
+        },
+        "occupational_therapy_for_psychological_disorders": {
+          "seeds": {
+            "3407": {
+              "total": 100,
+              "parsed": 78,
+              "parse_failures": 22,
+              "correct": 54,
+              "accuracy": 0.54,
+              "parse_rate": 0.78
+            },
+            "3408": {
+              "total": 100,
+              "parsed": 71,
+              "parse_failures": 29,
+              "correct": 48,
+              "accuracy": 0.48,
+              "parse_rate": 0.71
+            },
+            "3409": {
+              "total": 100,
+              "parsed": 78,
+              "parse_failures": 22,
+              "correct": 57,
+              "accuracy": 0.57,
+              "parse_rate": 0.78
+            }
+          },
+          "accuracy_mean": 0.53,
+          "accuracy_population_std": 0.03741657386773941
+        },
+        "optometry": {
+          "seeds": {
+            "3407": {
+              "total": 100,
+              "parsed": 77,
+              "parse_failures": 23,
+              "correct": 35,
+              "accuracy": 0.35,
+              "parse_rate": 0.77
+            },
+            "3408": {
+              "total": 100,
+              "parsed": 83,
+              "parse_failures": 17,
+              "correct": 47,
+              "accuracy": 0.47,
+              "parse_rate": 0.83
+            },
+            "3409": {
+              "total": 100,
+              "parsed": 80,
+              "parse_failures": 20,
+              "correct": 39,
+              "accuracy": 0.39,
+              "parse_rate": 0.8
+            }
+          },
+          "accuracy_mean": 0.4033333333333333,
+          "accuracy_population_std": 0.04988876515698588
+        },
+        "pharmacology": {
+          "seeds": {
+            "3407": {
+              "total": 100,
+              "parsed": 69,
+              "parse_failures": 31,
+              "correct": 37,
+              "accuracy": 0.37,
+              "parse_rate": 0.69
+            },
+            "3408": {
+              "total": 100,
+              "parsed": 75,
+              "parse_failures": 25,
+              "correct": 41,
+              "accuracy": 0.41,
+              "parse_rate": 0.75
+            },
+            "3409": {
+              "total": 100,
+              "parsed": 71,
+              "parse_failures": 29,
+              "correct": 42,
+              "accuracy": 0.42,
+              "parse_rate": 0.71
+            }
+          },
+          "accuracy_mean": 0.39999999999999997,
+          "accuracy_population_std": 0.021602468994692862
+        },
+        "pharmacy": {
+          "seeds": {
+            "3407": {
+              "total": 100,
+              "parsed": 80,
+              "parse_failures": 20,
+              "correct": 29,
+              "accuracy": 0.29,
+              "parse_rate": 0.8
+            },
+            "3408": {
+              "total": 100,
+              "parsed": 79,
+              "parse_failures": 21,
+              "correct": 26,
+              "accuracy": 0.26,
+              "parse_rate": 0.79
+            },
+            "3409": {
+              "total": 100,
+              "parsed": 81,
+              "parse_failures": 19,
+              "correct": 30,
+              "accuracy": 0.3,
+              "parse_rate": 0.81
+            }
+          },
+          "accuracy_mean": 0.2833333333333333,
+          "accuracy_population_std": 0.016996731711975938
+        },
+        "traditional_chinese_medicine_clinical_medicine": {
+          "seeds": {
+            "3407": {
+              "total": 100,
+              "parsed": 80,
+              "parse_failures": 20,
+              "correct": 42,
+              "accuracy": 0.42,
+              "parse_rate": 0.8
+            },
+            "3408": {
+              "total": 100,
+              "parsed": 78,
+              "parse_failures": 22,
+              "correct": 41,
+              "accuracy": 0.41,
+              "parse_rate": 0.78
+            },
+            "3409": {
+              "total": 100,
+              "parsed": 84,
+              "parse_failures": 16,
+              "correct": 43,
+              "accuracy": 0.43,
+              "parse_rate": 0.84
+            }
+          },
+          "accuracy_mean": 0.42,
+          "accuracy_population_std": 0.008164965809277268
+        },
+        "chinese_language_and_literature": {
+          "seeds": {
+            "3407": {
+              "total": 100,
+              "parsed": 91,
+              "parse_failures": 9,
+              "correct": 39,
+              "accuracy": 0.39,
+              "parse_rate": 0.91
+            },
+            "3408": {
+              "total": 100,
+              "parsed": 94,
+              "parse_failures": 6,
+              "correct": 43,
+              "accuracy": 0.43,
+              "parse_rate": 0.94
+            },
+            "3409": {
+              "total": 100,
+              "parsed": 94,
+              "parse_failures": 6,
+              "correct": 43,
+              "accuracy": 0.43,
+              "parse_rate": 0.94
+            }
+          },
+          "accuracy_mean": 0.4166666666666667,
+          "accuracy_population_std": 0.01885618083164126
+        },
+        "geography_of_taiwan": {
+          "seeds": {
+            "3407": {
+              "total": 100,
+              "parsed": 93,
+              "parse_failures": 7,
+              "correct": 66,
+              "accuracy": 0.66,
+              "parse_rate": 0.93
+            },
+            "3408": {
+              "total": 100,
+              "parsed": 94,
+              "parse_failures": 6,
+              "correct": 65,
+              "accuracy": 0.65,
+              "parse_rate": 0.94
+            },
+            "3409": {
+              "total": 100,
+              "parsed": 93,
+              "parse_failures": 7,
+              "correct": 55,
+              "accuracy": 0.55,
+              "parse_rate": 0.93
+            }
+          },
+          "accuracy_mean": 0.62,
+          "accuracy_population_std": 0.04966554808583779
+        },
+        "logic_reasoning": {
+          "seeds": {
+            "3407": {
+              "total": 100,
+              "parsed": 95,
+              "parse_failures": 5,
+              "correct": 28,
+              "accuracy": 0.28,
+              "parse_rate": 0.95
+            },
+            "3408": {
+              "total": 100,
+              "parsed": 95,
+              "parse_failures": 5,
+              "correct": 25,
+              "accuracy": 0.25,
+              "parse_rate": 0.95
+            },
+            "3409": {
+              "total": 100,
+              "parsed": 95,
+              "parse_failures": 5,
+              "correct": 34,
+              "accuracy": 0.34,
+              "parse_rate": 0.95
+            }
+          },
+          "accuracy_mean": 0.29000000000000004,
+          "accuracy_population_std": 0.037416573867739424
+        },
+        "computer_science": {
+          "seeds": {
+            "3407": {
+              "total": 100,
+              "parsed": 86,
+              "parse_failures": 14,
+              "correct": 55,
+              "accuracy": 0.55,
+              "parse_rate": 0.86
+            },
+            "3408": {
+              "total": 100,
+              "parsed": 87,
+              "parse_failures": 13,
+              "correct": 56,
+              "accuracy": 0.56,
+              "parse_rate": 0.87
+            },
+            "3409": {
+              "total": 100,
+              "parsed": 85,
+              "parse_failures": 15,
+              "correct": 59,
+              "accuracy": 0.59,
+              "parse_rate": 0.85
+            }
+          },
+          "accuracy_mean": 0.5666666666666667,
+          "accuracy_population_std": 0.016996731711975913
+        },
+        "general_principles_of_law": {
+          "seeds": {
+            "3407": {
+              "total": 100,
+              "parsed": 82,
+              "parse_failures": 18,
+              "correct": 44,
+              "accuracy": 0.44,
+              "parse_rate": 0.82
+            },
+            "3408": {
+              "total": 100,
+              "parsed": 81,
+              "parse_failures": 19,
+              "correct": 47,
+              "accuracy": 0.47,
+              "parse_rate": 0.81
+            },
+            "3409": {
+              "total": 100,
+              "parsed": 83,
+              "parse_failures": 17,
+              "correct": 44,
+              "accuracy": 0.44,
+              "parse_rate": 0.83
+            }
+          },
+          "accuracy_mean": 0.45,
+          "accuracy_population_std": 0.014142135623730937
+        }
+      },
+      "localized-medical-adapter": {
+        "basic_medical_science": {
+          "seeds": {
+            "3407": {
+              "total": 100,
+              "parsed": 100,
+              "parse_failures": 0,
+              "correct": 78,
+              "accuracy": 0.78,
+              "parse_rate": 1.0
+            },
+            "3408": {
+              "total": 100,
+              "parsed": 100,
+              "parse_failures": 0,
+              "correct": 73,
+              "accuracy": 0.73,
+              "parse_rate": 1.0
+            },
+            "3409": {
+              "total": 100,
+              "parsed": 100,
+              "parse_failures": 0,
+              "correct": 75,
+              "accuracy": 0.75,
+              "parse_rate": 1.0
+            }
+          },
+          "accuracy_mean": 0.7533333333333333,
+          "accuracy_population_std": 0.020548046676563275
+        },
+        "clinical_psychology": {
+          "seeds": {
+            "3407": {
+              "total": 100,
+              "parsed": 100,
+              "parse_failures": 0,
+              "correct": 74,
+              "accuracy": 0.74,
+              "parse_rate": 1.0
+            },
+            "3408": {
+              "total": 100,
+              "parsed": 100,
+              "parse_failures": 0,
+              "correct": 71,
+              "accuracy": 0.71,
+              "parse_rate": 1.0
+            },
+            "3409": {
+              "total": 100,
+              "parsed": 100,
+              "parse_failures": 0,
+              "correct": 74,
+              "accuracy": 0.74,
+              "parse_rate": 1.0
+            }
+          },
+          "accuracy_mean": 0.73,
+          "accuracy_population_std": 0.014142135623730963
+        },
+        "dentistry": {
+          "seeds": {
+            "3407": {
+              "total": 100,
+              "parsed": 100,
+              "parse_failures": 0,
+              "correct": 65,
+              "accuracy": 0.65,
+              "parse_rate": 1.0
+            },
+            "3408": {
+              "total": 100,
+              "parsed": 100,
+              "parse_failures": 0,
+              "correct": 63,
+              "accuracy": 0.63,
+              "parse_rate": 1.0
+            },
+            "3409": {
+              "total": 100,
+              "parsed": 100,
+              "parse_failures": 0,
+              "correct": 66,
+              "accuracy": 0.66,
+              "parse_rate": 1.0
+            }
+          },
+          "accuracy_mean": 0.6466666666666667,
+          "accuracy_population_std": 0.012472191289246483
+        },
+        "occupational_therapy_for_psychological_disorders": {
+          "seeds": {
+            "3407": {
+              "total": 100,
+              "parsed": 100,
+              "parse_failures": 0,
+              "correct": 73,
+              "accuracy": 0.73,
+              "parse_rate": 1.0
+            },
+            "3408": {
+              "total": 100,
+              "parsed": 100,
+              "parse_failures": 0,
+              "correct": 68,
+              "accuracy": 0.68,
+              "parse_rate": 1.0
+            },
+            "3409": {
+              "total": 100,
+              "parsed": 100,
+              "parse_failures": 0,
+              "correct": 77,
+              "accuracy": 0.77,
+              "parse_rate": 1.0
+            }
+          },
+          "accuracy_mean": 0.7266666666666667,
+          "accuracy_population_std": 0.036817870057290855
+        },
+        "optometry": {
+          "seeds": {
+            "3407": {
+              "total": 100,
+              "parsed": 100,
+              "parse_failures": 0,
+              "correct": 48,
+              "accuracy": 0.48,
+              "parse_rate": 1.0
+            },
+            "3408": {
+              "total": 100,
+              "parsed": 100,
+              "parse_failures": 0,
+              "correct": 49,
+              "accuracy": 0.49,
+              "parse_rate": 1.0
+            },
+            "3409": {
+              "total": 100,
+              "parsed": 100,
+              "parse_failures": 0,
+              "correct": 49,
+              "accuracy": 0.49,
+              "parse_rate": 1.0
+            }
+          },
+          "accuracy_mean": 0.48666666666666664,
+          "accuracy_population_std": 0.004714045207910321
+        },
+        "pharmacology": {
+          "seeds": {
+            "3407": {
+              "total": 100,
+              "parsed": 100,
+              "parse_failures": 0,
+              "correct": 62,
+              "accuracy": 0.62,
+              "parse_rate": 1.0
+            },
+            "3408": {
+              "total": 100,
+              "parsed": 100,
+              "parse_failures": 0,
+              "correct": 58,
+              "accuracy": 0.58,
+              "parse_rate": 1.0
+            },
+            "3409": {
+              "total": 100,
+              "parsed": 100,
+              "parse_failures": 0,
+              "correct": 57,
+              "accuracy": 0.57,
+              "parse_rate": 1.0
+            }
+          },
+          "accuracy_mean": 0.59,
+          "accuracy_population_std": 0.021602468994692887
+        },
+        "pharmacy": {
+          "seeds": {
+            "3407": {
+              "total": 100,
+              "parsed": 100,
+              "parse_failures": 0,
+              "correct": 33,
+              "accuracy": 0.33,
+              "parse_rate": 1.0
+            },
+            "3408": {
+              "total": 100,
+              "parsed": 100,
+              "parse_failures": 0,
+              "correct": 29,
+              "accuracy": 0.29,
+              "parse_rate": 1.0
+            },
+            "3409": {
+              "total": 100,
+              "parsed": 100,
+              "parse_failures": 0,
+              "correct": 35,
+              "accuracy": 0.35,
+              "parse_rate": 1.0
+            }
+          },
+          "accuracy_mean": 0.3233333333333333,
+          "accuracy_population_std": 0.024944382578492946
+        },
+        "traditional_chinese_medicine_clinical_medicine": {
+          "seeds": {
+            "3407": {
+              "total": 100,
+              "parsed": 100,
+              "parse_failures": 0,
+              "correct": 56,
+              "accuracy": 0.56,
+              "parse_rate": 1.0
+            },
+            "3408": {
+              "total": 100,
+              "parsed": 100,
+              "parse_failures": 0,
+              "correct": 54,
+              "accuracy": 0.54,
+              "parse_rate": 1.0
+            },
+            "3409": {
+              "total": 100,
+              "parsed": 100,
+              "parse_failures": 0,
+              "correct": 53,
+              "accuracy": 0.53,
+              "parse_rate": 1.0
+            }
+          },
+          "accuracy_mean": 0.5433333333333333,
+          "accuracy_population_std": 0.012472191289246483
+        },
+        "chinese_language_and_literature": {
+          "seeds": {
+            "3407": {
+              "total": 100,
+              "parsed": 100,
+              "parse_failures": 0,
+              "correct": 54,
+              "accuracy": 0.54,
+              "parse_rate": 1.0
+            },
+            "3408": {
+              "total": 100,
+              "parsed": 100,
+              "parse_failures": 0,
+              "correct": 46,
+              "accuracy": 0.46,
+              "parse_rate": 1.0
+            },
+            "3409": {
+              "total": 100,
+              "parsed": 100,
+              "parse_failures": 0,
+              "correct": 42,
+              "accuracy": 0.42,
+              "parse_rate": 1.0
+            }
+          },
+          "accuracy_mean": 0.47333333333333333,
+          "accuracy_population_std": 0.049888765156985905
+        },
+        "geography_of_taiwan": {
+          "seeds": {
+            "3407": {
+              "total": 100,
+              "parsed": 100,
+              "parse_failures": 0,
+              "correct": 76,
+              "accuracy": 0.76,
+              "parse_rate": 1.0
+            },
+            "3408": {
+              "total": 100,
+              "parsed": 100,
+              "parse_failures": 0,
+              "correct": 72,
+              "accuracy": 0.72,
+              "parse_rate": 1.0
+            },
+            "3409": {
+              "total": 100,
+              "parsed": 100,
+              "parse_failures": 0,
+              "correct": 70,
+              "accuracy": 0.7,
+              "parse_rate": 1.0
+            }
+          },
+          "accuracy_mean": 0.7266666666666667,
+          "accuracy_population_std": 0.024944382578492966
+        },
+        "logic_reasoning": {
+          "seeds": {
+            "3407": {
+              "total": 100,
+              "parsed": 100,
+              "parse_failures": 0,
+              "correct": 30,
+              "accuracy": 0.3,
+              "parse_rate": 1.0
+            },
+            "3408": {
+              "total": 100,
+              "parsed": 100,
+              "parse_failures": 0,
+              "correct": 31,
+              "accuracy": 0.31,
+              "parse_rate": 1.0
+            },
+            "3409": {
+              "total": 100,
+              "parsed": 100,
+              "parse_failures": 0,
+              "correct": 32,
+              "accuracy": 0.32,
+              "parse_rate": 1.0
+            }
+          },
+          "accuracy_mean": 0.31,
+          "accuracy_population_std": 0.008164965809277268
+        },
+        "computer_science": {
+          "seeds": {
+            "3407": {
+              "total": 100,
+              "parsed": 100,
+              "parse_failures": 0,
+              "correct": 73,
+              "accuracy": 0.73,
+              "parse_rate": 1.0
+            },
+            "3408": {
+              "total": 100,
+              "parsed": 100,
+              "parse_failures": 0,
+              "correct": 70,
+              "accuracy": 0.7,
+              "parse_rate": 1.0
+            },
+            "3409": {
+              "total": 100,
+              "parsed": 100,
+              "parse_failures": 0,
+              "correct": 75,
+              "accuracy": 0.75,
+              "parse_rate": 1.0
+            }
+          },
+          "accuracy_mean": 0.7266666666666667,
+          "accuracy_population_std": 0.020548046676563275
+        },
+        "general_principles_of_law": {
+          "seeds": {
+            "3407": {
+              "total": 100,
+              "parsed": 100,
+              "parse_failures": 0,
+              "correct": 68,
+              "accuracy": 0.68,
+              "parse_rate": 1.0
+            },
+            "3408": {
+              "total": 100,
+              "parsed": 100,
+              "parse_failures": 0,
+              "correct": 65,
+              "accuracy": 0.65,
+              "parse_rate": 1.0
+            },
+            "3409": {
+              "total": 100,
+              "parsed": 100,
+              "parse_failures": 0,
+              "correct": 61,
+              "accuracy": 0.61,
+              "parse_rate": 1.0
+            }
+          },
+          "accuracy_mean": 0.6466666666666667,
+          "accuracy_population_std": 0.02867441755680878
+        }
+      }
+    }
+  },
+  "parse_rate_warnings": [
+    {
+      "suite": "medqa",
+      "model": "localized-base",
+      "parse_rate": 0.7926397735314933,
+      "threshold": 0.8
+    }
+  ],
+  "cost_accounting": {
+    "basis": "parser-v3 A100 calibration",
+    "projected_hours": 2.979555188311461,
+    "compute_units_per_hour": 5.3,
+    "projected_compute_units": 15.791642498050743,
+    "projected_compute_units_with_20pct_buffer": 18.94997099766089,
+    "this_session_wall_hours": 2.5419476132425003,
+    "this_session_compute_units_estimate": 13.472322350185252,
+    "resume_note": "若曾中斷續跑，總 CU 需加總各 Colab session；本欄只估算完成這次 notebook session。"
+  },
+  "limitations": [
+    "parse failures and token-limit outputs count as incorrect",
+    "MedQA has no native subject labels, so only total accuracy is reported",
+    "results apply to the pinned revisions and quantized serving stack"
+  ]
+}

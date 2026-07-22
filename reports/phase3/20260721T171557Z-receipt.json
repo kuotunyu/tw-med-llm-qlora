@@ -1,0 +1,9 @@
+{
+  "phase": 3,
+  "run_mode": "calibration",
+  "experiment_fingerprint": "141226999eacb67ffd9a",
+  "drive_archive": "/content/drive/MyDrive/tw-med-llm-qlora/phase3/141226999eacb67ffd9a/calibration/runs/20260721T171557Z-phase3-calibration.zip",
+  "drive_manifest": "/content/drive/MyDrive/tw-med-llm-qlora/phase3/141226999eacb67ffd9a/calibration/runs/20260721T171557Z-run-manifest.json",
+  "archive_sha256": "0c87bc5250d2bc86d45abe00a486a26689a8823a21f7e57b054db043141da04e",
+  "archive_bytes": 110657239
+}

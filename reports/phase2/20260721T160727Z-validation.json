@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "phase": 2,
+  "run_id": "20260721T160727Z",
+  "status": "pass",
+  "source_artifacts": {
+    "manifest": "20260721T160727Z-run-manifest.json",
+    "manifest_sha256": "e7178f26335c6934a2f728a3278dbc2818e1a5752925af45f0812aff482a13cc",
+    "receipt": "20260721T160727Z-receipt.json",
+    "receipt_sha256": "d1ac402e6492bdf69219354e54f6ed2d8c5e314636dfb905c1113f1fe6b5aaf6",
+    "drive_archive_sha256": "a5baee5a4450964ac104c7f58af5877cb2bdee2b56f5b7fa1a37669b9f2bc1fd",
+    "drive_archive_bytes": 623618526
+  },
+  "validated_invariants": [
+    "full_training_disabled",
+    "approved_gpu_profile",
+    "pinned_complete_base_snapshot",
+    "fixed_data_revision_and_counts",
+    "test_excluded_from_trainer",
+    "response_only_masking",
+    "finite_loss_without_oom",
+    "adapter_saved_and_reloaded",
+    "strict_validation_parse",
+    "no_private_question_or_secret_fields"
+  ],
+  "hardware": {
+    "gpu": "NVIDIA L4",
+    "profile": "primary_24g",
+    "precision": "BF16",
+    "total_vram_gib": 22.0343017578125
+  },
+  "smoke": {
+    "examples": 100,
+    "steps": 10,
+    "wall_seconds": 684.3937227170004,
+    "seconds_per_step": 68.43937227170004,
+    "training_loss": 0.5617829531431198,
+    "first_logged_loss": 0.7228,
+    "last_logged_loss": 0.3233,
+    "peak_allocated_gib": 9.332640171051025,
+    "peak_reserved_gib": 11.189453125
+  },
+  "reload_probe": {
+    "split": "validation",
+    "strict_parse": true,
+    "correct": false,
+    "note": "single reload probe; not an accuracy evaluation"
+  },
+  "full_run_projection": {
+    "examples": 11248,
+    "steps": 703,
+    "hours": 13.364688529723646,
+    "compute_units_per_hour_user_observed": 1.54,
+    "projected_compute_units": 20.581620335774414,
+    "current_compute_units_user_observed": 437.16,
+    "projected_remaining_compute_units": 416.5783796642256,
+    "share_of_current_balance_percent": 4.708029173706288,
+    "monetary_estimate": null,
+    "monetary_estimate_note": "No per-compute-unit billing price was supplied."
+  }
+}

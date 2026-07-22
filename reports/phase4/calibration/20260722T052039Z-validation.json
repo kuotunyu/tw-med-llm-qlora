@@ -1,0 +1,73 @@
+{
+  "status": "recalibration_required",
+  "evidence_integrity": "pass",
+  "phase": 4,
+  "run_mode": "calibration",
+  "run_id": "20260722T052039Z",
+  "test_isolation": {
+    "manifest_test_files_loaded": 0,
+    "private_archive_test_members": 0,
+    "full_evaluation_unlocked": false
+  },
+  "hardware": {
+    "gpu_name": "NVIDIA A100-SXM4-40GB",
+    "gpu_vram_gib": 39.4935302734375,
+    "torch_version": "2.11.0+cu129",
+    "cuda_version": "12.9",
+    "vllm_version": "0.25.1+cu129"
+  },
+  "calibration": {
+    "split": "validation",
+    "unique_questions": 20,
+    "requests": 60,
+    "format_audit": {
+      "original-instruct": {
+        "rows": 20,
+        "reparsed": 17,
+        "reparsed_correct": 9,
+        "exact_standalone_answers": 0,
+        "responses_with_one_valid_box": 17,
+        "responses_with_multiple_valid_boxes": 0,
+        "minimum_characters": 9,
+        "maximum_characters": 167,
+        "mean_characters": 22.3
+      },
+      "localized-base": {
+        "rows": 20,
+        "reparsed": 0,
+        "reparsed_correct": 0,
+        "exact_standalone_answers": 0,
+        "responses_with_one_valid_box": 0,
+        "responses_with_multiple_valid_boxes": 0,
+        "minimum_characters": 48,
+        "maximum_characters": 72,
+        "mean_characters": 56.35
+      },
+      "localized-medical-adapter": {
+        "rows": 20,
+        "reparsed": 20,
+        "reparsed_correct": 11,
+        "exact_standalone_answers": 20,
+        "responses_with_one_valid_box": 0,
+        "responses_with_multiple_valid_boxes": 0,
+        "minimum_characters": 1,
+        "maximum_characters": 1,
+        "mean_characters": 1.0
+      }
+    }
+  },
+  "diagnosis": {
+    "legacy_extractor": "box",
+    "adapter_reported_parsed": 0,
+    "adapter_reparsed_with_reviewed_contract": 20,
+    "localized_base_reparsed": 0,
+    "conclusion": "The adapter emitted valid standalone A-D answers, but the box-only extractor rejected them. Localized-base outputs reached the generation cap before a unique answer. Accuracy values from this run are invalid."
+  },
+  "cost_projection_is_provisional": true,
+  "artifact_sha256": {
+    "manifest": "0c47f6784df3e90a2b671536af303fbc815a2d5b0a17cd49774568eb4197c578",
+    "receipt": "ab6c79c9a81a2023d7f02f836cf61719cca3e1b6dd2ccd5b406a0c29be8616fe",
+    "calibration_summary": "056b0902cf0b05072c55b352a9d81724b19aab499198b7e6430b422e2eb3abcb",
+    "private_archive": "fa5bc1f408211aea2c0942c93ee8c28db302c54e3cc334238fd408980dc5af60"
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "label": "validation calibration only; not a Phase 4 test result",
+  "split": "validation",
+  "unique_questions": 20,
+  "models": {
+    "original-instruct": {
+      "total": 20,
+      "parsed": 20,
+      "parse_failures": 0,
+      "correct": 10,
+      "accuracy": 0.5,
+      "parse_rate": 1.0,
+      "completion_tokens_total": 68,
+      "max_token_limit_hits": 0
+    },
+    "localized-base": {
+      "total": 20,
+      "parsed": 16,
+      "parse_failures": 4,
+      "correct": 9,
+      "accuracy": 0.45,
+      "parse_rate": 0.8,
+      "completion_tokens_total": 1120,
+      "max_token_limit_hits": 4
+    },
+    "localized-medical-adapter": {
+      "total": 20,
+      "parsed": 20,
+      "parse_failures": 0,
+      "correct": 11,
+      "accuracy": 0.55,
+      "parse_rate": 1.0,
+      "completion_tokens_total": 40,
+      "max_token_limit_hits": 0
+    }
+  },
+  "generation_contract": {
+    "parser": "standalone_A-D_or_exactly_one_simple_boxed_A-D",
+    "scorer": "exact_match",
+    "max_tokens": 256,
+    "minimum_parse_rate": 0.8
+  },
+  "inference_seconds": {
+    "original-instruct": 4.288960493000104,
+    "localized-base": 15.45988799099996,
+    "localized-medical-adapter": 1.2011201400000573
+  },
+  "server_startup_seconds": [
+    355.04227512299985,
+    330.03644131500005
+  ],
+  "generation_gate": {
+    "passed": false,
+    "parse_rate_failures": {},
+    "max_token_limit_failures": {
+      "localized-base": 4
+    },
+    "failure_action": "Do not unlock full evaluation; review archived evidence."
+  }
+}

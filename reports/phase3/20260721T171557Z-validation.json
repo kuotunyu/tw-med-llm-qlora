@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "phase": 3,
+  "run_mode": "calibration",
+  "run_id": "20260721T171557Z",
+  "status": "pass",
+  "source_artifacts": {
+    "manifest": "20260721T171557Z-run-manifest.json",
+    "manifest_sha256": "0a58668a248ecaacc8d65e98b351ccbaed85e33c09ee34d9e1cddba527e432a0",
+    "receipt": "20260721T171557Z-receipt.json",
+    "receipt_sha256": "941ee3ee2c3703b54c6a5c2e4ecd2c34c996753bc928c672bbec77d22554ebc3",
+    "drive_archive_sha256": "0c87bc5250d2bc86d45abe00a486a26689a8823a21f7e57b054db043141da04e",
+    "drive_archive_bytes": 110657239,
+    "checkpoint_archive_sha256": "cbcbd1dd998908f2cdaa7719bdc0636c6bad3df6c3043eebab974504379aec74",
+    "checkpoint_archive_bytes": 456408864
+  },
+  "validated_invariants": [
+    "calibration_mode_and_full_training_disabled",
+    "approved_a100_profile",
+    "pinned_complete_base_snapshot",
+    "fixed_data_revision_and_counts",
+    "test_excluded_from_trainer",
+    "response_only_masking_for_train_and_validation",
+    "finite_train_and_eval_loss_without_oom",
+    "checkpoint_contains_optimizer_scheduler_rng_and_trainer_state",
+    "checkpoint_integrity_restore_passed",
+    "adapter_saved_reloaded_and_strictly_parsed",
+    "no_private_question_or_secret_fields"
+  ],
+  "hardware": {
+    "gpu": "NVIDIA A100-SXM4-40GB",
+    "profile": "primary_40g",
+    "precision": "BF16",
+    "total_vram_gib": 39.4935302734375
+  },
+  "calibration": {
+    "train_examples": 100,
+    "validation_examples": 100,
+    "steps": 10,
+    "seconds_per_step_excluding_checkpoint": 20.525462628900005,
+    "checkpoint_seconds_per_save": 12.12548161999996,
+    "validation_100_rows_seconds": 30.84780834300011,
+    "training_loss": 0.56120166182518,
+    "eval_loss": 0.7262429594993591,
+    "first_logged_loss": 0.7199,
+    "last_logged_loss": 0.3171,
+    "peak_allocated_gib": 11.023994445800781,
+    "peak_reserved_gib": 12.35546875
+  },
+  "checkpoint": {
+    "fingerprint": "141226999eacb67ffd9a",
+    "restore_test_passed": true,
+    "restored_global_step": 10,
+    "retention_limit": 2
+  },
+  "reload_probe": {
+    "split": "validation",
+    "strict_parse": true,
+    "correct": false,
+    "note": "single reload probe; not an accuracy evaluation"
+  },
+  "billing_correction": {
+    "manifest_compute_units_per_hour": 4.82,
+    "observed_compute_units_per_hour": 5.3,
+    "manifest_current_compute_units": 437.16,
+    "observed_current_compute_units": 436.2,
+    "reason": "Notebook contained example values; corrected from the Colab resource panel."
+  },
+  "full_run_projection": {
+    "train_examples": 11248,
+    "validation_examples": 1409,
+    "steps": 703,
+    "checkpoint_events": 7,
+    "eval_events_including_final": 8,
+    "hours": 4.9976232099665765,
+    "compute_units_per_hour_user_observed": 5.3,
+    "projected_compute_units": 26.487403012822856,
+    "projected_compute_units_with_20pct_buffer": 31.784883615387425,
+    "current_compute_units_user_observed": 436.2,
+    "projected_remaining_compute_units": 409.7125969871771,
+    "projected_remaining_after_20pct_buffer": 404.4151163846126,
+    "share_of_current_balance_percent": 6.07230697221982,
+    "actual_calibration_session_compute_units_corrected": 0.3654466544821113,
+    "monetary_estimate": null,
+    "monetary_estimate_note": "No per-compute-unit billing price was supplied."
+  }
+}

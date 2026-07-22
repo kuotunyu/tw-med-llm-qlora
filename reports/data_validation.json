@@ -1,0 +1,153 @@
+{
+  "dataset": {
+    "config": "med_qa_tw_source",
+    "id": "bigbio/med_qa",
+    "revision": "e04abdc0672c54547fa1dbe36cfefc000e4f2657"
+  },
+  "deduplication": {
+    "removal_provenance_sha256": "7a7a958aa5d6b5caeba309f8122af9904c6318e9502d3d6e672047b071b5ecba",
+    "removed_by_split": {
+      "train": 42,
+      "validation": 2
+    },
+    "removed_rows": 44,
+    "winner_pairs": {
+      "train->test": 8,
+      "train->train": 28,
+      "train->validation": 6,
+      "validation->test": 1,
+      "validation->validation": 1
+    }
+  },
+  "isolation": {
+    "normalized_question_cross_split_overlaps": 0,
+    "stable_id_cross_split_overlaps": 0,
+    "test_referenced_splits": [
+      "test"
+    ],
+    "train_referenced_splits": [
+      "train"
+    ],
+    "validation_referenced_splits": [
+      "validation"
+    ]
+  },
+  "packages": {
+    "huggingface-hub": "1.24.0",
+    "pyarrow": "25.0.0",
+    "python-dotenv": "1.2.2"
+  },
+  "policy": {
+    "duplicate_key": "whitespace-collapse + casefold(question)",
+    "invalid_rows_silently_removed": false,
+    "priority": [
+      "test",
+      "validation",
+      "train"
+    ],
+    "test_unchanged": true,
+    "test_used_for_training": false,
+    "unicode_compatibility_folding": false,
+    "within_split_duplicates": "removed from validation and train"
+  },
+  "processed": {
+    "test": {
+      "content_sha256": "291501e9b4dc5634518635643e6087ae9b48f168b2af1d1f76ce154d03f012b0",
+      "file_sha256": "291501e9b4dc5634518635643e6087ae9b48f168b2af1d1f76ce154d03f012b0",
+      "logical_path": "data/processed/medqa/test.jsonl",
+      "rows": 1413
+    },
+    "train": {
+      "content_sha256": "b0eacb90d3cc125f8cf69f74a5e40fc10bc68043789ee410853ee682fd162231",
+      "file_sha256": "b0eacb90d3cc125f8cf69f74a5e40fc10bc68043789ee410853ee682fd162231",
+      "logical_path": "data/processed/medqa/train.jsonl",
+      "rows": 11248
+    },
+    "validation": {
+      "content_sha256": "721d5da635eadb15cff264d4bfde457a0f3abc255a352e6a1b5de4ee59edfe5e",
+      "file_sha256": "721d5da635eadb15cff264d4bfde457a0f3abc255a352e6a1b5de4ee59edfe5e",
+      "logical_path": "data/processed/medqa/validation.jsonl",
+      "rows": 1409
+    }
+  },
+  "quality_filtering": {
+    "reasons_by_split": {
+      "test": {
+        "ambiguous normalized choice text": 0
+      },
+      "train": {
+        "ambiguous normalized choice text": 5,
+        "answer must not be empty": 1,
+        "options[0].value must not be empty": 1,
+        "options[1].value must not be empty": 1
+      },
+      "validation": {
+        "ambiguous normalized choice text": 1
+      }
+    },
+    "removed_by_split": {
+      "test": 0,
+      "train": 8,
+      "validation": 1
+    },
+    "removed_rows": 9
+  },
+  "schema_version": 1,
+  "source": {
+    "test": {
+      "ambiguous_choice_rows": 0,
+      "invalid_reasons": {},
+      "invalid_rows": 0,
+      "parsed_rows": 1413,
+      "raw_rows": 1413,
+      "schema_fields": [
+        "answer",
+        "answer_idx",
+        "meta_info",
+        "options",
+        "question"
+      ],
+      "source_file": "med_qa_tw_source/test/0000.parquet",
+      "source_file_sha256": "799f6c7881d50b1101f168f31129aea699fec67401e2b8dc9464f1f84dc40c04",
+      "within_split_duplicate_rows": 0
+    },
+    "train": {
+      "ambiguous_choice_rows": 5,
+      "invalid_reasons": {
+        "answer must not be empty": 1,
+        "options[0].value must not be empty": 1,
+        "options[1].value must not be empty": 1
+      },
+      "invalid_rows": 3,
+      "parsed_rows": 11295,
+      "raw_rows": 11298,
+      "schema_fields": [
+        "answer",
+        "answer_idx",
+        "meta_info",
+        "options",
+        "question"
+      ],
+      "source_file": "med_qa_tw_source/train/0000.parquet",
+      "source_file_sha256": "b2cb4b82a7c7ffc6f6f99465197f4dfc94b04464cf2ab517a67418641c617646",
+      "within_split_duplicate_rows": 33
+    },
+    "validation": {
+      "ambiguous_choice_rows": 1,
+      "invalid_reasons": {},
+      "invalid_rows": 0,
+      "parsed_rows": 1412,
+      "raw_rows": 1412,
+      "schema_fields": [
+        "answer",
+        "answer_idx",
+        "meta_info",
+        "options",
+        "question"
+      ],
+      "source_file": "med_qa_tw_source/validation/0000.parquet",
+      "source_file_sha256": "06c2334173f17ed0665088e920bbf0fb54bb64ef7432885747668235ed54701a",
+      "within_split_duplicate_rows": 1
+    }
+  }
+}

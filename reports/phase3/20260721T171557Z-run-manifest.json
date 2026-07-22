@@ -1,0 +1,293 @@
+{
+  "checkpoint_audit": {
+    "archives_written_this_session": [
+      {
+        "archive": "checkpoint-10.zip",
+        "archive_bytes": 456408864,
+        "archive_sha256": "cbcbd1dd998908f2cdaa7719bdc0636c6bad3df6c3043eebab974504379aec74",
+        "checkpoint": "checkpoint-10",
+        "checkpoint_cycle_wall_seconds": 12.12548161999996,
+        "created_at_utc": "2026-07-21T17:22:45.759533+00:00",
+        "experiment_fingerprint": "141226999eacb67ffd9a",
+        "global_step": 10,
+        "members": [
+          "README.md",
+          "adapter_config.json",
+          "adapter_model.safetensors",
+          "added_tokens.json",
+          "chat_template.jinja",
+          "optimizer.pt",
+          "rng_state.pth",
+          "scheduler.pt",
+          "special_tokens_map.json",
+          "tokenizer.json",
+          "tokenizer.model",
+          "tokenizer_config.json",
+          "trainer_state.json",
+          "training_args.bin"
+        ],
+        "schema_version": 1,
+        "sync_wall_seconds": 9.133322996999937
+      }
+    ],
+    "drive_root": "/content/drive/MyDrive/tw-med-llm-qlora/phase3/141226999eacb67ffd9a/calibrations/20260721T171557Z/checkpoints",
+    "restore_test_passed": true,
+    "restored_checkpoint": "checkpoint-10",
+    "restored_global_step": 10,
+    "resume_requested": true,
+    "resumed_from": null,
+    "retention_limit": 2
+  },
+  "cost_estimate": {
+    "actual_session_compute_units": 0.33234959898184463,
+    "actual_session_hours": 0.06895219895888892,
+    "basis": "measured Phase 3 A100 calibration",
+    "calibrated_checkpoint_seconds_per_save": 12.12548161999996,
+    "calibrated_full_eval_seconds": 434.64561955287155,
+    "calibrated_seconds_per_step": 20.525462628900005,
+    "checkpoint_events": 7,
+    "compute_units_per_hour_user_input": 4.82,
+    "currency_user_input": null,
+    "current_compute_units_user_input": 437.16,
+    "effective_batch_size": 16,
+    "epochs": 1.0,
+    "estimated_cost": null,
+    "eval_events_including_final": 8,
+    "full_steps": 703,
+    "full_train_examples": 11248,
+    "price_per_compute_unit_user_input": null,
+    "projected_compute_units": 24.0885438720389,
+    "projected_compute_units_with_20pct_buffer": 28.90625264644668,
+    "projected_hours": 4.9976232099665765,
+    "projected_remaining_compute_units": 413.07145612796114,
+    "projected_seconds": 17991.443555879676
+  },
+  "created_at_utc": "2026-07-21T17:27:56.355038+00:00",
+  "data": {
+    "audit": {
+      "ambiguous_rows": {
+        "test": 0,
+        "train": 5,
+        "validation": 1
+      },
+      "calibration_validation_rows": 100,
+      "clean_rows": {
+        "test": 1413,
+        "train": 11248,
+        "validation": 1409
+      },
+      "duplicate_removals": {
+        "train->test": 8,
+        "train->train": 28,
+        "train->validation": 6,
+        "validation->test": 1,
+        "validation->validation": 1
+      },
+      "smoke_ids_sha256": "4fd155c1e3088e0c13fd0fee0282f6368932ad45289f49e1ab0c3d9ff492eb3d",
+      "smoke_rows": 100,
+      "source": {
+        "test": {
+          "invalid_reasons": {},
+          "invalid_rows": 0,
+          "parsed_rows": 1413,
+          "raw_rows": 1413,
+          "source_sha256": "799f6c7881d50b1101f168f31129aea699fec67401e2b8dc9464f1f84dc40c04"
+        },
+        "train": {
+          "invalid_reasons": {
+            "answer must be a non-empty string": 1,
+            "options[0].value must be a non-empty string": 1,
+            "options[1].value must be a non-empty string": 1
+          },
+          "invalid_rows": 3,
+          "parsed_rows": 11295,
+          "raw_rows": 11298,
+          "source_sha256": "b2cb4b82a7c7ffc6f6f99465197f4dfc94b04464cf2ab517a67418641c617646"
+        },
+        "validation": {
+          "invalid_reasons": {},
+          "invalid_rows": 0,
+          "parsed_rows": 1412,
+          "raw_rows": 1412,
+          "source_sha256": "06c2334173f17ed0665088e920bbf0fb54bb64ef7432885747668235ed54701a"
+        }
+      },
+      "test_used_for_training": false,
+      "trainer_referenced_splits": [
+        "train",
+        "validation"
+      ],
+      "validation_probe_id": "542f3d5ea6a81debd19c"
+    },
+    "dataset_id": "bigbio/med_qa",
+    "revision": "e04abdc0672c54547fa1dbe36cfefc000e4f2657"
+  },
+  "experiment_fingerprint": "141226999eacb67ffd9a",
+  "full_training_approval_verified": true,
+  "full_training_enabled": false,
+  "gpu": {
+    "allow_tf32": true,
+    "bf16_supported": true,
+    "compute_capability": [
+      8,
+      0
+    ],
+    "name": "NVIDIA A100-SXM4-40GB",
+    "precision": "BF16",
+    "total_vram_gib": 39.4935302734375
+  },
+  "model": {
+    "adapter_base_verified": true,
+    "hardware_profile": "primary_40g",
+    "load_in_4bit": true,
+    "model_id": "taide/Gemma-3-TAIDE-12b-Chat-2602",
+    "model_profile": "primary",
+    "revision": "4de0b93b99f8b61b59c40d019fd593bdd1c42249",
+    "snapshot_audit": {
+      "complete": true,
+      "free_disk_gib_before_download": 182.81668853759766,
+      "indexed_shards": [
+        "model-00001-of-00006.safetensors",
+        "model-00002-of-00006.safetensors",
+        "model-00003-of-00006.safetensors",
+        "model-00004-of-00006.safetensors",
+        "model-00005-of-00006.safetensors",
+        "model-00006-of-00006.safetensors"
+      ],
+      "remote_weight_files": [
+        "model-00001-of-00006.safetensors",
+        "model-00002-of-00006.safetensors",
+        "model-00003-of-00006.safetensors",
+        "model-00004-of-00006.safetensors",
+        "model-00005-of-00006.safetensors",
+        "model-00006-of-00006.safetensors"
+      ],
+      "repo_id": "taide/Gemma-3-TAIDE-12b-Chat-2602",
+      "revision": "4de0b93b99f8b61b59c40d019fd593bdd1c42249",
+      "snapshot_path": "/root/.cache/huggingface/hub/models--taide--Gemma-3-TAIDE-12b-Chat-2602/snapshots/4de0b93b99f8b61b59c40d019fd593bdd1c42249",
+      "tokenizer_source": "/root/.cache/huggingface/hub/models--taide--Gemma-3-TAIDE-12b-Chat-2602/snapshots/4de0b93b99f8b61b59c40d019fd593bdd1c42249",
+      "vlm_processor_required": true,
+      "weight_bytes": 27246744536,
+      "weight_gib": 25.37550827115774
+    }
+  },
+  "outputs": {
+    "adapter": "/content/tw-med-llm-qlora/20260721T171557Z/adapter",
+    "drive_checkpoints": "/content/drive/MyDrive/tw-med-llm-qlora/phase3/141226999eacb67ffd9a/calibrations/20260721T171557Z/checkpoints",
+    "evidence": "/content/tw-med-llm-qlora/20260721T171557Z/evidence",
+    "trainer": "/content/tw-med-llm-qlora/20260721T171557Z/trainer"
+  },
+  "packages": {
+    "accelerate": "1.14.0",
+    "bitsandbytes": "0.49.2",
+    "datasets": "4.3.0",
+    "huggingface-hub": "0.35.3",
+    "peft": "0.19.1",
+    "torch": "2.10.0+cu128",
+    "transformers": "4.56.2",
+    "triton": "3.6.0",
+    "trl": "0.22.2",
+    "unsloth": "2026.7.4",
+    "unsloth-zoo": "2026.7.4",
+    "xformers": "0.0.35"
+  },
+  "phase": 3,
+  "reload_check": {
+    "adapter_parameters": 65470464,
+    "adapter_reloaded": true,
+    "base_source": "pinned_local_snapshot",
+    "generation_tokenizer": "GemmaTokenizerFast",
+    "gold": "D",
+    "prediction": "B",
+    "probe_id": "542f3d5ea6a81debd19c",
+    "probe_split": "validation",
+    "published_base_model_id": "taide/Gemma-3-TAIDE-12b-Chat-2602",
+    "raw_output_sha256": "df7e70e5021544f4834bbee64a9e3789febc4be81470df629cad6ddb03320a5c",
+    "strict_parse": true,
+    "trainable_adapter_parameters": 0
+  },
+  "run_id": "20260721T171557Z",
+  "run_mode": "calibration",
+  "schema_version": 1,
+  "training": {
+    "batch_size": 4,
+    "gradient_accumulation_steps": 4,
+    "learning_rate": 5e-05,
+    "lora_alpha": 16,
+    "lora_rank": 16,
+    "masking_audit": {
+      "data_collator": "DataCollatorForLanguageModeling",
+      "last_response_only": true,
+      "masked_prompt_tokens": 246,
+      "processing_class": "GemmaTokenizerFast",
+      "response_loss_tokens": 3,
+      "resume_checkpoint": null,
+      "test_passed_to_trainer": false,
+      "train_rows": 100,
+      "validation_masked_prompt_tokens": 98,
+      "validation_response_loss_tokens": 3,
+      "validation_rows": 100,
+      "vision_collator": false
+    },
+    "max_sequence_length": 2048,
+    "metrics": {
+      "all_losses_finite": true,
+      "checkpoint_cycle_wall_seconds": 12.12548161999996,
+      "checkpoint_seconds_per_save": 12.12548161999996,
+      "checkpoint_sync_wall_seconds": 9.133322996999937,
+      "completed_steps_this_session": 10,
+      "final_eval_metrics": {
+        "epoch": 1.48,
+        "eval_loss": 0.7262429594993591,
+        "eval_runtime": 30.8451,
+        "eval_samples_per_second": 3.242,
+        "eval_steps_per_second": 0.811
+      },
+      "final_eval_rows": 100,
+      "final_eval_wall_seconds": 30.84780834300011,
+      "global_step": 10,
+      "logged_eval_losses": [
+        0.7262429594993591
+      ],
+      "logged_losses": [
+        0.7199,
+        0.7812,
+        0.7533,
+        0.7094,
+        0.6187,
+        0.3959,
+        0.4377,
+        0.451,
+        0.4277,
+        0.3171
+      ],
+      "mode": "calibration",
+      "oom": false,
+      "peak_allocated_gib": 11.023994445800781,
+      "peak_reserved_gib": 12.35546875,
+      "seconds_per_step_excluding_checkpoint": 20.525462628900005,
+      "seconds_per_step_this_session": 21.7380107909,
+      "training_loop_without_checkpoint_seconds": 205.25462628900004,
+      "training_loss": 0.56120166182518,
+      "wall_seconds": 217.380107909
+    },
+    "response_only_loss": true,
+    "seed": 3407
+  },
+  "training_contract": {
+    "batch_size": 4,
+    "dataset_id": "bigbio/med_qa",
+    "dataset_revision": "e04abdc0672c54547fa1dbe36cfefc000e4f2657",
+    "effective_batch_size": 16,
+    "epochs": 1,
+    "gradient_accumulation_steps": 4,
+    "hardware_profile": "primary_40g",
+    "learning_rate": 5e-05,
+    "lora_alpha": 16,
+    "lora_rank": 16,
+    "max_sequence_length": 2048,
+    "model_id": "taide/Gemma-3-TAIDE-12b-Chat-2602",
+    "model_revision": "4de0b93b99f8b61b59c40d019fd593bdd1c42249",
+    "seed": 3407
+  }
+}

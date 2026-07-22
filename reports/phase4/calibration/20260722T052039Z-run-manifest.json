@@ -1,0 +1,147 @@
+{
+  "schema_version": 1,
+  "phase": 4,
+  "run_mode": "calibration",
+  "created_at_utc": "2026-07-22T05:32:52.933832+00:00",
+  "full_evaluation_unlocked": false,
+  "test_files_loaded": 0,
+  "project_seed": 3407,
+  "hardware": {
+    "gpu_name": "NVIDIA A100-SXM4-40GB",
+    "gpu_vram_gib": 39.4935302734375,
+    "compute_capability": [
+      8,
+      0
+    ],
+    "bf16_supported": true,
+    "torch_version": "2.11.0+cu129",
+    "cuda_version": "12.9",
+    "platform": "Linux-6.6.122+-x86_64-with-glibc2.35"
+  },
+  "models": {
+    "original": {
+      "id": "google/gemma-3-12b-it",
+      "revision": "96b6f1eccf38110c56df3a15bffe176da04bfd80"
+    },
+    "localized_base": {
+      "id": "taide/Gemma-3-TAIDE-12b-Chat-2602",
+      "revision": "4de0b93b99f8b61b59c40d019fd593bdd1c42249"
+    },
+    "adapter": {
+      "archive_sha256": "2c537dfd3049319286c678a3ca3aa72e3f20baa7e0f44bde93ff7ee4dc47e43e",
+      "archive_bytes": 113079186,
+      "adapter_dir": "/content/tw-med-phase4-adapter/adapter",
+      "base_model_id": "taide/Gemma-3-TAIDE-12b-Chat-2602",
+      "adapter_config_sha256": "bc062f9d62a5ff8a81ed1d9bb0ce8f777e4f1f5cd3c9d6bcef4f41e9c2813999",
+      "weight_files": [
+        "adapter_model.safetensors"
+      ]
+    }
+  },
+  "data": {
+    "dataset_id": "ikala/tmmluplus",
+    "revision": "81d53e38340c9ade988f7fed8996da6554b504f3",
+    "split": "validation",
+    "unique_questions": 20,
+    "subject_count": 13,
+    "ordered_ids_sha256": "57936ce314438d901bf331cd03204b02f6bc8bb0b8befbe7ecca5dd6da743a8a"
+  },
+  "dependencies": {
+    "vllm": {
+      "module": "vllm",
+      "module_available": true,
+      "expected_version": "0.25.1+cu129",
+      "installed_version": "0.25.1+cu129"
+    },
+    "twinkle-eval": {
+      "module": "twinkle_eval",
+      "module_available": true,
+      "expected_version": "2.8.0",
+      "installed_version": "2.8.0"
+    },
+    "bitsandbytes": {
+      "module": "bitsandbytes",
+      "module_available": true,
+      "expected_version": "0.49.2",
+      "installed_version": "0.49.2"
+    },
+    "native_cuda_preflight": {
+      "cuda_available": true,
+      "gpu_name": "NVIDIA A100-SXM4-40GB",
+      "torch_cuda": "12.9",
+      "torch_version": "2.11.0+cu129",
+      "vllm_version": "0.25.1+cu129"
+    }
+  },
+  "twinkle_eval_contract": {
+    "repository": "https://github.com/ai-twinkle/Eval",
+    "revision": "470bbec130fa95c9e2e06c6a4b06db4a51390a06",
+    "extractor": "box",
+    "scorer": "exact_match",
+    "shuffle_options_inside_runner": false
+  },
+  "workload": {
+    "medqa_full": 4239,
+    "tmmlu_full": 16719,
+    "tmmlu_stability": 7800,
+    "total": 28758
+  },
+  "calibration_summary": {
+    "label": "validation calibration only; not a Phase 4 test result",
+    "split": "validation",
+    "unique_questions": 20,
+    "models": {
+      "original-instruct": {
+        "total": 20,
+        "parsed": 17,
+        "parse_failures": 3,
+        "correct": 9,
+        "accuracy": 0.45,
+        "parse_rate": 0.85
+      },
+      "localized-base": {
+        "total": 20,
+        "parsed": 0,
+        "parse_failures": 20,
+        "correct": 0,
+        "accuracy": 0.0,
+        "parse_rate": 0.0
+      },
+      "localized-medical-adapter": {
+        "total": 20,
+        "parsed": 0,
+        "parse_failures": 20,
+        "correct": 0,
+        "accuracy": 0.0,
+        "parse_rate": 0.0
+      }
+    },
+    "inference_seconds": {
+      "original-instruct": 6.085337910000021,
+      "localized-base": 9.394319334000102,
+      "localized-medical-adapter": 1.200959070999943
+    },
+    "server_startup_seconds": [
+      350.03662314900004,
+      330.0358913749999
+    ]
+  },
+  "cost_estimate": {
+    "measured_requests": 60,
+    "measured_seconds_per_request": 0.2780102719166678,
+    "planned_server_starts": 2,
+    "projected_seconds": 8675.091914303532,
+    "projected_hours": 2.4097477539732033,
+    "compute_units_per_hour_user_input": 5.3,
+    "projected_compute_units": 12.771663096057978,
+    "buffer_fraction": 0.2,
+    "projected_compute_units_with_buffer": 15.325995715269572,
+    "price_per_compute_unit_user_input": null,
+    "estimated_cost": null,
+    "currency_user_input": null
+  },
+  "private_archive": {
+    "sha256": "fa5bc1f408211aea2c0942c93ee8c28db302c54e3cc334238fd408980dc5af60",
+    "bytes": 33320
+  }
+}

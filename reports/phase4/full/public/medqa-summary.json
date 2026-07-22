@@ -1,0 +1,129 @@
+{
+  "split": "test",
+  "subject_breakdown": "not_reported_source_has_no_native_subject_labels",
+  "models": {
+    "original-instruct": {
+      "total": 1413,
+      "parsed": 1412,
+      "parse_failures": 1,
+      "correct": 935,
+      "accuracy": 0.6617126680820948,
+      "parse_rate": 0.9992922859164898,
+      "max_token_limit_hits": 0
+    },
+    "localized-base": {
+      "total": 1413,
+      "parsed": 1120,
+      "parse_failures": 293,
+      "correct": 797,
+      "accuracy": 0.5640481245576787,
+      "parse_rate": 0.7926397735314933,
+      "max_token_limit_hits": 280
+    },
+    "localized-medical-adapter": {
+      "total": 1413,
+      "parsed": 1413,
+      "parse_failures": 0,
+      "correct": 1018,
+      "accuracy": 0.7204529370134466,
+      "parse_rate": 1.0,
+      "max_token_limit_hits": 0
+    }
+  },
+  "adapter_minus_localized_base": {
+    "iterations": 10000,
+    "seed": 3407,
+    "stratified_by_subject": false,
+    "observed_difference_percentage_points": 15.640481245576787,
+    "ci_lower_percentage_points": 13.375796178343949,
+    "ci_upper_percentage_points": 17.97593772116065
+  },
+  "mcnemar_adapter_vs_localized_base": {
+    "base_wrong_adapter_correct": 264,
+    "base_correct_adapter_wrong": 43,
+    "discordant_pairs": 307,
+    "two_sided_exact_p_value": 6.113147021247119e-40
+  },
+  "representative_cases": [
+    {
+      "example_id": "8d7dacbc6545ae4d3e8d",
+      "subject": "medqa_total",
+      "gold": "A",
+      "base_prediction": "C",
+      "adapter_prediction": "A",
+      "category": "improved"
+    },
+    {
+      "example_id": "5d8f13a1123bc6bcf1e0",
+      "subject": "medqa_total",
+      "gold": "B",
+      "base_prediction": "B",
+      "adapter_prediction": "C",
+      "category": "regressed"
+    },
+    {
+      "example_id": "39dd0171d910eceeaa51",
+      "subject": "medqa_total",
+      "gold": "B",
+      "base_prediction": "D",
+      "adapter_prediction": "D",
+      "category": "both_wrong"
+    },
+    {
+      "example_id": "b79e11a3eb4df284caa7",
+      "subject": "medqa_total",
+      "gold": "B",
+      "base_prediction": null,
+      "adapter_prediction": "B",
+      "category": "parse_failure"
+    },
+    {
+      "example_id": "22f337cc63259ccc24ec",
+      "subject": "medqa_total",
+      "gold": "D",
+      "base_prediction": "D",
+      "adapter_prediction": "D",
+      "category": "both_correct"
+    },
+    {
+      "example_id": "70a6d2a6a7a28300da6b",
+      "subject": "medqa_total",
+      "gold": "B",
+      "base_prediction": "D",
+      "adapter_prediction": "B",
+      "category": "improved"
+    },
+    {
+      "example_id": "87edbf76ca788f47c680",
+      "subject": "medqa_total",
+      "gold": "D",
+      "base_prediction": "D",
+      "adapter_prediction": "B",
+      "category": "regressed"
+    },
+    {
+      "example_id": "346631002fdbb27b62ce",
+      "subject": "medqa_total",
+      "gold": "A",
+      "base_prediction": "D",
+      "adapter_prediction": "D",
+      "category": "both_wrong"
+    },
+    {
+      "example_id": "f4f4376f3ccd2e4d713d",
+      "subject": "medqa_total",
+      "gold": "B",
+      "base_prediction": null,
+      "adapter_prediction": "B",
+      "category": "parse_failure"
+    },
+    {
+      "example_id": "fe83253dcd03b91e0e7b",
+      "subject": "medqa_total",
+      "gold": "B",
+      "base_prediction": "B",
+      "adapter_prediction": "B",
+      "category": "both_correct"
+    }
+  ]
+}

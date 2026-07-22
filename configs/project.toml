@@ -1,0 +1,219 @@
+[project]
+seed = 3407
+effective_batch_size = 16
+
+[data.medqa]
+dataset_id = "bigbio/med_qa"
+config = "med_qa_tw_source"
+revision = "e04abdc0672c54547fa1dbe36cfefc000e4f2657"
+sample_size = 5
+expected_train_rows = 11248
+expected_validation_rows = 1409
+expected_test_rows = 1413
+
+[data.medqa.source_sha256]
+train = "b2cb4b82a7c7ffc6f6f99465197f4dfc94b04464cf2ab517a67418641c617646"
+validation = "06c2334173f17ed0665088e920bbf0fb54bb64ef7432885747668235ed54701a"
+test = "799f6c7881d50b1101f168f31129aea699fec67401e2b8dc9464f1f84dc40c04"
+
+[data.tmmluplus]
+dataset_id = "ikala/tmmluplus"
+revision = "81d53e38340c9ade988f7fed8996da6554b504f3"
+
+[models.primary]
+model_id = "taide/Gemma-3-TAIDE-12b-Chat-2602"
+revision = "4de0b93b99f8b61b59c40d019fd593bdd1c42249"
+baseline_id = "google/gemma-3-12b-it"
+baseline_revision = "96b6f1eccf38110c56df3a15bffe176da04bfd80"
+requires_bf16 = true
+batch_size = 1
+gradient_accumulation_steps = 16
+max_sequence_length = 2048
+
+[[hardware_profiles]]
+name = "primary_80g"
+model_profile = "primary"
+min_vram_gib = 70.0
+min_compute_capability = [8, 0]
+requires_bf16 = true
+batch_size = 8
+gradient_accumulation_steps = 2
+max_sequence_length = 2048
+allow_tf32 = true
+
+[[hardware_profiles]]
+name = "primary_40g"
+model_profile = "primary"
+min_vram_gib = 38.0
+min_compute_capability = [8, 0]
+requires_bf16 = true
+batch_size = 4
+gradient_accumulation_steps = 4
+max_sequence_length = 2048
+allow_tf32 = true
+
+[[hardware_profiles]]
+name = "primary_24g"
+model_profile = "primary"
+min_vram_gib = 22.0
+min_compute_capability = [8, 0]
+requires_bf16 = true
+batch_size = 1
+gradient_accumulation_steps = 16
+max_sequence_length = 2048
+allow_tf32 = true
+
+[[hardware_profiles]]
+name = "fallback_16g"
+model_profile = "fallback"
+min_vram_gib = 14.0
+min_compute_capability = [7, 5]
+requires_bf16 = false
+batch_size = 2
+gradient_accumulation_steps = 8
+max_sequence_length = 2048
+allow_tf32 = false
+
+[models.fallback]
+model_id = "twinkle-ai/gemma-3-4B-T1-it"
+revision = "63b2bb819a7885b476c2ff98a418de8400661f9d"
+baseline_id = "google/gemma-3-4b-it"
+baseline_revision = "093f9f388b31de276ce2de164bdc2081324b9767"
+requires_bf16 = false
+batch_size = 2
+gradient_accumulation_steps = 8
+max_sequence_length = 2048
+
+[training]
+load_in_4bit = true
+lora_rank = 16
+lora_alpha = 16
+lora_dropout = 0.0
+learning_rate = 5e-5
+num_train_epochs = 1
+warmup_ratio = 0.03
+lr_scheduler_type = "cosine"
+optimizer = "adamw_8bit"
+smoke_examples = 100
+smoke_steps = 10
+save_steps = 100
+eval_steps = 100
+save_total_limit = 2
+
+[evaluation]
+calibration_examples = 20
+bootstrap_iterations = 10000
+full_shuffle_seed = 3407
+stability_seeds = [3407, 3408, 3409]
+stability_examples_per_subject = 100
+forgetting_margin_percentage_points = 2.0
+medical_subjects = [
+  "basic_medical_science",
+  "clinical_psychology",
+  "dentistry",
+  "occupational_therapy_for_psychological_disorders",
+  "optometry",
+  "pharmacology",
+  "pharmacy",
+  "traditional_chinese_medicine_clinical_medicine",
+]
+control_subjects = [
+  "chinese_language_and_literature",
+  "geography_of_taiwan",
+  "logic_reasoning",
+  "computer_science",
+  "general_principles_of_law",
+]
+
+[evaluation.generation]
+max_tokens = 256
+minimum_calibration_parse_rate = 0.8
+token_limit_hits_fail_calibration = false
+token_limit_hits_count_as_incorrect = true
+temperature = 0.0
+top_p = 1.0
+
+[evaluation.workload]
+medqa_test_rows = 1413
+tmmlu_test_rows = 5573
+full_model_count = 3
+stability_model_count = 2
+expected_medqa_full_requests = 4239
+expected_tmmlu_full_requests = 16719
+expected_tmmlu_stability_requests = 7800
+expected_total_requests = 28758
+
+[evaluation.full_approval]
+approved = true
+approved_at = "2026-07-22"
+approval_phrase = "確認解鎖 Phase 4 正式評估"
+required_approval_code = "PHASE4_FULL_28758_APPROVED_20260722"
+approved_requests = 28758
+calibration_run_id = "20260722T061028Z"
+calibration_manifest_sha256 = "d9c0f23e72808f0a8fc4edc1a7889719637f9390346725d5f72f10c4d3e2cdf2"
+calibration_validation_sha256 = "6c39aff8cd4e82b80d24a4ce7f7959e7b7fd5ba9546f2432ef3b7c96212b2d85"
+shard_size = 250
+parallel_workers = 4
+compute_units_per_hour = 5.3
+projected_hours = 2.979555188311461
+projected_compute_units = 15.791642498050743
+projected_compute_units_with_20pct_buffer = 18.94997099766089
+
+[evaluation.twinkle_eval]
+version = "2.8.0"
+repository = "https://github.com/ai-twinkle/Eval"
+revision = "470bbec130fa95c9e2e06c6a4b06db4a51390a06"
+extractor = "box"
+scorer = "exact_match"
+
+[evaluation.vllm]
+version = "0.25.1"
+wheel_variant = "cu129"
+wheel_url = "https://github.com/vllm-project/vllm/releases/download/v0.25.1/vllm-0.25.1%2Bcu129-cp38-abi3-manylinux_2_28_x86_64.whl"
+wheel_sha256 = "9e206f370c934a2d4b6b1f05d3d09708d344e05d80260189ef19f60755709431"
+torch_backend = "cu129"
+expected_torch_cuda = "12.9"
+uv_version = "0.11.31"
+quantization = "bitsandbytes"
+max_model_length = 2048
+gpu_memory_utilization = 0.85
+max_lora_rank = 16
+language_model_only = true
+
+[evaluation.phase3_adapter]
+selected_checkpoint = 700
+base_model_id = "taide/Gemma-3-TAIDE-12b-Chat-2602"
+drive_archive = "/content/drive/MyDrive/tw-med-llm-qlora/phase3/141226999eacb67ffd9a/full/runs/20260722T014216Z-phase3-full.zip"
+archive_sha256 = "2c537dfd3049319286c678a3ca3aa72e3f20baa7e0f44bde93ff7ee4dc47e43e"
+archive_bytes = 113079186
+
+[inference.windows_4090]
+required_gpu_name = "RTX 4090"
+minimum_vram_gib = 22.0
+minimum_compute_capability = [8, 9]
+requires_bf16 = true
+load_in_4bit = true
+quantization_type = "nf4"
+double_quantization = true
+attention_implementation = "sdpa"
+max_new_tokens = 64
+ollama_model_name = "tw-med-taide-12b"
+
+[inference.phase3_adapter]
+selected_checkpoint = 700
+base_model_id = "taide/Gemma-3-TAIDE-12b-Chat-2602"
+base_model_revision = "4de0b93b99f8b61b59c40d019fd593bdd1c42249"
+archive_sha256 = "2c537dfd3049319286c678a3ca3aa72e3f20baa7e0f44bde93ff7ee4dc47e43e"
+
+[publication]
+enabled = false
+adapter_repo_id = ""
+visibility = "private"
+github_repository_url = "https://github.com/kuotunyu/tw-med-llm-qlora"
+requires_explicit_repo_id = true
+requires_explicit_visibility_confirmation = true
+
+[export.gguf]
+enabled = false
+quantization_method = "q4_k_m"
+run_environment = "colab_linux"
