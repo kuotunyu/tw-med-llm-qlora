@@ -8,7 +8,7 @@
 
 ## 目前狀態
 
-Phase 0–4 已完成。TAIDE 12B 的 A100 40GB、11,248 筆、1 epoch QLoRA 已跑完，正式 adapter 選用完成 1,409 筆 validation 的 step 700。Phase 4 已完成 28,758 次正式生成與本機證據驗證：adapter 在 MedQA test 達 72.05%，在 13 科 TMMLU+ 達 61.53%，且五個非醫學控制科通過預先定義的 −2 個百分點 non-inferiority 判準。Phase 5 的 Windows RTX 4090 base + adapter acceptance 已通過；GitHub 公開目標已建立，尚待 hosted CI、Hugging Face 私人目標確認與 adapter 發布，權重尚未公開。
+Phase 0–4 已完成。TAIDE 12B 的 A100 40GB、11,248 筆、1 epoch QLoRA 已跑完，正式 adapter 選用完成 1,409 筆 validation 的 step 700。Phase 4 已完成 28,758 次正式生成與本機證據驗證：adapter 在 MedQA test 達 72.05%，在 13 科 TMMLU+ 達 61.53%，且五個非醫學控制科通過預先定義的 −2 個百分點 non-inferiority 判準。Phase 5 的 Windows RTX 4090 base + adapter acceptance 與 GitHub hosted Windows／Linux CPU CI 均已通過；目前只剩 Hugging Face 私人目標確認、adapter 發布與 receipt 驗證，權重尚未公開。
 
 ## 研究架構
 
@@ -45,11 +45,11 @@ flowchart LR
 | 2 | 100 筆、10 steps smoke test | 完成 |
 | 3 | 完整 QLoRA 與 checkpoint | 完成；證據驗證通過 |
 | 4 | MedQA + TMMLU+ 雙軌評估 | 完成；28,758 requests 與證據驗證通過 |
-| 5 | RTX 4090 推論與發布 | 進行中；4090 acceptance 通過，等待 hosted CI、HF 目標與 receipt |
+| 5 | RTX 4090 推論與發布 | 進行中；4090 acceptance 與 hosted CI 通過，等待 HF 目標與 receipt |
 
 每個 Phase 都必須先展示測試與產物，經確認後才進入下一階段。完整決策與執行紀錄見 [PROJECT_PLAN.md](PROJECT_PLAN.md)。
 
-Repository 內含最小權限、無 secrets 的 CPU CI；每次 push／pull request 會在 Windows 與 Linux 的 Python 3.11 環境，以 `uv.lock` 執行 Ruff、完整 pytest 及四份 notebook freshness 檢查。GPU smoke、完整訓練、正式評估與 4090 acceptance 不會在 CI 中誤觸。
+Repository 內含最小權限、無 secrets 的 CPU CI；每次 push／pull request 會在 Windows 與 Linux 的 Python 3.11 環境，以 `uv.lock` 執行 Ruff、完整 pytest 及四份 notebook freshness 檢查。公開 root commit `180e544` 的 [GitHub Actions CI #1](https://github.com/kuotunyu/tw-med-llm-qlora/actions/runs/29937271766) 已由 `windows-latest` 與 `ubuntu-latest` 實測通過。GPU smoke、完整訓練、正式評估與 4090 acceptance 不會在 CI 中誤觸。
 
 ## 快速開始
 
