@@ -206,8 +206,8 @@ base_model_revision = "4de0b93b99f8b61b59c40d019fd593bdd1c42249"
 archive_sha256 = "2c537dfd3049319286c678a3ca3aa72e3f20baa7e0f44bde93ff7ee4dc47e43e"
 
 [publication]
-enabled = false
-adapter_repo_id = ""
+enabled = true
+adapter_repo_id = "steven0226/tw-med-llm-qlora-adapter"
 visibility = "private"
 github_repository_url = "https://github.com/kuotunyu/tw-med-llm-qlora"
 requires_explicit_repo_id = true
