@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "phase": 5,
+  "created_at_utc": "2026-07-22T16:59:57.130391+00:00",
+  "repo_id": "steven0226/tw-med-llm-qlora-adapter",
+  "visibility": "private",
+  "commit_url": "https://huggingface.co/steven0226/tw-med-llm-qlora-adapter/commit/c2830d37fe6b5e73e6dd07e17efbb858979d0aa4",
+  "resolved_revision": "c2830d37fe6b5e73e6dd07e17efbb858979d0aa4",
+  "files": {
+    "adapter_config.json": {
+      "sha256": "bc062f9d62a5ff8a81ed1d9bb0ce8f777e4f1f5cd3c9d6bcef4f41e9c2813999",
+      "bytes": 1517
+    },
+    "adapter_model.safetensors": {
+      "sha256": "10c88d7749afc28f56f853ed68aa01c5199d7b4668de873e214c85299980a666",
+      "bytes": 131041608
+    },
+    "added_tokens.json": {
+      "sha256": "56470d94ee6b9e71b779912124532e7d2ae58703a4790baf9c665b9a21309a81",
+      "bytes": 1235625
+    },
+    "chat_template.jinja": {
+      "sha256": "e0c229b1264963a6eff6619fdc6b2898bc572870f3b7c3914297e637656518b8",
+      "bytes": 613
+    },
+    "preprocessor_config.json": {
+      "sha256": "c63dafba7e2813b103af3b313e76ec5b8be2fd2e3bb535c9a7b50a06b2cef686",
+      "bytes": 786
+    },
+    "processor_config.json": {
+      "sha256": "3ffd5f11778dc73e2b69b3c00535e4121e1badf7018136263cd17b5b34fbaa53",
+      "bytes": 70
+    },
+    "special_tokens_map.json": {
+      "sha256": "45a857d8a2495d0be30a5d2d6de03278195eb028b6e0b8efc248bfa697d65f05",
+      "bytes": 670
+    },
+    "tokenizer.json": {
+      "sha256": "bbcd89de930f73e545010f22ab9c8b0004593d664e280b0b08f5160ae50e1cb0",
+      "bytes": 43737557
+    },
+    "tokenizer.model": {
+      "sha256": "1299c11d7cf632ef3b4e11937501358ada021bbdf7c47638d13c0ee982f2e79c",
+      "bytes": 4689074
+    },
+    "tokenizer_config.json": {
+      "sha256": "9c8e2e9bd74cd41c84f492ce82d188c312e3c694557a32044b33c8bfddbf52cc",
+      "bytes": 10949097
+    },
+    "README.md": {
+      "sha256": "38b13f1e03b9aa913800a32e920b95b2cc29040467d29833255940d81d9837a4",
+      "bytes": 5281
+    }
+  },
+  "acceptance": {
+    "valid": true,
+    "phase": 5,
+    "gpu": "NVIDIA GeForce RTX 4090",
+    "base_model": "taide/Gemma-3-TAIDE-12b-Chat-2602",
+    "base_revision": "4de0b93b99f8b61b59c40d019fd593bdd1c42249",
+    "adapter_source_type": "local",
+    "adapter_revision": null,
+    "model_load_seconds": 84.69020420000015,
+    "first_token_seconds": 1.588571199999933,
+    "total_generation_seconds": 1.5895815000003495,
+    "peak_allocated_gib": 8.050415992736816,
+    "peak_reserved_gib": 11.5859375,
+    "parsed_answer": "C",
+    "private_content_absent": true
+  },
+  "token_recorded": false
+}
