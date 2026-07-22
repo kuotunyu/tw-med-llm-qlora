@@ -8,7 +8,7 @@
 
 ## 目前狀態
 
-Phase 0–4 已完成。TAIDE 12B 的 A100 40GB、11,248 筆、1 epoch QLoRA 已跑完，正式 adapter 選用完成 1,409 筆 validation 的 step 700。Phase 4 已完成 28,758 次正式生成與本機證據驗證：adapter 在 MedQA test 達 72.05%，在 13 科 TMMLU+ 達 61.53%，且五個非醫學控制科通過預先定義的 −2 個百分點 non-inferiority 判準。Phase 5 的 Windows RTX 4090 base + adapter acceptance 與 GitHub hosted Windows／Linux CPU CI 均已通過；目前只剩 Hugging Face 私人目標確認、adapter 發布與 receipt 驗證，權重尚未公開。
+Phase 0–4 已完成。TAIDE 12B 的 A100 40GB、11,248 筆、1 epoch QLoRA 已跑完，正式 adapter 選用完成 1,409 筆 validation 的 step 700。Phase 4 已完成 28,758 次正式生成與本機證據驗證：adapter 在 MedQA test 達 72.05%，在 13 科 TMMLU+ 達 61.53%，且五個非醫學控制科通過預先定義的 −2 個百分點 non-inferiority 判準。Phase 5 的 Windows RTX 4090 base + adapter acceptance 與 GitHub hosted Windows／Linux CPU CI 均已通過；Hugging Face 私人目標與 write token 已驗證，目前只剩 adapter dry-run、上傳與 receipt 驗證，權重尚未公開。
 
 ## 研究架構
 
@@ -45,7 +45,7 @@ flowchart LR
 | 2 | 100 筆、10 steps smoke test | 完成 |
 | 3 | 完整 QLoRA 與 checkpoint | 完成；證據驗證通過 |
 | 4 | MedQA + TMMLU+ 雙軌評估 | 完成；28,758 requests 與證據驗證通過 |
-| 5 | RTX 4090 推論與發布 | 進行中；4090 acceptance 與 hosted CI 通過，等待 HF 目標與 receipt |
+| 5 | RTX 4090 推論與發布 | 進行中；4090 acceptance、hosted CI 與 HF 私人目標通過，等待 receipt |
 
 每個 Phase 都必須先展示測試與產物，經確認後才進入下一階段。完整決策與執行紀錄見 [PROJECT_PLAN.md](PROJECT_PLAN.md)。
 
@@ -417,12 +417,12 @@ uv run tw-med-local-infer --adapter artifacts\phase3-step700-adapter --interacti
 
 ```powershell
 uv run tw-med-publish-adapter artifacts\phase3-step700-adapter `
-  --repo-id OWNER/ADAPTER_REPO `
+  --repo-id steven0226/tw-med-llm-qlora-adapter `
   --visibility private `
-  --github-url https://github.com/OWNER/tw-med-llm-qlora
+  --github-url https://github.com/kuotunyu/tw-med-llm-qlora
 ```
 
-真正執行前仍須全部滿足：4090 acceptance manifest 驗證通過、`configs/project.toml` 的 `publication.enabled=true`、設定中的 repo ID／GitHub URL／visibility 完全相符、`HF_TOKEN` 有 write 權限，以及 dry-run 顯示的一次性確認碼。GitHub 公開目標已固定為 `kuotunyu/tw-med-llm-qlora`；Hugging Face 將採私人發布，但目前尚未確認具有寫入權限的 namespace，因此 `adapter_repo_id` 留空且 `publication.enabled=false`。確認精確目標後仍須先展示 dry-run allowlist，再以綁定該 repo 與 visibility 的一次性確認碼解鎖。程式碼 MIT License 不代表 adapter 權重採 MIT；adapter 的使用與再發布必須遵守 gated 基底模型的現行條款。
+真正執行前仍須全部滿足：4090 acceptance manifest 驗證通過、`configs/project.toml` 的 `publication.enabled=true`、設定中的 repo ID／GitHub URL／visibility 完全相符、`HF_TOKEN` 有 write 權限，以及 dry-run 顯示的一次性確認碼。GitHub 公開目標固定為 `kuotunyu/tw-med-llm-qlora`；Hugging Face 私人目標固定為 `steven0226/tw-med-llm-qlora-adapter`，且已驗證 token 身分為 `steven0226`、權限為 write、repository 可見性為 private。正式上傳前仍須先展示 dry-run allowlist，再以綁定該 repo 與 visibility 的一次性確認碼解鎖。程式碼 MIT License 不代表 adapter 權重採 MIT；adapter 的使用與再發布必須遵守 gated 基底模型的現行條款。
 
 ### 選配 GGUF 與 Ollama
 

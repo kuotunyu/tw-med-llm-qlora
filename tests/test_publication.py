@@ -102,12 +102,12 @@ def test_execution_gate_can_be_closed_explicitly(tmp_path: Path) -> None:
         )
 
 
-def test_repository_publication_gate_stays_closed_until_hf_target_is_confirmed() -> None:
+def test_repository_publication_gate_matches_confirmed_private_target() -> None:
     publication = load_project_config(ROOT / "configs" / "project.toml").raw["publication"]
 
     assert publication == {
-        "enabled": False,
-        "adapter_repo_id": "",
+        "enabled": True,
+        "adapter_repo_id": "steven0226/tw-med-llm-qlora-adapter",
         "visibility": "private",
         "github_repository_url": "https://github.com/kuotunyu/tw-med-llm-qlora",
         "requires_explicit_repo_id": True,

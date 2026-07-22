@@ -24,7 +24,7 @@
 | 2 Smoke test | 完成 | 100 筆／10 steps 無 OOM/NaN，adapter 可重載，完成成本估算；使用者確認 |
 | 3 完整訓練 | 完成 | checkpoint 可恢復、adapter/曲線/manifest 完整、validation 指標完成；使用者已確認跨 Phase |
 | 4 雙軌評估 | 完成；28,758 requests、公開／私人封存與本機證據驗證均通過 | MedQA 三模型表、TMMLU+ 分科／穩定度／遺忘判定完成 |
-| 5 本機與發布 | 進行中；step-700 adapter、RTX 4090 acceptance 與 GitHub hosted CI 已驗證，等待 HF 私人目標與 receipt | 4090 推論通過、模型卡完成、使用者核准目標與可見性、GitHub hosted CI 通過、HF publication receipt 驗證通過 |
+| 5 本機與發布 | 進行中；step-700 adapter、RTX 4090 acceptance、GitHub hosted CI 與 HF 私人目標已驗證，等待 dry-run、上傳與 receipt | 4090 推論通過、模型卡完成、使用者核准目標與可見性、GitHub hosted CI 通過、HF publication receipt 驗證通過 |
 
 ## 鎖定決策
 
@@ -64,6 +64,7 @@
 | 2026-07-22 | RTX 4090 acceptance 以內容安全 manifest 作正式證據 | 固定 synthetic probe 僅保存 prompt／raw output hash；驗證器重算硬體、base revision、adapter hash、量化、延遲、VRAM 與 strict answer，正文不進 Git |
 | 2026-07-22 | 發布採 GitHub public、Hugging Face adapter private 的分階段策略 | 使用者核准 `kuotunyu/tw-med-llm-qlora` 公開與 `kuotunyu/tw-med-llm-qlora-adapter` 私人；先取得 hosted CI 與私人重載證據，未另行核准前不把 adapter 改為公開 |
 | 2026-07-22 | 公開版清理時重新關閉 HF 發布 gate | 現有 credential 無法寫入原核准的 HF namespace；保留 GitHub 公開 URL，將 `adapter_repo_id` 清空並設 `publication.enabled=false`，待精確可寫入的私人目標再次確認 |
+| 2026-07-23 | HF 私人發布目標改為可寫入 namespace | 使用者建立 `steven0226/tw-med-llm-qlora-adapter` 並確認為 private；本機 `.env` token 的 `whoami` 為 `steven0226`、role 為 write，且可讀取該私人 repository。設定精確目標並重新開啟 publication gate，實際上傳仍須 dry-run 與一次性確認碼 |
 
 ## 固定技術規格
 
@@ -132,7 +133,7 @@
 | Phase 3 full 訓練曲線 | 已驗證 | [reports/phase3/full/20260722T014216Z-training_curves.png](reports/phase3/full/20260722T014216Z-training_curves.png) |
 | Phase 3 full 驗證摘要 | 13 項不變量通過 | [reports/phase3/full/20260722T014216Z-validation.json](reports/phase3/full/20260722T014216Z-validation.json) |
 | 評估結果 | 正式 MedQA／TMMLU+ 結果與統計均已完成 | [reports/phase4/full/public/phase4-results.json](reports/phase4/full/public/phase4-results.json) |
-| Adapter | step 700 已完成並通過正式評估；私人發布 namespace 待重新確認，尚未上傳 | `adapter_repo_id` 暫空 |
+| Adapter | step 700 已完成並通過正式評估；私人目標與 write token 已驗證，尚未上傳 | `steven0226/tw-med-llm-qlora-adapter` |
 
 ## 執行紀錄
 
@@ -244,6 +245,7 @@
 | 2026-07-22 | 5 | 清理公開 snapshot 並重新關閉 HF gate | GitHub 公開 repo 已建立但尚未推送；移除完成後不再需要的離線交接工具、重複規範與 pre-4090 快照。現有 HF credential 無原 namespace 寫入權限，因此清空 adapter 目標並關閉發布 gate | 完成公開版測試；由使用者建立乾淨 Git 歷史並推送 |
 | 2026-07-22 | 5 | 完成公開版清理驗收 | 移除 13 個公開雜訊檔案；四份 notebook 依安全設定重建。`pytest` 177 passed、Ruff、`uv lock --check`、四份 notebook freshness、Markdown 本機連結、credential shape 與公開 report 禁止欄位掃描全部通過 | 停在 Git 閘門；由使用者檢視變更並建立乾淨公開歷史 |
 | 2026-07-23 | 5 | 建立乾淨公開歷史並驗證 hosted CI | 使用者以無 parent 的 root commit `180e544 chore: 建立可重現研究專案` 推送 `main`；公開 repository 僅包含清理後快照。本機 `archive/pre-public-history` 未推送。GitHub Actions run #1 的 `windows-latest` 與 `ubuntu-latest` 均成功 | 記錄 hosted CI 證據；確認可寫入的 HF 私人 namespace |
+| 2026-07-23 | 5 | 建立並驗證 HF 私人目標 | 使用者建立 `steven0226/tw-med-llm-qlora-adapter`，頁面標示 private；以 `.env` token 呼叫 `whoami` 與 `repo_info`，回報 account `steven0226`、role `write`、repo ID 相符且 private=true，全程未輸出 token | 設定精確目標、重建 notebooks 並完成發布前本機驗收 |
 
 ## 已知風險
 
@@ -271,4 +273,4 @@
 
 Phase 5 的 Windows RTX 4090 base + adapter acceptance 已完成，內容安全 manifest 與獨立驗證均通過。Windows CUDA wheel 路由已固定在 `uv.lock`，模型卡、發布 dry-run、完成度稽核器與選配 GGUF／Ollama 仍維持既有安全閘門。
 
-GitHub `kuotunyu/tw-med-llm-qlora` 已以乾淨 root commit 公開，hosted Windows／Linux CPU CI 均通過。下一個必要動作是確認具有寫入權限的 Hugging Face 私人 namespace；`adapter_repo_id` 與發布 gate 仍保持清空／關閉。確認精確目標後，再執行 adapter dry-run、展示 allowlist 與一次性確認碼，最後上傳並驗證 publication receipt。GGUF export 保持關閉；HF adapter 未另行核准前不改為公開。
+GitHub `kuotunyu/tw-med-llm-qlora` 已以乾淨 root commit 公開，hosted Windows／Linux CPU CI 均通過。Hugging Face 私人目標 `steven0226/tw-med-llm-qlora-adapter` 與 write token 也已驗證，`adapter_repo_id` 已固定並重新開啟 publication gate。下一個必要動作是重建 notebooks、完成本機驗收並提交設定，再執行 adapter dry-run、展示 allowlist 與一次性確認碼，最後上傳並驗證 publication receipt。GGUF export 保持關閉；HF adapter 未另行核准前不改為公開。
