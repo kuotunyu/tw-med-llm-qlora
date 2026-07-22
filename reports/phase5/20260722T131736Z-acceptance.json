@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "created_at_utc": "2026-07-22T13:17:36.028200+00:00",
+  "phase": 5,
+  "base_model": {
+    "model_id": "taide/Gemma-3-TAIDE-12b-Chat-2602",
+    "revision": "4de0b93b99f8b61b59c40d019fd593bdd1c42249"
+  },
+  "adapter": {
+    "source_type": "local",
+    "repo_id": null,
+    "local_path_sha256": "cc079185651596e4de9089b7b8448f0a645e998742a43f22243db783f06a2d8e",
+    "base_model_name_or_path": "taide/Gemma-3-TAIDE-12b-Chat-2602",
+    "base_model_revision": null,
+    "peft_type": "LORA",
+    "task_type": "CAUSAL_LM",
+    "inference_mode": true,
+    "config_sha256": "bc062f9d62a5ff8a81ed1d9bb0ce8f777e4f1f5cd3c9d6bcef4f41e9c2813999",
+    "weights_sha256": "10c88d7749afc28f56f853ed68aa01c5199d7b4668de873e214c85299980a666",
+    "resolved_revision": null,
+    "requested_revision": null
+  },
+  "hardware": {
+    "eligible": true,
+    "failures": [],
+    "os": "Windows",
+    "required": {
+      "gpu_name_contains": "RTX 4090",
+      "minimum_vram_gib": 22.0,
+      "minimum_compute_capability": [8, 9],
+      "bf16": true
+    },
+    "nvidia_smi": {
+      "name": "NVIDIA GeForce RTX 4090",
+      "total_vram_mib": 24564,
+      "compute_capability": [8, 9],
+      "driver_version": "591.86",
+      "total_vram_gib": 23.98828125
+    },
+    "torch": {
+      "torch_version": "2.10.0+cu128",
+      "torch_cuda_version": "12.8",
+      "cuda_available": true,
+      "bf16_supported": true,
+      "device_name": "NVIDIA GeForce RTX 4090",
+      "compute_capability": [8, 9]
+    }
+  },
+  "quantization": {
+    "load_in_4bit": true,
+    "quant_type": "nf4",
+    "compute_dtype": "bfloat16",
+    "double_quant": true,
+    "attention": "sdpa"
+  },
+  "timing": {
+    "model_load_seconds": 84.69020420000015,
+    "first_token_seconds": 1.588571199999933,
+    "total_generation_seconds": 1.5895815000003495
+  },
+  "memory": {
+    "peak_allocated_gib": 8.050415992736816,
+    "peak_reserved_gib": 11.5859375
+  },
+  "generation": {
+    "prompt_sha256": "b3696914c215952bdf4d55c7cd4ba938370e1fd29676cf1b3ca9cb58b80d9cfc",
+    "raw_output_sha256": "6b23c0d5f35d1b11f9b683f0b0a617355deb11277d91ae091d399c655b87940d",
+    "parsed_answer": "C",
+    "prompt_tokens": 50,
+    "completion_tokens": 2
+  },
+  "medical_disclaimer": "research use only; not medical advice",
+  "acceptance": {
+    "probe": "synthetic_unit_mcq_v1",
+    "expected_answer": "C",
+    "passed": true
+  }
+}

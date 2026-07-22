@@ -1,0 +1,10 @@
+{
+  "phase": 4,
+  "run_mode": "calibration",
+  "drive_private_archive": "/content/drive/MyDrive/tw-med-llm-qlora/phase4/calibration/runs/20260722T052039Z-phase4-calibration-private.zip",
+  "drive_manifest": "/content/drive/MyDrive/tw-med-llm-qlora/phase4/calibration/runs/20260722T052039Z-run-manifest.json",
+  "drive_calibration_summary": "/content/drive/MyDrive/tw-med-llm-qlora/phase4/calibration/runs/20260722T052039Z-calibration-summary.json",
+  "archive_sha256": "fa5bc1f408211aea2c0942c93ee8c28db302c54e3cc334238fd408980dc5af60",
+  "archive_bytes": 33320,
+  "full_evaluation_unlocked": false
+}

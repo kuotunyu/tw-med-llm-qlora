@@ -1,0 +1,40 @@
+{
+  "label": "validation calibration only; not a Phase 4 test result",
+  "split": "validation",
+  "unique_questions": 20,
+  "models": {
+    "original-instruct": {
+      "total": 20,
+      "parsed": 17,
+      "parse_failures": 3,
+      "correct": 9,
+      "accuracy": 0.45,
+      "parse_rate": 0.85
+    },
+    "localized-base": {
+      "total": 20,
+      "parsed": 0,
+      "parse_failures": 20,
+      "correct": 0,
+      "accuracy": 0.0,
+      "parse_rate": 0.0
+    },
+    "localized-medical-adapter": {
+      "total": 20,
+      "parsed": 0,
+      "parse_failures": 20,
+      "correct": 0,
+      "accuracy": 0.0,
+      "parse_rate": 0.0
+    }
+  },
+  "inference_seconds": {
+    "original-instruct": 6.085337910000021,
+    "localized-base": 9.394319334000102,
+    "localized-medical-adapter": 1.200959070999943
+  },
+  "server_startup_seconds": [
+    350.03662314900004,
+    330.0358913749999
+  ]
+}

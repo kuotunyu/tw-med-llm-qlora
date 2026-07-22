@@ -1,0 +1,83 @@
+{
+  "dataset": {
+    "config": "med_qa_tw_source",
+    "id": "bigbio/med_qa",
+    "revision": "e04abdc0672c54547fa1dbe36cfefc000e4f2657",
+    "schema_fields": [
+      "answer",
+      "answer_idx",
+      "meta_info",
+      "options",
+      "question"
+    ],
+    "source_file": "med_qa_tw_source/train/0000.parquet",
+    "source_file_sha256": "b2cb4b82a7c7ffc6f6f99465197f4dfc94b04464cf2ab517a67418641c617646",
+    "source_rows": 11298,
+    "split": "train"
+  },
+  "gate": "medqa_five_row_sample",
+  "packages": {
+    "huggingface-hub": "1.24.0",
+    "pyarrow": "25.0.0",
+    "python-dotenv": "1.2.2",
+    "transformers": "5.14.1"
+  },
+  "sample": {
+    "checks": {
+      "answer_key_valid": true,
+      "answer_text_matches": true,
+      "chat_template_round_trip": true,
+      "exactly_four_choices": true,
+      "single_bos": true,
+      "utf8_round_trip": true
+    },
+    "content_sha256": "fa5803883788018bb49d6248e87ed984b64b0f8bc8a90eac5d42d008214c778b",
+    "example_ids": [
+      "e1f418cf9f186bd1f55e",
+      "9946c5abb634c5c7500b",
+      "1ed04f9346029ffcba33",
+      "62aff22949adc8e29bbb",
+      "f19526a0f8ef5d14ab34"
+    ],
+    "requested_rows": 5,
+    "valid_rows": 5
+  },
+  "schema_version": 1,
+  "tokenizer": {
+    "class": "GemmaTokenizer",
+    "model_id": "taide/Gemma-3-TAIDE-12b-Chat-2602",
+    "revision": "4de0b93b99f8b61b59c40d019fd593bdd1c42249",
+    "template_checks": [
+      {
+        "bos_count": 1,
+        "rendered_sha256": "3a32d903b68dcb19737ed10c7f96c8d060f7aab1d512f4baec6beed597c30de4",
+        "round_trip_equal": true,
+        "token_count": 87
+      },
+      {
+        "bos_count": 1,
+        "rendered_sha256": "db7d986411777fa751fe9469a381a1f854cd36c5a40faa6313bff672d61fb706",
+        "round_trip_equal": true,
+        "token_count": 83
+      },
+      {
+        "bos_count": 1,
+        "rendered_sha256": "18161d6a0c46bc0834024a2241629e94b3c6d3f209a3485406916cee0b46d7f6",
+        "round_trip_equal": true,
+        "token_count": 112
+      },
+      {
+        "bos_count": 1,
+        "rendered_sha256": "41aa49122f8c883683b3a3739b8857233f5b2de186c2ac2e36ed4c77b77fb434",
+        "round_trip_equal": true,
+        "token_count": 136
+      },
+      {
+        "bos_count": 1,
+        "rendered_sha256": "e403bb00c78c468594b215ca4b313b7c6eff217140b7581e580ade1e26d8b8bc",
+        "round_trip_equal": true,
+        "token_count": 143
+      }
+    ]
+  }
+}

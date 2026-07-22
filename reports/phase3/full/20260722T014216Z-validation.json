@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "phase": 3,
+  "run_mode": "full",
+  "run_id": "20260722T014216Z",
+  "status": "pass",
+  "source_artifacts": {
+    "manifest": "20260722T014216Z-run-manifest.json",
+    "manifest_sha256": "2b7ab94de7f208c12eed7cf2fd6d2740e8819d50aadf511c3b17d4128f370104",
+    "receipt": "20260722T014216Z-receipt.json",
+    "receipt_sha256": "cff34652bdf63eddbb8615b9936f96a0b7fdcbd76a136611af138a9ddc5405e5",
+    "trainer_log": "20260722T014216Z-trainer_log.csv",
+    "trainer_log_sha256": "6a97aa4b28052b86a0d25fcd9ac97f0acae7ab5a655997725b7b45cc1cbcbb1b",
+    "training_curves": "20260722T014216Z-training_curves.png",
+    "training_curves_sha256": "1d0dd8397304e8868d7df82525c4ca0d0973e00b13d84647baf16ca5d6a55142",
+    "drive_archive_sha256": "2c537dfd3049319286c678a3ca3aa72e3f20baa7e0f44bde93ff7ee4dc47e43e"
+  },
+  "validated_invariants": [
+    "full_training_approval_verified",
+    "same_a100_40g_profile_as_calibration",
+    "pinned_complete_base_snapshot",
+    "full_train_and_validation_counts",
+    "test_excluded_from_trainer",
+    "response_only_masking",
+    "703_training_steps_with_finite_logged_training_loss",
+    "finite_full_validation_for_selected_adapter_checkpoint",
+    "non_finite_step_703_validation_rejected_when_applicable",
+    "checkpoint_integrity_and_final_checkpoint_restore",
+    "adapter_saved_reloaded_and_strictly_parsed",
+    "trainer_log_and_curve_hashes_match_receipt",
+    "no_private_question_or_secret_fields"
+  ],
+  "hardware": {
+    "gpu": "NVIDIA A100-SXM4-40GB",
+    "profile": "primary_40g",
+    "precision": "BF16",
+    "total_vram_gib": 39.4935302734375
+  },
+  "training": {
+    "train_examples": 11248,
+    "validation_examples": 1409,
+    "steps": 703,
+    "selected_adapter_step": 700,
+    "completed_steps_this_session": 703,
+    "resumed": false,
+    "training_loss": 0.2871782784780771,
+    "final_eval_loss": 0.22702080011367798,
+    "first_logged_loss": 1.1682,
+    "last_logged_loss": 0.2393,
+    "peak_allocated_gib": 11.414080142974854,
+    "peak_reserved_gib": 12.359375,
+    "training_wall_seconds": 3993.54839548,
+    "final_eval_wall_seconds": 122.1772
+  },
+  "checkpoint": {
+    "restored_global_step": 700,
+    "selected_adapter_step": 700,
+    "archives_written_this_session": 8,
+    "retention_limit": 2
+  },
+  "cost": {
+    "approved_projected_hours": 4.9976232099665765,
+    "approved_projected_compute_units": 26.487403012822856,
+    "approved_buffered_compute_units": 31.784883615387425,
+    "measured_training_and_final_eval_hours": 1.1432571098555557,
+    "measured_training_and_final_eval_compute_units": 6.059262682234445,
+    "monetary_estimate": null
+  },
+  "reload_probe": {
+    "split": "validation",
+    "strict_parse": true,
+    "correct": false,
+    "note": "single reload probe; not an accuracy evaluation"
+  }
+}

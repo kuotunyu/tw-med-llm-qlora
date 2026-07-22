@@ -1,0 +1,31 @@
+{
+  "status": "passed",
+  "errors": [],
+  "checks": {
+    "request_count": 28758,
+    "unique_model_request_pairs": 28758,
+    "public_archive_sha256": "1804c26d602d49a9c7b48fe611f6f1acb9a6b492eed568c41be50d7bc2284f76",
+    "private_cases_archive_sha256": "4d314d74d54234af51ce8bc1df6adcfe93dc9afacc4eb183b796db2bbabf163e",
+    "public_content_keys_blocked": [
+      "choices",
+      "prompt",
+      "question",
+      "raw_output"
+    ],
+    "private_representative_cases": 10,
+    "suite_counts": {
+      "localized-base/medqa-full": 1413,
+      "localized-base/tmmlu-full": 5573,
+      "localized-base/tmmlu-stability-3407": 1300,
+      "localized-base/tmmlu-stability-3408": 1300,
+      "localized-base/tmmlu-stability-3409": 1300,
+      "localized-medical-adapter/medqa-full": 1413,
+      "localized-medical-adapter/tmmlu-full": 5573,
+      "localized-medical-adapter/tmmlu-stability-3407": 1300,
+      "localized-medical-adapter/tmmlu-stability-3408": 1300,
+      "localized-medical-adapter/tmmlu-stability-3409": 1300,
+      "original-instruct/medqa-full": 1413,
+      "original-instruct/tmmlu-full": 5573
+    }
+  }
+}

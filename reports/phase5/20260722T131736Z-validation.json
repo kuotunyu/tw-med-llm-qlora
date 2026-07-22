@@ -1,0 +1,16 @@
+{
+  "valid": true,
+  "phase": 5,
+  "gpu": "NVIDIA GeForce RTX 4090",
+  "base_model": "taide/Gemma-3-TAIDE-12b-Chat-2602",
+  "base_revision": "4de0b93b99f8b61b59c40d019fd593bdd1c42249",
+  "adapter_source_type": "local",
+  "adapter_revision": null,
+  "model_load_seconds": 84.69020420000015,
+  "first_token_seconds": 1.588571199999933,
+  "total_generation_seconds": 1.5895815000003495,
+  "peak_allocated_gib": 8.050415992736816,
+  "peak_reserved_gib": 11.5859375,
+  "parsed_answer": "C",
+  "private_content_absent": true
+}

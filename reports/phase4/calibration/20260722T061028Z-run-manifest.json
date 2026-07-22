@@ -1,0 +1,167 @@
+{
+  "schema_version": 1,
+  "phase": 4,
+  "run_mode": "calibration",
+  "created_at_utc": "2026-07-22T06:22:44.435209+00:00",
+  "full_evaluation_unlocked": false,
+  "test_files_loaded": 0,
+  "project_seed": 3407,
+  "hardware": {
+    "gpu_name": "NVIDIA A100-SXM4-40GB",
+    "gpu_vram_gib": 39.4935302734375,
+    "compute_capability": [
+      8,
+      0
+    ],
+    "bf16_supported": true,
+    "torch_version": "2.11.0+cu129",
+    "cuda_version": "12.9",
+    "platform": "Linux-6.6.122+-x86_64-with-glibc2.35"
+  },
+  "models": {
+    "original": {
+      "id": "google/gemma-3-12b-it",
+      "revision": "96b6f1eccf38110c56df3a15bffe176da04bfd80"
+    },
+    "localized_base": {
+      "id": "taide/Gemma-3-TAIDE-12b-Chat-2602",
+      "revision": "4de0b93b99f8b61b59c40d019fd593bdd1c42249"
+    },
+    "adapter": {
+      "archive_sha256": "2c537dfd3049319286c678a3ca3aa72e3f20baa7e0f44bde93ff7ee4dc47e43e",
+      "archive_bytes": 113079186,
+      "adapter_dir": "/content/tw-med-phase4-adapter/adapter",
+      "base_model_id": "taide/Gemma-3-TAIDE-12b-Chat-2602",
+      "adapter_config_sha256": "bc062f9d62a5ff8a81ed1d9bb0ce8f777e4f1f5cd3c9d6bcef4f41e9c2813999",
+      "weight_files": [
+        "adapter_model.safetensors"
+      ]
+    }
+  },
+  "data": {
+    "dataset_id": "ikala/tmmluplus",
+    "revision": "81d53e38340c9ade988f7fed8996da6554b504f3",
+    "split": "validation",
+    "unique_questions": 20,
+    "subject_count": 13,
+    "ordered_ids_sha256": "57936ce314438d901bf331cd03204b02f6bc8bb0b8befbe7ecca5dd6da743a8a"
+  },
+  "dependencies": {
+    "vllm": {
+      "module": "vllm",
+      "module_available": true,
+      "expected_version": "0.25.1+cu129",
+      "installed_version": "0.25.1+cu129"
+    },
+    "twinkle-eval": {
+      "module": "twinkle_eval",
+      "module_available": true,
+      "expected_version": "2.8.0",
+      "installed_version": "2.8.0"
+    },
+    "bitsandbytes": {
+      "module": "bitsandbytes",
+      "module_available": true,
+      "expected_version": "0.49.2",
+      "installed_version": "0.49.2"
+    },
+    "native_cuda_preflight": {
+      "cuda_available": true,
+      "gpu_name": "NVIDIA A100-SXM4-40GB",
+      "torch_cuda": "12.9",
+      "torch_version": "2.11.0+cu129",
+      "vllm_version": "0.25.1+cu129"
+    }
+  },
+  "twinkle_eval_contract": {
+    "repository": "https://github.com/ai-twinkle/Eval",
+    "revision": "470bbec130fa95c9e2e06c6a4b06db4a51390a06",
+    "extractor": "strict standalone A-D or exactly one simple boxed A-D; Twinkle audit=box",
+    "scorer": "exact_match",
+    "shuffle_options_inside_runner": false
+  },
+  "workload": {
+    "medqa_full": 4239,
+    "tmmlu_full": 16719,
+    "tmmlu_stability": 7800,
+    "total": 28758
+  },
+  "calibration_summary": {
+    "label": "validation calibration only; not a Phase 4 test result",
+    "split": "validation",
+    "unique_questions": 20,
+    "models": {
+      "original-instruct": {
+        "total": 20,
+        "parsed": 20,
+        "parse_failures": 0,
+        "correct": 10,
+        "accuracy": 0.5,
+        "parse_rate": 1.0,
+        "completion_tokens_total": 68,
+        "max_token_limit_hits": 0
+      },
+      "localized-base": {
+        "total": 20,
+        "parsed": 16,
+        "parse_failures": 4,
+        "correct": 9,
+        "accuracy": 0.45,
+        "parse_rate": 0.8,
+        "completion_tokens_total": 1120,
+        "max_token_limit_hits": 4
+      },
+      "localized-medical-adapter": {
+        "total": 20,
+        "parsed": 20,
+        "parse_failures": 0,
+        "correct": 11,
+        "accuracy": 0.55,
+        "parse_rate": 1.0,
+        "completion_tokens_total": 40,
+        "max_token_limit_hits": 0
+      }
+    },
+    "generation_contract": {
+      "parser": "standalone_A-D_or_exactly_one_simple_boxed_A-D",
+      "scorer": "exact_match",
+      "max_tokens": 256,
+      "minimum_parse_rate": 0.8
+    },
+    "inference_seconds": {
+      "original-instruct": 4.288960493000104,
+      "localized-base": 15.45988799099996,
+      "localized-medical-adapter": 1.2011201400000573
+    },
+    "server_startup_seconds": [
+      355.04227512299985,
+      330.03644131500005
+    ],
+    "generation_gate": {
+      "passed": false,
+      "parse_rate_failures": {},
+      "max_token_limit_failures": {
+        "localized-base": 4
+      },
+      "failure_action": "Do not unlock full evaluation; review archived evidence."
+    }
+  },
+  "cost_estimate": {
+    "measured_requests": 60,
+    "measured_seconds_per_request": 0.3491661437333354,
+    "planned_server_starts": 2,
+    "projected_seconds": 10726.39867792126,
+    "projected_hours": 2.979555188311461,
+    "compute_units_per_hour_user_input": 5.3,
+    "projected_compute_units": 15.791642498050743,
+    "buffer_fraction": 0.2,
+    "projected_compute_units_with_buffer": 18.94997099766089,
+    "price_per_compute_unit_user_input": null,
+    "estimated_cost": null,
+    "currency_user_input": null
+  },
+  "private_archive": {
+    "sha256": "a90c2ef0386c556be3590faafe01aead714ff1ac3147e4c2118e36c4d5c87e0a",
+    "bytes": 33486
+  }
+}

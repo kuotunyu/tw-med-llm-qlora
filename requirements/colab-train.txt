@@ -1,0 +1,17 @@
+# Direct Phase 3 dependencies verified against the official Gemma 3 notebook.
+# Colab owns the CUDA/PyTorch base image; Unsloth resolves its matching xformers/Triton
+# wheels, and the notebook records their exact installed versions with pip freeze.
+unsloth[colab-new]==2026.7.4
+unsloth-zoo==2026.7.4
+transformers==4.56.2
+trl==0.22.2
+datasets==4.3.0
+peft==0.19.1
+bitsandbytes==0.49.2
+accelerate==1.14.0
+huggingface-hub==0.35.3
+pyarrow==25.0.0
+sentencepiece==0.2.2
+protobuf==6.33.5
+matplotlib==3.11.1
+wandb==0.28.1

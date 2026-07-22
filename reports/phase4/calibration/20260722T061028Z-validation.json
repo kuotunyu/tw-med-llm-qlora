@@ -1,0 +1,78 @@
+{
+  "status": "pass_after_protocol_review",
+  "evidence_integrity": "pass",
+  "phase": 4,
+  "run_mode": "calibration",
+  "run_id": "20260722T061028Z",
+  "test_isolation": {
+    "manifest_test_files_loaded": 0,
+    "private_archive_test_members": 0,
+    "full_evaluation_unlocked": false
+  },
+  "hardware": {
+    "gpu_name": "NVIDIA A100-SXM4-40GB",
+    "gpu_vram_gib": 39.4935302734375,
+    "torch_version": "2.11.0+cu129",
+    "cuda_version": "12.9",
+    "vllm_version": "0.25.1+cu129"
+  },
+  "calibration": {
+    "split": "validation",
+    "unique_questions": 20,
+    "requests": 60,
+    "format_audit": {
+      "original-instruct": {
+        "rows": 20,
+        "reparsed": 20,
+        "reparsed_correct": 10,
+        "exact_standalone_answers": 14,
+        "responses_with_one_valid_box": 6,
+        "responses_with_multiple_valid_boxes": 0,
+        "minimum_characters": 1,
+        "maximum_characters": 9,
+        "mean_characters": 3.6
+      },
+      "localized-base": {
+        "rows": 20,
+        "reparsed": 16,
+        "reparsed_correct": 9,
+        "exact_standalone_answers": 0,
+        "responses_with_one_valid_box": 16,
+        "responses_with_multiple_valid_boxes": 0,
+        "minimum_characters": 9,
+        "maximum_characters": 519,
+        "mean_characters": 98.35
+      },
+      "localized-medical-adapter": {
+        "rows": 20,
+        "reparsed": 20,
+        "reparsed_correct": 11,
+        "exact_standalone_answers": 20,
+        "responses_with_one_valid_box": 0,
+        "responses_with_multiple_valid_boxes": 0,
+        "minimum_characters": 1,
+        "maximum_characters": 1,
+        "mean_characters": 1.0
+      }
+    }
+  },
+  "diagnosis": {
+    "parser_contract": "standalone_A-D_or_exactly_one_simple_boxed_A-D",
+    "all_public_counts_reproduced_from_private_outputs": true,
+    "producer_generation_gate_passed": false,
+    "reviewed_generation_gate_passed": true,
+    "parse_rate_failures": {},
+    "observed_max_token_limit_hits": {
+      "localized-base": 4
+    },
+    "reviewed_token_limit_policy": "count_as_incorrect_and_report",
+    "conclusion": "The producer gate failed only because token-limit hits were fatal; the reviewed policy counts those outputs as incorrect and reports them."
+  },
+  "cost_projection_is_provisional": false,
+  "artifact_sha256": {
+    "manifest": "d9c0f23e72808f0a8fc4edc1a7889719637f9390346725d5f72f10c4d3e2cdf2",
+    "receipt": "b7f4e7ddb0dc51f33a83ec16bd63897d1e18f6331fd492b253331d0196de4075",
+    "calibration_summary": "0c795327da8dec57f62d49e3329b5170adeeef318ea299d06e062b8e7cba8335",
+    "private_archive": "a90c2ef0386c556be3590faafe01aead714ff1ac3147e4c2118e36c4d5c87e0a"
+  }
+}

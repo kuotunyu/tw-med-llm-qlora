@@ -1,0 +1,75 @@
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tw-med-llm-qlora"
+version = "0.1.0"
+description = "Reproducible Traditional Chinese medical MCQ QLoRA research toolkit"
+readme = "README.md"
+requires-python = ">=3.11,<3.12"
+license = { file = "LICENSE" }
+authors = [{ name = "tw-med-llm-qlora contributors" }]
+dependencies = []
+
+[project.scripts]
+tw-med-local-infer = "tw_med_qlora.local_inference:main"
+tw-med-validate-phase5 = "tw_med_qlora.cli.validate_phase5_evidence:main"
+tw-med-phase5-status = "tw_med_qlora.cli.phase5_status:main"
+tw-med-publish-adapter = "tw_med_qlora.cli.publish_adapter:main"
+
+[dependency-groups]
+data = [
+  "huggingface-hub>=1.20.1,<2",
+  "pyarrow>=25,<26",
+  "python-dotenv>=1.2.2,<2",
+  "transformers[chat-template]>=5.14.1,<6",
+]
+dev = [
+  "nbformat>=5.10,<6",
+  "pytest>=8.3,<9",
+  "ruff>=0.12,<1",
+]
+inference = [
+  "accelerate>=1.14,<2",
+  "bitsandbytes>=0.49.2,<0.50",
+  "huggingface-hub>=1.20.1,<2",
+  "peft>=0.19.1,<0.20",
+  "pillow>=12,<13",
+  "python-dotenv>=1.2.2,<2",
+  "safetensors>=0.7,<1",
+  "torch>=2.10,<2.11",
+  "torchvision>=0.25,<0.26",
+  "transformers[chat-template]>=5.14.1,<6",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.uv.sources]
+torch = [
+  { index = "pytorch-cu128", marker = "sys_platform == 'win32'" },
+]
+torchvision = [
+  { index = "pytorch-cu128", marker = "sys_platform == 'win32'" },
+]
+
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url = "https://download.pytorch.org/whl/cu128"
+explicit = true
+
+[tool.pytest.ini_options]
+addopts = "-ra"
+pythonpath = ["src"]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.ruff.lint.per-file-ignores]
+"notebooks/*.ipynb" = ["F821"]

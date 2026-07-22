@@ -1,0 +1,213 @@
+{
+  "schema_version": 1,
+  "phase": 4,
+  "run_mode": "full",
+  "created_at_utc": "2026-07-22T09:39:43.200273+00:00",
+  "full_evaluation_unlocked": true,
+  "user_approval": {
+    "approved_at": "2026-07-22",
+    "approval_phrase": "確認解鎖 Phase 4 正式評估",
+    "approved_requests": 28758
+  },
+  "contract": {
+    "schema_version": 1,
+    "approval_code": "PHASE4_FULL_28758_APPROVED_20260722",
+    "workload": {
+      "medqa_full": 4239,
+      "tmmlu_full": 16719,
+      "tmmlu_stability": 7800,
+      "total": 28758
+    },
+    "models": {
+      "original-instruct": {
+        "id": "google/gemma-3-12b-it",
+        "revision": "96b6f1eccf38110c56df3a15bffe176da04bfd80"
+      },
+      "localized-base": {
+        "id": "taide/Gemma-3-TAIDE-12b-Chat-2602",
+        "revision": "4de0b93b99f8b61b59c40d019fd593bdd1c42249"
+      },
+      "localized-medical-adapter": {
+        "archive_bytes": 113079186,
+        "archive_sha256": "2c537dfd3049319286c678a3ca3aa72e3f20baa7e0f44bde93ff7ee4dc47e43e",
+        "base_model_id": "taide/Gemma-3-TAIDE-12b-Chat-2602",
+        "drive_archive": "/content/drive/MyDrive/tw-med-llm-qlora/phase3/141226999eacb67ffd9a/full/runs/20260722T014216Z-phase3-full.zip",
+        "selected_checkpoint": 700
+      }
+    },
+    "data": {
+      "medqa": {
+        "config": "med_qa_tw_source",
+        "dataset_id": "bigbio/med_qa",
+        "expected_test_rows": 1413,
+        "expected_train_rows": 11248,
+        "expected_validation_rows": 1409,
+        "revision": "e04abdc0672c54547fa1dbe36cfefc000e4f2657",
+        "sample_size": 5,
+        "source_sha256": {
+          "test": "799f6c7881d50b1101f168f31129aea699fec67401e2b8dc9464f1f84dc40c04",
+          "train": "b2cb4b82a7c7ffc6f6f99465197f4dfc94b04464cf2ab517a67418641c617646",
+          "validation": "06c2334173f17ed0665088e920bbf0fb54bb64ef7432885747668235ed54701a"
+        }
+      },
+      "tmmluplus": {
+        "dataset_id": "ikala/tmmluplus",
+        "revision": "81d53e38340c9ade988f7fed8996da6554b504f3"
+      }
+    },
+    "generation": {
+      "max_tokens": 256,
+      "minimum_calibration_parse_rate": 0.8,
+      "temperature": 0.0,
+      "token_limit_hits_count_as_incorrect": true,
+      "token_limit_hits_fail_calibration": false,
+      "top_p": 1.0
+    },
+    "statistics": {
+      "bootstrap_iterations": 10000,
+      "forgetting_margin_percentage_points": 2.0,
+      "medical_subjects": [
+        "basic_medical_science",
+        "clinical_psychology",
+        "dentistry",
+        "occupational_therapy_for_psychological_disorders",
+        "optometry",
+        "pharmacology",
+        "pharmacy",
+        "traditional_chinese_medicine_clinical_medicine"
+      ],
+      "control_subjects": [
+        "chinese_language_and_literature",
+        "geography_of_taiwan",
+        "logic_reasoning",
+        "computer_science",
+        "general_principles_of_law"
+      ]
+    },
+    "full_shuffle_seed": 3407,
+    "stability_seeds": [
+      3407,
+      3408,
+      3409
+    ],
+    "stability_examples_per_subject": 100,
+    "calibration_manifest_sha256": "d9c0f23e72808f0a8fc4edc1a7889719637f9390346725d5f72f10c4d3e2cdf2",
+    "calibration_validation_sha256": "6c39aff8cd4e82b80d24a4ce7f7959e7b7fd5ba9546f2432ef3b7c96212b2d85"
+  },
+  "contract_fingerprint": "bd654c530af218684315b98a25568b046f32a8e768c78489e00f4b69b8c21143",
+  "hardware": {
+    "gpu_name": "NVIDIA A100-SXM4-40GB",
+    "gpu_vram_gib": 39.4935302734375,
+    "compute_capability": [
+      8,
+      0
+    ],
+    "bf16_supported": true,
+    "torch_version": "2.11.0+cu129",
+    "cuda_version": "12.9",
+    "platform": "Linux-6.6.122+-x86_64-with-glibc2.35"
+  },
+  "dependencies": {
+    "vllm": {
+      "module": "vllm",
+      "module_available": true,
+      "expected_version": "0.25.1+cu129",
+      "installed_version": "0.25.1+cu129"
+    },
+    "twinkle-eval": {
+      "module": "twinkle_eval",
+      "module_available": true,
+      "expected_version": "2.8.0",
+      "installed_version": "2.8.0"
+    },
+    "bitsandbytes": {
+      "module": "bitsandbytes",
+      "module_available": true,
+      "expected_version": "0.49.2",
+      "installed_version": "0.49.2"
+    },
+    "native_cuda_preflight": {
+      "vllm_version": "0.25.1+cu129",
+      "torch_version": "2.11.0+cu129",
+      "torch_cuda": "12.9",
+      "cuda_available": true,
+      "gpu_name": "NVIDIA A100-SXM4-40GB"
+    }
+  },
+  "adapter": {
+    "archive_sha256": "2c537dfd3049319286c678a3ca3aa72e3f20baa7e0f44bde93ff7ee4dc47e43e",
+    "archive_bytes": 113079186,
+    "adapter_dir": "/content/tw-med-phase4-adapter/adapter",
+    "base_model_id": "taide/Gemma-3-TAIDE-12b-Chat-2602",
+    "adapter_config_sha256": "bc062f9d62a5ff8a81ed1d9bb0ce8f777e4f1f5cd3c9d6bcef4f41e9c2813999",
+    "weight_files": [
+      "adapter_model.safetensors"
+    ]
+  },
+  "data": {
+    "medqa_test_rows": 1413,
+    "medqa_content_fingerprint": "291501e9b4dc5634518635643e6087ae9b48f168b2af1d1f76ce154d03f012b0",
+    "tmmlu_test_rows": 5573,
+    "tmmlu_test_counts": {
+      "basic_medical_science": 954,
+      "clinical_psychology": 125,
+      "dentistry": 399,
+      "occupational_therapy_for_psychological_disorders": 543,
+      "optometry": 920,
+      "pharmacology": 577,
+      "pharmacy": 391,
+      "traditional_chinese_medicine_clinical_medicine": 278,
+      "chinese_language_and_literature": 199,
+      "geography_of_taiwan": 768,
+      "logic_reasoning": 139,
+      "computer_science": 174,
+      "general_principles_of_law": 106
+    },
+    "stability_rows_per_seed": 1300,
+    "loaded_splits": [
+      "medqa:test",
+      "tmmluplus:test"
+    ],
+    "train_rows_loaded": 0,
+    "validation_rows_loaded": 0,
+    "prompt_or_hyperparameter_selection_after_test_load": false
+  },
+  "twinkle_eval_contract": {
+    "extractor": "box",
+    "repository": "https://github.com/ai-twinkle/Eval",
+    "revision": "470bbec130fa95c9e2e06c6a4b06db4a51390a06",
+    "scorer": "exact_match",
+    "version": "2.8.0",
+    "strict_parser": "standalone A-D or exactly one simple boxed A-D",
+    "runner_shuffle_options": false
+  },
+  "resumption": {
+    "shard_size": 250,
+    "completed_shards": 123,
+    "completed_requests": 28758,
+    "drive_shard_root": "/content/drive/MyDrive/tw-med-llm-qlora/phase4/full/bd654c530af218684315b98a25568b046f32a8e768c78489e00f4b69b8c21143/shards"
+  },
+  "session_wall_seconds": 9151.011407673,
+  "server_startup_seconds": {
+    "original-instruct": 340.03710945299997,
+    "localized-with-adapter": 315.03390145000003
+  },
+  "cost_accounting": {
+    "basis": "parser-v3 A100 calibration",
+    "projected_hours": 2.979555188311461,
+    "compute_units_per_hour": 5.3,
+    "projected_compute_units": 15.791642498050743,
+    "projected_compute_units_with_20pct_buffer": 18.94997099766089,
+    "this_session_wall_hours": 2.5419476132425003,
+    "this_session_compute_units_estimate": 13.472322350185252,
+    "resume_note": "若曾中斷續跑，總 CU 需加總各 Colab session；本欄只估算完成這次 notebook session。"
+  },
+  "public_archive": {
+    "sha256": "1804c26d602d49a9c7b48fe611f6f1acb9a6b492eed568c41be50d7bc2284f76",
+    "bytes": 1589761
+  },
+  "private_cases_archive": {
+    "sha256": "4d314d74d54234af51ce8bc1df6adcfe93dc9afacc4eb183b796db2bbabf163e",
+    "bytes": 5157
+  }
+}

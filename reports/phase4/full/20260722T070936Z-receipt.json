@@ -1,0 +1,12 @@
+{
+  "phase": 4,
+  "run_mode": "full",
+  "contract_fingerprint": "bd654c530af218684315b98a25568b046f32a8e768c78489e00f4b69b8c21143",
+  "drive_public_archive": "/content/drive/MyDrive/tw-med-llm-qlora/phase4/full/bd654c530af218684315b98a25568b046f32a8e768c78489e00f4b69b8c21143/final/runs/20260722T070936Z-phase4-full-public.zip",
+  "drive_private_cases_archive": "/content/drive/MyDrive/tw-med-llm-qlora/phase4/full/bd654c530af218684315b98a25568b046f32a8e768c78489e00f4b69b8c21143/final/runs/20260722T070936Z-phase4-cases-private.zip",
+  "drive_manifest": "/content/drive/MyDrive/tw-med-llm-qlora/phase4/full/bd654c530af218684315b98a25568b046f32a8e768c78489e00f4b69b8c21143/final/runs/20260722T070936Z-run-manifest.json",
+  "public_archive_sha256": "1804c26d602d49a9c7b48fe611f6f1acb9a6b492eed568c41be50d7bc2284f76",
+  "private_cases_archive_sha256": "4d314d74d54234af51ce8bc1df6adcfe93dc9afacc4eb183b796db2bbabf163e",
+  "completed_requests": 28758,
+  "raw_shards_remain_private": "/content/drive/MyDrive/tw-med-llm-qlora/phase4/full/bd654c530af218684315b98a25568b046f32a8e768c78489e00f4b69b8c21143/shards"
+}

@@ -1,0 +1,197 @@
+{
+  "cost_estimate": {
+    "basis": "measured Phase 2 smoke wall time",
+    "compute_units_per_hour_user_input": null,
+    "currency_user_input": null,
+    "effective_batch_size": 16,
+    "epochs": 1.0,
+    "estimated_cost": null,
+    "full_steps": 703,
+    "full_train_examples": 11248,
+    "price_per_compute_unit_user_input": null,
+    "projected_compute_units": null,
+    "projected_hours": 13.364688529723646
+  },
+  "created_at_utc": "2026-07-21T16:24:55.876225+00:00",
+  "data": {
+    "audit": {
+      "ambiguous_rows": {
+        "test": 0,
+        "train": 5,
+        "validation": 1
+      },
+      "clean_rows": {
+        "test": 1413,
+        "train": 11248,
+        "validation": 1409
+      },
+      "duplicate_removals": {
+        "train->test": 8,
+        "train->train": 28,
+        "train->validation": 6,
+        "validation->test": 1,
+        "validation->validation": 1
+      },
+      "smoke_ids_sha256": "4fd155c1e3088e0c13fd0fee0282f6368932ad45289f49e1ab0c3d9ff492eb3d",
+      "smoke_rows": 100,
+      "source": {
+        "test": {
+          "invalid_reasons": {},
+          "invalid_rows": 0,
+          "parsed_rows": 1413,
+          "raw_rows": 1413,
+          "source_sha256": "799f6c7881d50b1101f168f31129aea699fec67401e2b8dc9464f1f84dc40c04"
+        },
+        "train": {
+          "invalid_reasons": {
+            "answer must be a non-empty string": 1,
+            "options[0].value must be a non-empty string": 1,
+            "options[1].value must be a non-empty string": 1
+          },
+          "invalid_rows": 3,
+          "parsed_rows": 11295,
+          "raw_rows": 11298,
+          "source_sha256": "b2cb4b82a7c7ffc6f6f99465197f4dfc94b04464cf2ab517a67418641c617646"
+        },
+        "validation": {
+          "invalid_reasons": {},
+          "invalid_rows": 0,
+          "parsed_rows": 1412,
+          "raw_rows": 1412,
+          "source_sha256": "06c2334173f17ed0665088e920bbf0fb54bb64ef7432885747668235ed54701a"
+        }
+      },
+      "test_used_for_training": false,
+      "trainer_referenced_splits": [
+        "train"
+      ],
+      "validation_probe_id": "542f3d5ea6a81debd19c"
+    },
+    "dataset_id": "bigbio/med_qa",
+    "revision": "e04abdc0672c54547fa1dbe36cfefc000e4f2657"
+  },
+  "full_training_enabled": false,
+  "gpu": {
+    "allow_tf32": true,
+    "bf16_supported": true,
+    "compute_capability": [
+      8,
+      9
+    ],
+    "name": "NVIDIA L4",
+    "precision": "BF16",
+    "total_vram_gib": 22.0343017578125
+  },
+  "model": {
+    "adapter_base_verified": true,
+    "hardware_profile": "primary_24g",
+    "load_in_4bit": true,
+    "model_id": "taide/Gemma-3-TAIDE-12b-Chat-2602",
+    "model_profile": "primary",
+    "revision": "4de0b93b99f8b61b59c40d019fd593bdd1c42249",
+    "snapshot_audit": {
+      "complete": true,
+      "free_disk_gib_before_download": 182.81951904296875,
+      "indexed_shards": [
+        "model-00001-of-00006.safetensors",
+        "model-00002-of-00006.safetensors",
+        "model-00003-of-00006.safetensors",
+        "model-00004-of-00006.safetensors",
+        "model-00005-of-00006.safetensors",
+        "model-00006-of-00006.safetensors"
+      ],
+      "remote_weight_files": [
+        "model-00001-of-00006.safetensors",
+        "model-00002-of-00006.safetensors",
+        "model-00003-of-00006.safetensors",
+        "model-00004-of-00006.safetensors",
+        "model-00005-of-00006.safetensors",
+        "model-00006-of-00006.safetensors"
+      ],
+      "repo_id": "taide/Gemma-3-TAIDE-12b-Chat-2602",
+      "revision": "4de0b93b99f8b61b59c40d019fd593bdd1c42249",
+      "snapshot_path": "/root/.cache/huggingface/hub/models--taide--Gemma-3-TAIDE-12b-Chat-2602/snapshots/4de0b93b99f8b61b59c40d019fd593bdd1c42249",
+      "tokenizer_source": "/root/.cache/huggingface/hub/models--taide--Gemma-3-TAIDE-12b-Chat-2602/snapshots/4de0b93b99f8b61b59c40d019fd593bdd1c42249",
+      "vlm_processor_required": true,
+      "weight_bytes": 27246744536,
+      "weight_gib": 25.37550827115774
+    }
+  },
+  "outputs": {
+    "adapter": "/content/tw-med-llm-qlora/20260721T160727Z/adapter",
+    "evidence": "/content/tw-med-llm-qlora/20260721T160727Z/evidence",
+    "trainer": "/content/tw-med-llm-qlora/20260721T160727Z/trainer"
+  },
+  "packages": {
+    "accelerate": "1.14.0",
+    "bitsandbytes": "0.49.2",
+    "datasets": "4.3.0",
+    "huggingface-hub": "0.35.3",
+    "peft": "0.19.1",
+    "torch": "2.10.0+cu128",
+    "transformers": "4.56.2",
+    "triton": "3.6.0",
+    "trl": "0.22.2",
+    "unsloth": "2026.7.4",
+    "unsloth-zoo": "2026.7.4",
+    "xformers": "0.0.35"
+  },
+  "phase": 2,
+  "reload_check": {
+    "adapter_parameters": 65470464,
+    "adapter_reloaded": true,
+    "base_source": "pinned_local_snapshot",
+    "generation_tokenizer": "GemmaTokenizerFast",
+    "gold": "D",
+    "prediction": "B",
+    "probe_id": "542f3d5ea6a81debd19c",
+    "probe_split": "validation",
+    "published_base_model_id": "taide/Gemma-3-TAIDE-12b-Chat-2602",
+    "raw_output_sha256": "df7e70e5021544f4834bbee64a9e3789febc4be81470df629cad6ddb03320a5c",
+    "strict_parse": true,
+    "trainable_adapter_parameters": 0
+  },
+  "run_id": "20260721T160727Z",
+  "schema_version": 1,
+  "training": {
+    "batch_size": 1,
+    "gradient_accumulation_steps": 16,
+    "learning_rate": 5e-05,
+    "lora_alpha": 16,
+    "lora_rank": 16,
+    "masking_audit": {
+      "data_collator": "DataCollatorForLanguageModeling",
+      "last_response_only": true,
+      "masked_prompt_tokens": 246,
+      "processing_class": "GemmaTokenizerFast",
+      "response_loss_tokens": 3,
+      "test_passed_to_trainer": false,
+      "vision_collator": false
+    },
+    "max_sequence_length": 2048,
+    "response_only_loss": true,
+    "seed": 3407,
+    "smoke_metrics": {
+      "all_losses_finite": true,
+      "logged_losses": [
+        0.7228,
+        0.7818,
+        0.7604,
+        0.715,
+        0.6199,
+        0.3921,
+        0.4374,
+        0.454,
+        0.411,
+        0.3233
+      ],
+      "oom": false,
+      "peak_allocated_gib": 9.332640171051025,
+      "peak_reserved_gib": 11.189453125,
+      "seconds_per_step": 68.43937227170004,
+      "steps": 10,
+      "training_loss": 0.5617829531431198,
+      "wall_seconds": 684.3937227170004
+    }
+  }
+}

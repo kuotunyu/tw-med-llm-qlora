@@ -1,0 +1,36 @@
+{
+  "phase": 3,
+  "run_mode": "full",
+  "experiment_fingerprint": "141226999eacb67ffd9a",
+  "drive_archive": "/content/drive/MyDrive/tw-med-llm-qlora/phase3/141226999eacb67ffd9a/full/runs/20260722T014216Z-phase3-full.zip",
+  "drive_manifest": "/content/drive/MyDrive/tw-med-llm-qlora/phase3/141226999eacb67ffd9a/full/runs/20260722T014216Z-run-manifest.json",
+  "archive_sha256": "2c537dfd3049319286c678a3ca3aa72e3f20baa7e0f44bde93ff7ee4dc47e43e",
+  "archive_bytes": 113079186,
+  "drive_evidence": {
+    "trainer_log.csv": {
+      "path": "/content/drive/MyDrive/tw-med-llm-qlora/phase3/141226999eacb67ffd9a/full/runs/20260722T014216Z-trainer_log.csv",
+      "sha256": "6a97aa4b28052b86a0d25fcd9ac97f0acae7ab5a655997725b7b45cc1cbcbb1b",
+      "bytes": 6198
+    },
+    "trainer_log.json": {
+      "path": "/content/drive/MyDrive/tw-med-llm-qlora/phase3/141226999eacb67ffd9a/full/runs/20260722T014216Z-trainer_log.json",
+      "sha256": "f4b58f24064d6dc30c48ffc21b50bb57aac463d95dc2f349ab72d36484064053",
+      "bytes": 12585
+    },
+    "training_curves.png": {
+      "path": "/content/drive/MyDrive/tw-med-llm-qlora/phase3/141226999eacb67ffd9a/full/runs/20260722T014216Z-training_curves.png",
+      "sha256": "1d0dd8397304e8868d7df82525c4ca0d0973e00b13d84647baf16ca5d6a55142",
+      "bytes": 79834
+    },
+    "MODEL_CARD_DRAFT.md": {
+      "path": "/content/drive/MyDrive/tw-med-llm-qlora/phase3/141226999eacb67ffd9a/full/runs/20260722T014216Z-MODEL_CARD_DRAFT.md",
+      "sha256": "001bbf31f694d46b58e3380b0c27c200a9e5a819d970587ae28598e0cae95f26",
+      "bytes": 855
+    },
+    "pip-freeze.txt": {
+      "path": "/content/drive/MyDrive/tw-med-llm-qlora/phase3/141226999eacb67ffd9a/full/runs/20260722T014216Z-pip-freeze.txt",
+      "sha256": "1e919e6b5909fd6e36cbb6eb0748fa95470b993342023c0cdbed548c7c9fad70",
+      "bytes": 14153
+    }
+  }
+}
