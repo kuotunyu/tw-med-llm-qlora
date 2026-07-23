@@ -47,7 +47,7 @@ flowchart LR
 | 4 | MedQA + TMMLU+ 雙軌評估 | 完成；28,758 requests 與證據驗證通過 |
 | 5 | RTX 4090 推論與發布 | 完成；4090 acceptance、hosted CI、HF 私人發布與 receipt 驗證通過 |
 
-每個 Phase 都必須先展示測試與產物，經確認後才進入下一階段。完整決策與執行紀錄見 [PROJECT_PLAN.md](PROJECT_PLAN.md)。
+每個 Phase 都必須先展示測試與產物，經確認後才進入下一階段。可公開的實測結果、限制與重現方式收斂於本 README，機器可驗證的內容安全證據則歸檔於 [`reports/`](reports/)。
 
 Repository 內含最小權限、無 secrets 的 CPU CI；每次 push／pull request 會在 Windows 與 Linux 的 Python 3.11 環境，以 `uv.lock` 執行 Ruff、完整 pytest 及四份 notebook freshness 檢查。公開 root commit `180e544` 的 [GitHub Actions CI #1](https://github.com/kuotunyu/tw-med-llm-qlora/actions/runs/29937271766)，以及 publication 換行修正 `e804526` 的 [CI #4](https://github.com/kuotunyu/tw-med-llm-qlora/actions/runs/29940013658)，均由 `windows-latest` 與 `ubuntu-latest` 實測通過。GPU smoke、完整訓練、正式評估與 4090 acceptance 不會在 CI 中誤觸。
 

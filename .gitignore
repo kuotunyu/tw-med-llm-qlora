@@ -10,6 +10,12 @@ __pycache__/
 .mypy_cache/
 .ipynb_checkpoints/
 
+# Local Codex workflow and private execution journal
+AGENTS.md
+PROJECT_PLAN.md
+.codex/
+tests/test_project_skill.py
+
 # Local datasets and generated artifacts
 data/raw/
 data/processed/
