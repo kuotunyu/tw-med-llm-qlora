@@ -4,20 +4,27 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "tw-med-llm-qlora"
-version = "0.1.0"
+version = "0.2.0"
 description = "Reproducible Traditional Chinese medical MCQ QLoRA research toolkit"
 readme = "README.md"
 requires-python = ">=3.11,<3.12"
 license = "MIT"
 license-files = ["LICENSE"]
-authors = [{ name = "tw-med-llm-qlora contributors" }]
+authors = [{ name = "kuotunyu" }]
 dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/kuotunyu/tw-med-llm-qlora"
+Model = "https://huggingface.co/steven0226/tw-med-llm-qlora-adapter"
+Changelog = "https://github.com/kuotunyu/tw-med-llm-qlora/blob/main/CHANGELOG.md"
+Issues = "https://github.com/kuotunyu/tw-med-llm-qlora/issues"
 
 [project.scripts]
 tw-med-local-infer = "tw_med_qlora.local_inference:main"
 tw-med-validate-phase5 = "tw_med_qlora.cli.validate_phase5_evidence:main"
 tw-med-phase5-status = "tw_med_qlora.cli.phase5_status:main"
 tw-med-publish-adapter = "tw_med_qlora.cli.publish_adapter:main"
+tw-med-verify-public-adapter = "tw_med_qlora.cli.verify_public_adapter:main"
 
 [dependency-groups]
 data = [

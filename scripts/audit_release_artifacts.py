@@ -12,12 +12,21 @@ from pathlib import Path, PurePosixPath
 from typing import Any
 
 EXPECTED_NAME = "tw-med-llm-qlora"
-EXPECTED_VERSION = "0.1.0"
+EXPECTED_VERSION = "0.2.0"
+NORMALIZED_NAME = EXPECTED_NAME.replace("-", "_")
+RELEASE_ROOT = f"{NORMALIZED_NAME}-{EXPECTED_VERSION}"
 EXPECTED_SCRIPTS = {
     "tw-med-local-infer": "tw_med_qlora.local_inference:main",
     "tw-med-phase5-status": "tw_med_qlora.cli.phase5_status:main",
     "tw-med-publish-adapter": "tw_med_qlora.cli.publish_adapter:main",
     "tw-med-validate-phase5": "tw_med_qlora.cli.validate_phase5_evidence:main",
+    "tw-med-verify-public-adapter": "tw_med_qlora.cli.verify_public_adapter:main",
+}
+EXPECTED_PROJECT_URLS = {
+    "Changelog": "https://github.com/kuotunyu/tw-med-llm-qlora/blob/main/CHANGELOG.md",
+    "Homepage": "https://github.com/kuotunyu/tw-med-llm-qlora",
+    "Issues": "https://github.com/kuotunyu/tw-med-llm-qlora/issues",
+    "Model": "https://huggingface.co/steven0226/tw-med-llm-qlora-adapter",
 }
 FORBIDDEN_PARTS = {
     ".codex",
@@ -48,6 +57,8 @@ FORBIDDEN_SUFFIXES = {
     ".safetensors",
 }
 SDIST_ALLOWED_ROOTS = {
+    "CHANGELOG.md",
+    "CITATION.cff",
     "LICENSE",
     "MANIFEST.in",
     "PKG-INFO",
@@ -59,7 +70,7 @@ SDIST_ALLOWED_ROOTS = {
 
 
 class ReleaseAuditError(RuntimeError):
-    """Raised when an artifact violates the v0.1.0 release contract."""
+    """Raised when an artifact violates the current release contract."""
 
 
 def sha256_file(path: Path) -> str:
@@ -91,7 +102,7 @@ def validated_members(names: list[str], *, strip_sdist_root: bool) -> list[PureP
             for member in members
             if len(member.parts) > 1
         ]
-        if root != "tw_med_llm_qlora-0.1.0":
+        if root != RELEASE_ROOT:
             raise ReleaseAuditError(f"unexpected sdist root: {root}")
 
     for member in members:
@@ -112,6 +123,10 @@ def parse_metadata(text: str) -> dict[str, Any]:
         "requires_python": metadata["Requires-Python"],
         "license_expression": metadata["License-Expression"],
         "license_files": metadata.get_all("License-File", []),
+        "project_urls": dict(
+            value.split(", ", maxsplit=1)
+            for value in metadata.get_all("Project-URL", [])
+        ),
     }
     expected = {
         "name": EXPECTED_NAME,
@@ -131,6 +146,11 @@ def parse_metadata(text: str) -> dict[str, Any]:
         )
     if "LICENSE" not in result["license_files"]:
         raise ReleaseAuditError("metadata does not declare LICENSE")
+    if result["project_urls"] != EXPECTED_PROJECT_URLS:
+        raise ReleaseAuditError(
+            "metadata project_urls: "
+            f"expected {EXPECTED_PROJECT_URLS!r}, got {result['project_urls']!r}"
+        )
     return result
 
 
@@ -155,7 +175,7 @@ def audit_wheel(path: Path) -> dict[str, Any]:
     with zipfile.ZipFile(path) as archive:
         members = validated_members(archive.namelist(), strip_sdist_root=False)
         roots = {member.parts[0] for member in members if member.parts}
-        dist_info = "tw_med_llm_qlora-0.1.0.dist-info"
+        dist_info = f"{RELEASE_ROOT}.dist-info"
         if roots != {"tw_med_qlora", dist_info}:
             raise ReleaseAuditError(f"unexpected wheel roots: {sorted(roots)}")
         required = {
@@ -189,6 +209,8 @@ def audit_sdist(path: Path) -> dict[str, Any]:
         if unexpected:
             raise ReleaseAuditError(f"unexpected sdist roots: {sorted(unexpected)}")
         required = {
+            PurePosixPath("CHANGELOG.md"),
+            PurePosixPath("CITATION.cff"),
             PurePosixPath("LICENSE"),
             PurePosixPath("MANIFEST.in"),
             PurePosixPath("PKG-INFO"),
@@ -199,7 +221,7 @@ def audit_sdist(path: Path) -> dict[str, Any]:
         missing = required.difference(members)
         if missing:
             raise ReleaseAuditError(f"sdist is missing: {sorted(map(str, missing))}")
-        member = archive.getmember("tw_med_llm_qlora-0.1.0/PKG-INFO")
+        member = archive.getmember(f"{RELEASE_ROOT}/PKG-INFO")
         extracted = archive.extractfile(member)
         if extracted is None:
             raise ReleaseAuditError("cannot read sdist PKG-INFO")
