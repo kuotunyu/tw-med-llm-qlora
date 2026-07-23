@@ -68,7 +68,12 @@ def validate_publication_receipt(
         raise Phase5ReadinessError("publication receipt phase or token policy is invalid")
     publication = config.raw["publication"]
     repo_id = str(publication.get("adapter_repo_id", ""))
-    visibility = str(publication.get("visibility", ""))
+    visibility = str(
+        publication.get(
+            "phase5_receipt_visibility",
+            publication.get("visibility", ""),
+        )
+    )
     if receipt.get("repo_id") != repo_id or receipt.get("visibility") != visibility:
         raise Phase5ReadinessError("publication receipt target does not match project config")
     if not _COMMIT.fullmatch(str(receipt.get("resolved_revision", ""))):

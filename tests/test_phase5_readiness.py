@@ -128,6 +128,7 @@ def publication_config():
             "enabled": True,
             "adapter_repo_id": "owner/adapter",
             "visibility": "public",
+            "phase5_receipt_visibility": "public",
             "github_repository_url": "https://github.com/owner/repository",
         }
     )
@@ -165,6 +166,16 @@ def test_publication_receipt_contract_is_content_safe(tmp_path: Path) -> None:
     assert validated["valid"] is True
     assert validated["resolved_revision"] == "b" * 40
     assert validated["token_absent"] is True
+
+
+def test_archived_private_receipt_remains_valid_after_phase7_target_change() -> None:
+    validated = validate_publication_receipt(
+        ROOT / "reports" / "phase5" / "20260722T165957Z-publication-receipt.json",
+        config=config(),
+    )
+
+    assert validated["valid"] is True
+    assert validated["visibility"] == "private"
 
 
 def test_publication_receipt_rejects_token_policy_violation(tmp_path: Path) -> None:
@@ -207,4 +218,3 @@ def test_readiness_requires_every_gate_before_completion(
     assert report["ready_for_handoff"] is True
     assert report["ready_for_publication"] is True
     assert report["phase5_complete"] is True
-
