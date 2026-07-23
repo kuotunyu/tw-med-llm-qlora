@@ -6,6 +6,7 @@
 - Confirm `.env`, data, model weights, checkpoints, and private generations are ignored.
 - Record exact dataset/model revisions, seed, hardware, package lock, commands, and outputs.
 - Run pytest and any Phase-specific validation.
+- Run `uv run pytest -q tests/test_project_skill.py` to validate the repo-local workflow skill.
 - Update the execution log before committing.
 - Stop at the Phase gate and request confirmation.
 
@@ -13,7 +14,6 @@
 
 - Validate Python 3.11 and `uv.lock`.
 - Run `pytest` and `ruff check .`.
-- Run the skill `quick_validate.py` checker.
 - Verify `git check-ignore .env` succeeds and `.env` is not staged.
 
 ## Phase 1
@@ -50,4 +50,3 @@
 - Recheck current GGUF export API before optional conversion.
 - Verify model-card licensing and medical-use disclaimers.
 - Publish only after the user confirms repository targets and visibility.
-

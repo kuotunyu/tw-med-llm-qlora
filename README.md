@@ -444,15 +444,19 @@ GGUF 不阻塞 adapter 交付。現行 Unsloth 官方 API 為 `save_pretrained_g
 
 notebook 會硬性檢查 A100、BF16、至少 38 GiB VRAM、100 GiB 本機空間、20 GiB Drive 空間、Phase 3 archive 大小與 SHA-256。首次 A100 執行因部分 Hugging Face cache 讓 Unsloth／Transformers 取得空的權重路徑而停止；第二次已完成固定 snapshot 與 adapter 載入，但標準 PEFT wrapper 將 `save_pretrained_gguf` 委派給底層 base model，Unsloth 因而只轉換 base，並在 requested output／Drive 複製前被產物 gate 攔下。兩次都沒有可接受的 GGUF receipt 或外部上傳。
 
-修正版先完整下載固定 revision，逐一驗證遠端 safetensors、index shard、tokenizer 與必要 processor，再把已驗證 adapter 複製到僅供本次執行的目錄，將其 base 路徑綁定到本機 snapshot，直接交由 Unsloth 建立 PEFT model。昂貴轉檔前必須同時通過 `PeftModel` 類型、active adapter、LoRA 參數與 GGUF method owner 四項檢查。成功 run 證實 `PeftModelForCausalLM`、active adapter `default` 與 672 個 LoRA parameter tensors，並產生一個 8,165,172,704-byte Q4_K_M 主 GGUF 及一個 854,200,608-byte `mmproj`；兩者都依 Unsloth 回傳的實際路徑複製到 Drive 並逐檔寫入 receipt。Ollama 驗收只以主 GGUF 執行文字 probe，`mmproj` 目前只做完整性歸檔，不宣稱視覺能力已驗證。每次執行使用獨立 `run_id`，不自動發布或上傳外部模型服務。帶回 Windows RTX 4090 後執行：
+修正版先完整下載固定 revision，逐一驗證遠端 safetensors、index shard、tokenizer 與必要 processor，再把已驗證 adapter 複製到僅供本次執行的目錄，將其 base 路徑綁定到本機 snapshot，直接交由 Unsloth 建立 PEFT model。昂貴轉檔前必須同時通過 `PeftModel` 類型、active adapter、LoRA 參數與 GGUF method owner 四項檢查。成功 run 證實 `PeftModelForCausalLM`、active adapter `default` 與 672 個 LoRA parameter tensors，並產生一個 8,165,172,704-byte Q4_K_M 主 GGUF及一個 854,200,608-byte `mmproj`；兩者都依 Unsloth 回傳的實際路徑複製到 Drive 並逐檔寫入 receipt。每次執行使用獨立 `run_id`，不自動發布或上傳外部模型服務。帶回 Windows RTX 4090 後可分別執行文字與 VLM 視覺驗收：
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File scripts\run_ollama_acceptance.ps1 `
   -ExportDirectory "C:\GGUF輸出資料夾" `
   -ModelName "tw-med-taide-12b-q4-k-m"
+
+powershell -ExecutionPolicy Bypass -File scripts\run_ollama_vlm_acceptance.ps1 `
+  -ExportDirectory "C:\GGUF輸出資料夾" `
+  -ModelName "tw-med-taide-12b-q4-k-m-vlm"
 ```
 
-Ollama 驗收會先要求 receipt 具備 PEFT merge 證據，重算主 GGUF、`mmproj` 與 Modelfile 的大小和 SHA-256，再以主 GGUF 建立本機文字模型、檢查 100% GPU 載入並執行固定 probe。產生的 `ollama-acceptance.json` 只保存雜湊、耗時與驗證欄位，不保存 raw output、匯入後 Modelfile 或 `ollama ps` 正文，也不會推送到外部服務。Windows 實測使用 Ollama 0.32.0 與 RTX 4090，模型 `tw-med-taide-12b-q4-k-m` 顯示 100% GPU，固定 probe 於 4.658 秒回傳預期的單一 `C`，且主 GGUF SHA-256 為 `f1dece13…11156`。內容安全的 [GGUF export receipt](reports/phase5/20260723T080232Z-gguf-export-receipt.json)與 [Ollama acceptance](reports/phase5/20260723T081846Z-ollama-acceptance.json)已歸檔。
+兩份 Ollama 驗收都會先要求 receipt 具備 PEFT merge 證據，重算主 GGUF、`mmproj` 與 Modelfile 的大小和 SHA-256。文字路徑以主 GGUF 建立本機模型；VLM 路徑則用兩個 `FROM` 同時匯入主 GGUF 與 projector，並要求 `/api/show` 回報 `completion`、`vision`、CLIP projector 與兩筆來源。Windows 實測使用 Ollama 0.32.0 與 RTX 4090：文字模型固定 probe 於 4.658 秒回傳單一 `C`；VLM 模型以程式產生的紅色方塊圖片測試，warm run 於 0.717 秒回傳單一 `RED`，兩者皆顯示 100% GPU。receipt 只保存雜湊、耗時與驗證欄位，不保存 raw output、測試圖片、匯入後 Modelfile 或 `ollama ps` 正文，也不會推送到外部服務。內容安全的 [GGUF export receipt](reports/phase5/20260723T080232Z-gguf-export-receipt.json)、[文字 acceptance](reports/phase5/20260723T081846Z-ollama-acceptance.json)與 [VLM acceptance](reports/phase5/20260723T104400Z-ollama-vlm-acceptance.json)已歸檔。歸檔與測試完成後，本機兩個驗收模型及 9,019,384,339-byte 暫存資料夾均已移除；大型 GGUF 僅保留於 Drive。
 
 ## 授權
 
