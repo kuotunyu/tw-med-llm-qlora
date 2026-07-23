@@ -84,7 +84,7 @@
 | --- | --- | --- |
 | 完整訓練 | A100 40GB 實際 session 1.143 小時；依 5.3 CU／小時約 6.06 CU，低於 calibration 的 26.49 CU 保守投影；未提供每 CU 單價，故不估金額 | 已完成並通過證據驗證 |
 | Phase 4 雙軌評估 | 完整 28,758 requests 的完成 session 實測 2.542 小時；依 5.3 CU／小時估算 13.47 CU，低於 15.79 CU 投影與 18.95 CU 緩衝；先前校準／中斷 session 需另計 | 已完成並通過證據驗證 |
-| 選配 GGUF Q4_K_M 匯出 | A100 40GB 預估 0.5–1.0 小時；依 5.3 CU／小時估算 2.65–5.30 CU，含 20% 上限 6.36 CU；GGUF 預估 7–9 GiB，執行時以實際資源面板為準 | 使用者已明確核准；repository gate 已開啟，每次 Colab 執行仍須填入 approval code |
+| 選配 GGUF Q4_K_M 匯出 | A100 40GB 成功 workflow 實測 1,350.68 秒（22.51 分鐘）；主 GGUF 7.604 GiB，符合 7–9 GiB 預估。receipt 未記錄帳務頁實際 CU，不以耗時反推扣點；核准上限維持 6.36 CU | 已完成 Drive-only 匯出與 Windows Ollama 驗收；每次重跑仍須重新填入 approval code |
 | 付費 LLM API | v1 不使用 | 若未來新增，先依 token 量與官方費率估價 |
 
 ## 產物連結
@@ -115,7 +115,7 @@
 | Adapter 模型卡 | 已完成並隨 private adapter 發布；包含基底條款、資料授權差異、研究用途、非醫療建議、正式結果與限制 | [model_card/README.md](model_card/README.md) |
 | Adapter 發布工具 | 已完成 dry-run 與實際 private 上傳；allowlist、模型卡渲染、4090 manifest 與綁定 repo/visibility 的確認碼均通過 | [src/tw_med_qlora/cli/publish_adapter.py](src/tw_med_qlora/cli/publish_adapter.py) |
 | Phase 5 publication receipt／遠端驗證 | 已驗證；HF revision `c2830d37…0aa4`、private=true、11/11 檔案共 191,661,898 bytes 逐檔 SHA-256 相符、token 未記錄 | [receipt](reports/phase5/20260722T165957Z-publication-receipt.json)／[validation](reports/phase5/20260722T170446Z-publication-validation.json) |
-| 選配 GGUF／Ollama | 使用者已核准 A100 Q4_K_M 匯出上限 6.36 CU；首次因部分 HF cache 停止，第二次完整載入後暴露 `save_pretrained_gguf` 被委派給 base model 的問題，均未產生可接受的 Drive receipt。現已改為由 Unsloth 直接載入本機重綁 base 的 adapter checkpoint，並要求 PEFT／LoRA／method owner 證據及 VLM 主 GGUF＋`mmproj` 雙產物；重跑前須核對剩餘 CU | [notebooks/export_gguf.ipynb](notebooks/export_gguf.ipynb)／[Ollama 驗收腳本](scripts/run_ollama_acceptance.ps1) |
+| 選配 GGUF／Ollama | 已完成；run `20260723T074001Z` 驗證 PEFT class、active adapter 與 672 個 LoRA tensors，Drive 保存 8,165,172,704-byte Q4_K_M 主 GGUF與 854,200,608-byte `mmproj`，逐檔 SHA-256 相符且沒有外部上傳。Windows Ollama 0.32.0／RTX 4090 文字 probe 回傳預期 `C`、4.658 秒、100% GPU；VLM projector 僅歸檔，未宣稱視覺驗收 | [export receipt](reports/phase5/20260723T080232Z-gguf-export-receipt.json)／[Ollama acceptance](reports/phase5/20260723T081846Z-ollama-acceptance.json)／[notebook](notebooks/export_gguf.ipynb)／[驗收腳本](scripts/run_ollama_acceptance.ps1) |
 | Phase 4 首次 calibration manifest | 證據完整；結果因協定問題不作成績解讀 | [reports/phase4/calibration/20260722T052039Z-run-manifest.json](reports/phase4/calibration/20260722T052039Z-run-manifest.json) |
 | Phase 4 首次 calibration 驗證摘要 | integrity pass；recalibration required | [reports/phase4/calibration/20260722T052039Z-validation.json](reports/phase4/calibration/20260722T052039Z-validation.json) |
 | Phase 4 parser-v3 calibration manifest | A100 實跑完成，test 未載入 | [reports/phase4/calibration/20260722T061028Z-run-manifest.json](reports/phase4/calibration/20260722T061028Z-run-manifest.json) |
@@ -261,6 +261,8 @@
 | 2026-07-23 | 5 選配 | 修正 Ollama 驗收的 hosted Windows 雜湊相容性 | 新增腳本內建 `Get-FileSha256`，以 `System.IO.File.OpenRead` 與 `System.Security.Cryptography.SHA256` 計算 GGUF、Modelfile 與 export receipt 雜湊；契約測試明確禁止 `Get-FileHash`。聚焦 3 項、完整 `pytest` 184 passed，Ruff、`uv lock --check`、四份 notebook freshness 與 skill validator 全數通過 | 建立聚焦 commit 並由最新 hosted Windows／Ubuntu CI 確認 |
 | 2026-07-23 | 5 選配 | 診斷第二次 GGUF 匯出未採用 adapter | run `20260723T064358Z` 完成 A100、archive、固定 snapshot 6/6 shards 與 frozen adapter 載入；但標準 PEFT wrapper 透過 `__getattr__` 取得底層 base 的 GGUF method，Unsloth 明確回報 `Model is not a PEFT model`，只在 base cache 產生主 Q4_K_M 與 BF16 `mmproj`。notebook 因 requested output 為空而在 Drive 建目錄前停止，沒有 receipt 或外部上傳，cache 產物不採用 | 停止 A100；查核 Unsloth 2026.7.4 實作並修正 PEFT method binding 與 VLM 雙產物契約 |
 | 2026-07-23 | 5 選配 | 修正 PEFT merge 與 VLM GGUF 產物契約 | verified adapter 先複製到 runtime-only 目錄並把 base path 重綁至固定本機 snapshot，再由 Unsloth 直接載入，使 saving patch 綁定 PEFT wrapper；轉檔前要求 `PeftModel`、active adapter、LoRA tensor 與 method owner 全部通過。產物改依 Unsloth 回傳清單驗證一個 Q4_K_M 主檔與一個 `mmproj`，兩者均歸檔；Ollama 只驗文字主模型，receipt schema 升至 3。聚焦 9 項、完整 `pytest` 184 passed，Ruff、`uv lock --check`、四份 notebook freshness 與 skill validator 全數通過 | 由使用者建立聚焦 commit／push；hosted CI 通過且核對剩餘 CU 後才可再啟動 A100 |
+| 2026-07-23 | 5 選配 | 完成 A100 PEFT／VLM GGUF 匯出 | run `20260723T074001Z` 在 A100-SXM4-40GB 驗證固定 base revision、6/6 shards、step-700 adapter、`PeftModelForCausalLM`、active `default` 與 672 個 LoRA tensors；workflow 1,350.68 秒，產生 7.604-GiB Q4_K_M 主 GGUF 與 854,200,608-byte BF16 `mmproj`，兩者與 Modelfile 均通過 Drive 複製後 SHA-256。receipt 記錄 `external_upload_performed=false`、`published=false` | 帶回 Windows，以 Ollama 驗證主 GGUF 文字推論與 100% GPU 載入 |
+| 2026-07-23 | 5 選配 | 完成 Windows Ollama 實機驗收與 receipt 相容性修正 | 首次執行在模型匯入前發現實際 schema 3 receipt 未帶 `model_snapshot.vlm_processor_required`；腳本改為相容舊 receipt，以已記錄 projector 推導 VLM 要求，未來 receipt 則顯式保存該欄位。Ollama 0.32.0 建立 `tw-med-taide-12b-q4-k-m`，RTX 4090 顯示 100% GPU，固定 probe 4.658 秒回傳單一 `C`；主 GGUF SHA-256 `f1dece13…11156`，一個 projector 完整歸檔，無 raw output 或外部上傳。完整 `pytest` 185 passed、Ruff、`uv lock --check`、四份 notebook freshness 與 skill validator 全數通過 | 由使用者檢視變更、建立聚焦 commits 並 push；確認 hosted Windows／Ubuntu CI |
 
 ## 已知風險
 
@@ -271,7 +273,7 @@
 - Windows 對剛完成的大型 ZIP 或含 safetensors 目錄可能拒絕具 replace-existing 語意的改名；Phase 5 目的地原本就必須不存在，因此改用 no-overwrite `rename`，並只針對 `PermissionError` 做最多 1.25 秒的有限重試。若仍失敗會保留 `.partial`，不會誤標為完成或靜默刪除證據。
 - 接手副本未包含原 `.git`，舊 parent history 只能由移轉時的 hash 證據與本執行簿追溯；目前以新 root commit 保存驗證後快照。若日後找到原機 `.git`，應另行比對，不把兩條歷史直接偽裝成同一條。
 - Windows 未啟用 Developer Mode，Hugging Face cache 以無 symlink 降級模式工作，會增加磁碟用量；本次下載後仍有約 214 GiB 可用，不影響 acceptance 正確性。
-- 選配 GGUF 匯出已重新確認 Unsloth API 並取得 6.36 CU 上限核准；repository gate 已開啟，但每次 notebook 的執行旗標與 approval 欄位仍預設關閉。首次 A100 暴露部分 Hugging Face cache 風險，第二次則暴露標準 PEFT wrapper 將 GGUF method 委派給 base model 的風險；兩次都在 Drive receipt 前安全停止。現行修正版要求 Unsloth 直接載入 runtime adapter、PEFT／LoRA／method owner 證據與 VLM 雙 GGUF 完整性，但仍須在全新 runtime 實測。再次執行前必須先取得前兩次的實際 CU 消耗，確保沒有超出原核准額度。
+- 選配 GGUF 匯出已於 A100 完成，且 Windows Ollama 文字 probe 與 100% GPU 載入通過；repository gate 仍開啟，但每次 notebook 的執行旗標與 approval 欄位預設關閉。receipt 未保存帳務頁實際 CU，因此只報告 22.51 分鐘 workflow 耗時，不把名目 CU／小時換算成實際扣點。`mmproj` 已做大小與 SHA-256 歸檔，但 Ollama acceptance 僅驗證主 GGUF 文字路徑，不宣稱 VLM 視覺能力通過。
 - Colab 的 CUDA/PyTorch 基礎映像由平台管理；notebook 鎖定直接訓練依賴，並把實際 transitive versions 全量寫入 `pip-freeze.txt`。
 - TAIDE 12B 原始 safetensors snapshot 約 27 GB；即使採 4-bit 載入仍需先保留完整下載空間，notebook 會在下載前檢查本機磁碟並保留 8 GiB 餘裕。
 - Premium GPU 類型與可用性仍由 Colab 動態分配，且較高階 GPU 可能更快消耗 compute units；以 smoke manifest 的實測吞吐與帳務數據為準。
@@ -288,4 +290,4 @@
 
 Phase 5 已完成。Windows RTX 4090 base + adapter acceptance、內容安全 manifest、GitHub hosted Windows／Linux CPU CI、HF private publication、publication receipt 與遠端 11 個 allowlist 檔案的逐檔 SHA-256 均已驗證。最終完成度稽核的 13 項必要條件全部通過，`phase5_complete=true`。
 
-選配 GGUF／Ollama 不改變 Phase 5 已完成的結論。使用者已核准 A100 Q4_K_M 匯出上限 6.36 CU；首次 A100 執行在部分模型 cache 的 Unsloth 載入路徑停止，未產生 GGUF。修正版先完整下載並驗證固定 snapshot，再以本機離線路徑載入。下一步是完成本機驗證與聚焦 commit，之後由使用者在全新 A100 runtime 重新從第一格逐格執行。
+選配 GGUF／Ollama 不改變 Phase 5 已完成的結論，且現已完成。A100 run `20260723T074001Z` 產生經 PEFT／LoRA 證據與逐檔 SHA-256 綁定的 Q4_K_M 主 GGUF 及 VLM `mmproj`，只保存至 Google Drive；Windows RTX 4090／Ollama 0.32.0 的文字 acceptance 亦通過。下一步僅剩由使用者檢視、分成聚焦 Conventional Commits、push，並確認 hosted Windows／Ubuntu CI。
