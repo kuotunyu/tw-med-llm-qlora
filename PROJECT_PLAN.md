@@ -263,6 +263,7 @@
 | 2026-07-23 | 5 選配 | 修正 PEFT merge 與 VLM GGUF 產物契約 | verified adapter 先複製到 runtime-only 目錄並把 base path 重綁至固定本機 snapshot，再由 Unsloth 直接載入，使 saving patch 綁定 PEFT wrapper；轉檔前要求 `PeftModel`、active adapter、LoRA tensor 與 method owner 全部通過。產物改依 Unsloth 回傳清單驗證一個 Q4_K_M 主檔與一個 `mmproj`，兩者均歸檔；Ollama 只驗文字主模型，receipt schema 升至 3。聚焦 9 項、完整 `pytest` 184 passed，Ruff、`uv lock --check`、四份 notebook freshness 與 skill validator 全數通過 | 由使用者建立聚焦 commit／push；hosted CI 通過且核對剩餘 CU 後才可再啟動 A100 |
 | 2026-07-23 | 5 選配 | 完成 A100 PEFT／VLM GGUF 匯出 | run `20260723T074001Z` 在 A100-SXM4-40GB 驗證固定 base revision、6/6 shards、step-700 adapter、`PeftModelForCausalLM`、active `default` 與 672 個 LoRA tensors；workflow 1,350.68 秒，產生 7.604-GiB Q4_K_M 主 GGUF 與 854,200,608-byte BF16 `mmproj`，兩者與 Modelfile 均通過 Drive 複製後 SHA-256。receipt 記錄 `external_upload_performed=false`、`published=false` | 帶回 Windows，以 Ollama 驗證主 GGUF 文字推論與 100% GPU 載入 |
 | 2026-07-23 | 5 選配 | 完成 Windows Ollama 實機驗收與 receipt 相容性修正 | 首次執行在模型匯入前發現實際 schema 3 receipt 未帶 `model_snapshot.vlm_processor_required`；腳本改為相容舊 receipt，以已記錄 projector 推導 VLM 要求，未來 receipt 則顯式保存該欄位。Ollama 0.32.0 建立 `tw-med-taide-12b-q4-k-m`，RTX 4090 顯示 100% GPU，固定 probe 4.658 秒回傳單一 `C`；主 GGUF SHA-256 `f1dece13…11156`，一個 projector 完整歸檔，無 raw output 或外部上傳。完整 `pytest` 185 passed、Ruff、`uv lock --check`、四份 notebook freshness 與 skill validator 全數通過 | 由使用者檢視變更、建立聚焦 commits 並 push；確認 hosted Windows／Ubuntu CI |
+| 2026-07-23 | 5 選配 | 歸檔實測證據並完成 hosted CI | 使用者建立 `1c80556 fix(ollama): 相容 VLM export receipt` 與 `9f7ccc8 docs(export): 歸檔 GGUF 與 Ollama 實測證據`，推送後 `main` 與 `origin/main` 同步；[GitHub Actions run 29998727771](https://github.com/kuotunyu/tw-med-llm-qlora/actions/runs/29998727771) 的 Python 3.11 `windows-latest` 與 `ubuntu-latest` jobs 均成功 | 選配流程封存完成；後續只有經使用者另行確認的本機大型產物清理或新研究工作 |
 
 ## 已知風險
 
@@ -290,4 +291,4 @@
 
 Phase 5 已完成。Windows RTX 4090 base + adapter acceptance、內容安全 manifest、GitHub hosted Windows／Linux CPU CI、HF private publication、publication receipt 與遠端 11 個 allowlist 檔案的逐檔 SHA-256 均已驗證。最終完成度稽核的 13 項必要條件全部通過，`phase5_complete=true`。
 
-選配 GGUF／Ollama 不改變 Phase 5 已完成的結論，且現已完成。A100 run `20260723T074001Z` 產生經 PEFT／LoRA 證據與逐檔 SHA-256 綁定的 Q4_K_M 主 GGUF 及 VLM `mmproj`，只保存至 Google Drive；Windows RTX 4090／Ollama 0.32.0 的文字 acceptance 亦通過。下一步僅剩由使用者檢視、分成聚焦 Conventional Commits、push，並確認 hosted Windows／Ubuntu CI。
+選配 GGUF／Ollama 不改變 Phase 5 已完成的結論，且現已完成。A100 run `20260723T074001Z` 產生經 PEFT／LoRA 證據與逐檔 SHA-256 綁定的 Q4_K_M 主 GGUF 及 VLM `mmproj`，只保存至 Google Drive；Windows RTX 4090／Ollama 0.32.0 的文字 acceptance 亦通過。實測證據與相容性修正已推送，GitHub Actions run `29998727771` 的 hosted Windows／Ubuntu CI 均成功，目前沒有必要的工程工作；本機大型產物清理或新研究工作需另行確認。
