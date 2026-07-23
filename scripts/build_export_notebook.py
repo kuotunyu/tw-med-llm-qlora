@@ -154,6 +154,7 @@ def build_notebook() -> nbformat.NotebookNode:
         raise FileExistsError(f"Refusing to overwrite an existing export run: {{drive_output}}")
     local_root = Path("/content/tw-med-gguf-export") / run_id
     adapter_dir = local_root / "adapter"
+    runtime_adapter_dir = local_root / "runtime_adapter"
     export_dir = local_root / "q4_k_m"
     for directory in (local_root, adapter_dir, export_dir):
         directory.mkdir(parents=True, exist_ok=False)
@@ -209,9 +210,9 @@ def build_notebook() -> nbformat.NotebookNode:
             target.parent.mkdir(parents=True, exist_ok=True)
             with archive.open(member) as source, target.open("wb") as output:
                 shutil.copyfileobj(source, output)
-    adapter_config = json.loads(
-        (adapter_dir / "adapter_config.json").read_text(encoding="utf-8")
-    )
+    adapter_config_path = adapter_dir / "adapter_config.json"
+    adapter_config_sha256 = sha256_file(adapter_config_path)
+    adapter_config = json.loads(adapter_config_path.read_text(encoding="utf-8"))
     model_config = PROJECT_CONFIG["models"]["primary"]
     if adapter_config.get("base_model_name_or_path") != model_config["model_id"]:
         raise RuntimeError("Adapter/base mismatch; export stopped")
@@ -377,8 +378,21 @@ def build_notebook() -> nbformat.NotebookNode:
     }
     print(json.dumps(MODEL_SNAPSHOT_AUDIT, ensure_ascii=False, indent=2))
 
-    base_model, processor = FastModel.from_pretrained(
-        model_name=str(snapshot_path),
+    shutil.copytree(adapter_dir, runtime_adapter_dir)
+    runtime_adapter_config_path = runtime_adapter_dir / "adapter_config.json"
+    runtime_adapter_config = dict(adapter_config)
+    runtime_adapter_config["base_model_name_or_path"] = str(snapshot_path)
+    runtime_adapter_config["revision"] = None
+    runtime_adapter_config_path.write_text(
+        json.dumps(runtime_adapter_config, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+        newline="\n",
+    )
+    if sha256_file(adapter_config_path) != adapter_config_sha256:
+        raise RuntimeError("Original adapter_config.json changed during runtime rebinding")
+
+    model, processor = FastModel.from_pretrained(
+        model_name=str(runtime_adapter_dir),
         max_seq_length=2048,
         load_in_4bit=True,
         load_in_8bit=False,
@@ -388,21 +402,36 @@ def build_notebook() -> nbformat.NotebookNode:
         local_files_only=True,
         use_safetensors=True,
     )
-    model = PeftModel.from_pretrained(
-        base_model,
-        str(adapter_dir),
-        is_trainable=False,
-        low_cpu_mem_usage=True,
-        local_files_only=True,
-    )
+    if not isinstance(model, PeftModel):
+        raise RuntimeError(
+            "Unsloth did not return a PEFT model for the verified adapter; "
+            "refusing to export a base-only GGUF"
+        )
+    for parameter in model.parameters():
+        parameter.requires_grad_(False)
     model.eval()
     trainable, total = model.get_nb_trainable_parameters()
     if trainable != 0 or total <= 0:
         raise RuntimeError(f"Frozen adapter audit failed: trainable={trainable}, total={total}")
-    if not hasattr(model, "save_pretrained_gguf"):
+    active_adapters_value = getattr(model, "active_adapters", [])
+    if callable(active_adapters_value):
+        active_adapters_value = active_adapters_value()
+    active_adapters = list(active_adapters_value)
+    adapter_parameter_names = [
+        name for name, _ in model.named_parameters() if "lora_" in name.casefold()
+    ]
+    if not active_adapters or not adapter_parameter_names:
         raise RuntimeError(
-            "Current Unsloth no longer exposes save_pretrained_gguf on this PEFT model; "
-            "stop and recheck the official API instead of using an unverified fallback."
+            "Loaded PEFT model has no active adapter or LoRA parameters; export stopped"
+        )
+    gguf_save_method = model.__dict__.get("save_pretrained_gguf")
+    if (
+        gguf_save_method is None
+        or getattr(gguf_save_method, "__self__", None) is not model
+    ):
+        raise RuntimeError(
+            "Unsloth GGUF save method is not bound to the PEFT wrapper; "
+            "refusing to export a base-only GGUF"
         )
     text_tokenizer = getattr(processor, "tokenizer", processor)
     chat_template = (
@@ -415,6 +444,10 @@ def build_notebook() -> nbformat.NotebookNode:
     print(
         {
             "adapter_reloaded": True,
+            "peft_detected": True,
+            "peft_model_class": model.__class__.__name__,
+            "active_adapters": active_adapters,
+            "lora_parameter_tensors": len(adapter_parameter_names),
             "trainable_parameters": trainable,
             "processor_class": processor.__class__.__name__,
             "tokenizer_class": text_tokenizer.__class__.__name__,
@@ -424,16 +457,60 @@ def build_notebook() -> nbformat.NotebookNode:
     '''
 
     export = r'''
-    model.save_pretrained_gguf(
+    conversion_result = gguf_save_method(
         str(export_dir),
         tokenizer=processor,
         quantization_method=export_config["quantization_method"],
         maximum_memory_usage=float(export_config["maximum_memory_usage"]),
     )
-    gguf_files = sorted(export_dir.glob("*.gguf"))
-    if len(gguf_files) != 1 or gguf_files[0].stat().st_size <= 0:
-        raise RuntimeError(f"Expected exactly one non-empty GGUF file: {gguf_files}")
-    gguf_path = gguf_files[0]
+    if not isinstance(conversion_result, dict):
+        raise RuntimeError(
+            f"Unsloth returned an unexpected GGUF result: {type(conversion_result)!r}"
+        )
+    reported_gguf_files = sorted(
+        {Path(path).resolve() for path in conversion_result.get("gguf_files", [])},
+        key=lambda path: path.name.casefold(),
+    )
+    missing_or_empty_ggufs = [
+        str(path)
+        for path in reported_gguf_files
+        if not path.is_file() or path.stat().st_size <= 0
+    ]
+    if not reported_gguf_files or missing_or_empty_ggufs:
+        raise RuntimeError(
+            "Unsloth did not report complete GGUF files: "
+            f"files={reported_gguf_files}, invalid={missing_or_empty_ggufs}"
+        )
+    quantization_label = str(export_config["quantization_method"]).casefold()
+    primary_ggufs = [
+        path
+        for path in reported_gguf_files
+        if "mmproj" not in path.name.casefold()
+        and quantization_label in path.name.casefold()
+    ]
+    projector_ggufs = [
+        path for path in reported_gguf_files if "mmproj" in path.name.casefold()
+    ]
+    if len(primary_ggufs) != 1:
+        raise RuntimeError(
+            "Expected exactly one reported Q4_K_M primary GGUF: "
+            f"{reported_gguf_files}"
+        )
+    if snapshot_is_vlm and len(projector_ggufs) != 1:
+        raise RuntimeError(
+            "Expected exactly one reported VLM projector GGUF: "
+            f"{reported_gguf_files}"
+        )
+    recognized_ggufs = {path.resolve() for path in primary_ggufs + projector_ggufs}
+    if recognized_ggufs != {path.resolve() for path in reported_gguf_files}:
+        raise RuntimeError(
+            f"Unrecognized GGUF outputs were reported: {reported_gguf_files}"
+        )
+    if not bool(conversion_result.get("is_vlm")) == snapshot_is_vlm:
+        raise RuntimeError(
+            "Unsloth GGUF result VLM status does not match the verified snapshot"
+        )
+    gguf_path = primary_ggufs[0]
     gguf_gib = gguf_path.stat().st_size / 1024**3
     expected_gguf_gib = [
         float(export_config["expected_gguf_gib_lower"]),
@@ -459,7 +536,8 @@ def build_notebook() -> nbformat.NotebookNode:
     )
     drive_output.mkdir(parents=False, exist_ok=False)
     copied = {}
-    for source in (gguf_path, modelfile):
+    export_artifacts = [gguf_path, *projector_ggufs, modelfile]
+    for source in export_artifacts:
         partial = drive_output / (source.name + ".partial")
         destination = drive_output / source.name
         if partial.exists() or destination.exists():
@@ -477,7 +555,7 @@ def build_notebook() -> nbformat.NotebookNode:
         }
     workflow_elapsed_seconds = time.perf_counter() - workflow_started_monotonic
     receipt = {
-        "schema_version": 2,
+        "schema_version": 3,
         "phase": 5,
         "optional_export": "gguf_q4_k_m",
         "run_id": run_id,
@@ -501,6 +579,14 @@ def build_notebook() -> nbformat.NotebookNode:
         },
         "adapter_checkpoint": int(phase3["selected_checkpoint"]),
         "phase3_archive_sha256": archive_sha256,
+        "adapter_merge": {
+            "peft_detected": True,
+            "peft_model_class": model.__class__.__name__,
+            "active_adapters": active_adapters,
+            "lora_parameter_tensors": len(adapter_parameter_names),
+            "original_adapter_config_sha256": adapter_config_sha256,
+            "runtime_base_model_rebound_to_verified_snapshot": True,
+        },
         "quantization_method": export_config["quantization_method"],
         "maximum_memory_usage": export_config["maximum_memory_usage"],
         "gpu": gpu,
@@ -517,6 +603,13 @@ def build_notebook() -> nbformat.NotebookNode:
             "chat_template_sha256": chat_template_sha256,
             "bos_token": text_tokenizer.bos_token,
             "eos_token": text_tokenizer.eos_token,
+        },
+        "gguf": {
+            "primary_file": gguf_path.name,
+            "projector_files": [path.name for path in projector_ggufs],
+            "reported_files": [path.name for path in reported_gguf_files],
+            "ollama_import_mode": "text_only_primary_gguf",
+            "vlm_projector_archived": bool(projector_ggufs),
         },
         "packages": {
             package: importlib.metadata.version(package)
