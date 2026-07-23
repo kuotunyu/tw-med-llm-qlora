@@ -8,7 +8,7 @@
 
 ## 目前狀態
 
-Phase 0–5 已完成；Phase 6 的 v0.1.0 本機與 hosted Windows／Linux release gates 已通過，準備建立 tag 與 GitHub Release。TAIDE 12B 的 A100 40GB、11,248 筆、1 epoch QLoRA 已跑完，正式 adapter 選用完成 1,409 筆 validation 的 step 700。Phase 4 已完成 28,758 次正式生成與本機證據驗證：adapter 在 MedQA test 達 72.05%，在 13 科 TMMLU+ 達 61.53%，且五個非醫學控制科通過預先定義的 −2 個百分點 non-inferiority 判準。Phase 5 的 Windows RTX 4090 base + adapter acceptance、GitHub hosted Windows／Linux CPU CI 與 Hugging Face 私人發布均已通過；遠端 revision `c2830d37fe6b5e73e6dd07e17efbb858979d0aa4` 的 11 個發布檔案已逐一重算並與 receipt 完全相符。Adapter 權重維持 private，並未公開。
+Phase 0–6 已完成，`v0.1.0` annotated tag、GitHub Release、wheel／sdist 與 hosted Windows／Linux release gates 均已驗證。TAIDE 12B 的 A100 40GB、11,248 筆、1 epoch QLoRA 已跑完，正式 adapter 選用完成 1,409 筆 validation 的 step 700。Phase 4 已完成 28,758 次正式生成與本機證據驗證：adapter 在 MedQA test 達 72.05%，在 13 科 TMMLU+ 達 61.53%，且五個非醫學控制科通過預先定義的 −2 個百分點 non-inferiority 判準。Phase 5 的 Windows RTX 4090 base + adapter acceptance、GitHub hosted Windows／Linux CPU CI 與 Hugging Face 私人發布均已通過。Phase 7 正在準備把 adapter 轉為 public + automatic gated；遠端在最終確認前仍維持 private。
 
 ## 研究架構
 
@@ -46,7 +46,8 @@ flowchart LR
 | 3 | 完整 QLoRA 與 checkpoint | 完成；證據驗證通過 |
 | 4 | MedQA + TMMLU+ 雙軌評估 | 完成；28,758 requests 與證據驗證通過 |
 | 5 | RTX 4090 推論與發布 | 完成；4090 acceptance、hosted CI、HF 私人發布與 receipt 驗證通過 |
-| 6 | v0.1.0 可重現發布驗收 | 進行中；本機與 hosted Windows／Linux gates 已通過，待 tag 與 GitHub Release |
+| 6 | v0.1.0 可重現發布驗收 | 完成；tag、Release、artifacts 與 hosted CI 均驗證通過 |
+| 7 | HF adapter public gated 發布 | 進行中；授權、最小檔案與切換流程準備完成後，才執行外部可見性閘門 |
 
 每個 Phase 都必須先展示測試與產物，經確認後才進入下一階段。可公開的實測結果、限制與重現方式收斂於本 README，機器可驗證的內容安全證據則歸檔於 [`reports/`](reports/)。
 
@@ -437,18 +438,26 @@ uv run tw-med-local-infer --adapter artifacts\phase3-step700-adapter --interacti
 
 ### Adapter 模型卡與發布閘門
 
-[Adapter 模型卡模板](model_card/README.md)已包含研究用途、非醫療建議、基底關係與授權、資料授權差異、硬體／超參數、正式評估與限制。發布程式預設只做 dry-run，且只允許 adapter／tokenizer allowlist 與渲染後模型卡，不會上傳訓練題目、完整 base、`.env` 或私有輸出：
+[Adapter 模型卡模板](model_card/README.md)已包含研究用途、非醫療建議、基底關係與授權、TAIDE 指定告知與來源標示、衍生修改揭露、資料授權差異、硬體／超參數、正式評估與限制；官方授權 PDF 的原樣副本保存於 [`model_card/TAIDE-GEMMA-LICENSE.pdf`](model_card/TAIDE-GEMMA-LICENSE.pdf)。發布程式預設只做 dry-run。public 計畫只保留 PEFT adapter 的 config／weights、渲染後模型卡與授權 PDF，並刪除先前 private repository 中由基底衍生的 tokenizer／processor 檔案；不會上傳訓練題目、完整 base、`.env` 或私有輸出：
 
 ```powershell
 uv run tw-med-publish-adapter artifacts\phase3-step700-adapter `
   --repo-id steven0226/tw-med-llm-qlora-adapter `
-  --visibility private `
+  --visibility public `
+  --gated auto `
   --github-url https://github.com/kuotunyu/tw-med-llm-qlora
 ```
 
-本次已依上述 gate 發布至 private repository `steven0226/tw-med-llm-qlora-adapter`。內容安全的 [publication receipt](reports/phase5/20260722T165957Z-publication-receipt.json) 綁定 [HF revision `c2830d37…`](https://huggingface.co/steven0226/tw-med-llm-qlora-adapter/commit/c2830d37fe6b5e73e6dd07e17efbb858979d0aa4)；[獨立驗證摘要](reports/phase5/20260722T170446Z-publication-validation.json)確認 repository 仍為 private、HEAD 與 receipt revision 相同，且 11/11 個檔案、共 191,661,898 bytes 的 SHA-256 全部一致。遠端另有 Hugging Face 自動產生的 `.gitattributes`，不屬於發布 allowlist。
+Phase 5 的 private 發布已完成。內容安全的 [publication receipt](reports/phase5/20260722T165957Z-publication-receipt.json) 綁定 HF revision `c2830d37…`；[獨立驗證摘要](reports/phase5/20260722T170446Z-publication-validation.json)確認當時 repository 為 private、HEAD 與 receipt revision 相同，且 11/11 個檔案的 SHA-256 全部一致。這些是歷史證據，不表示目前已完成 public 切換。
 
-未來每次重新發布仍須滿足 4090 acceptance、精確 repo／visibility、write token、dry-run allowlist 與一次性確認碼；現有核准不會自動延伸到 public visibility。程式碼 MIT License 不代表 adapter 權重採 MIT；adapter 的使用與再發布必須遵守 gated 基底模型的現行條款。
+Phase 7 的執行會先在 private 狀態完成最小檔案上傳、遠端逐檔大小／SHA-256 驗證與舊 tokenizer／processor 清理，最後才以單一設定呼叫切換為 public + automatic gated。執行仍須滿足 4090 acceptance、精確 repo／visibility／gate、write token、dry-run allowlist 與一次性確認碼；任何前置步驟失敗都不會提早公開。程式碼 MIT License 不代表 adapter 權重採 MIT；adapter 的使用與再發布必須遵守基底模型與 TAIDE 的現行條款。
+
+切換後使用獨立驗證器複核 authenticated 檔案 SHA-256、匿名可見的 public metadata、automatic gated 狀態，以及匿名下載確實遭拒；報告不保存 token、電子郵件或檔案內容：
+
+```powershell
+uv run --group data python -m tw_med_qlora.cli.verify_public_adapter `
+  --receipt outputs\publication\phase7-publication-receipt.json
+```
 
 ### 選配 GGUF 與 Ollama
 
