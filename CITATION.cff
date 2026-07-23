@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "若在研究中使用本專案，請引用這個軟體版本。"
+title: "tw-med-llm-qlora：可重現繁體中文醫療選擇題 QLoRA 研究工具"
+type: software
+authors:
+  - name: "kuotunyu"
+version: "0.2.0"
+date-released: "2026-07-24"
+repository-code: "https://github.com/kuotunyu/tw-med-llm-qlora"
+url: "https://github.com/kuotunyu/tw-med-llm-qlora/releases/tag/v0.2.0"
+license: MIT
+abstract: "以固定資料、模型 revision 與證據鏈重現繁體中文醫療選擇題 QLoRA 訓練、評估、本機推論及內容安全發布。"
+keywords:
+  - "QLoRA"
+  - "Traditional Chinese"
+  - "medical multiple-choice questions"
+  - "reproducible research"
+  - "parameter-efficient fine-tuning"

@@ -1,5 +1,8 @@
 # tw-med-llm-qlora
 
+[![CI](https://github.com/kuotunyu/tw-med-llm-qlora/actions/workflows/ci.yml/badge.svg)](https://github.com/kuotunyu/tw-med-llm-qlora/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/kuotunyu/tw-med-llm-qlora)](https://github.com/kuotunyu/tw-med-llm-qlora/releases/latest)
+
 > 本專案僅供模型研究與教育用途，不構成醫療建議、診斷或治療依據。
 
 ## 個人動機
@@ -8,7 +11,16 @@
 
 ## 目前狀態
 
-Phase 0–7 已完成，`v0.1.0` annotated tag、GitHub Release、wheel／sdist 與 hosted Windows／Linux release gates 均已驗證。TAIDE 12B 的 A100 40GB、11,248 筆、1 epoch QLoRA 已跑完，正式 adapter 選用完成 1,409 筆 validation 的 step 700。Phase 4 已完成 28,758 次正式生成與本機證據驗證：adapter 在 MedQA test 達 72.05%，在 13 科 TMMLU+ 達 61.53%，且五個非醫學控制科通過預先定義的 −2 個百分點 non-inferiority 判準。Phase 5 的 Windows RTX 4090 base + adapter acceptance 與 GitHub hosted Windows／Linux CPU CI 均已通過。[Hugging Face adapter](https://huggingface.co/steven0226/tw-med-llm-qlora-adapter)現為 public + automatic gated，只保留兩個 PEFT adapter 檔、模型卡與官方授權 PDF；匿名使用者可讀 metadata，但未獲授權時不能下載檔案。
+Phase 0–7 已完成；Phase 8 正在凍結 `v0.2.0` 的 package、citation 與公開入口，不會重新訓練、修改模型權重或再次變更 Hugging Face 可見性。TAIDE 12B 的 A100 40GB、11,248 筆、1 epoch QLoRA 已跑完，正式 adapter 選用完成 1,409 筆 validation 的 step 700。Phase 4 已完成 28,758 次正式生成與本機證據驗證：adapter 在 MedQA test 達 72.05%，在 13 科 TMMLU+ 達 61.53%，且五個非醫學控制科通過預先定義的 −2 個百分點 non-inferiority 判準。Phase 5 的 Windows RTX 4090 base + adapter acceptance 與 GitHub hosted Windows／Linux CPU CI 均已通過。[Hugging Face adapter](https://huggingface.co/steven0226/tw-med-llm-qlora-adapter)現為 public + automatic gated，只保留兩個 PEFT adapter 檔、模型卡與官方授權 PDF；匿名使用者可讀 metadata，但未獲授權時不能下載檔案。
+
+## 快速入口
+
+- [最新 GitHub Release](https://github.com/kuotunyu/tw-med-llm-qlora/releases/latest)
+- [public + automatic gated adapter](https://huggingface.co/steven0226/tw-med-llm-qlora-adapter)
+- [評估結果](#評估結果)與[訓練成本](#訓練曲線與成本)
+- [快速開始](#快速開始)與[Windows 本機推論](#本機推論)
+- [可公開的機器驗證證據](reports/)與[版本變更](CHANGELOG.md)
+- [引用資訊](#引用)
 
 ## 研究架構
 
@@ -48,6 +60,7 @@ flowchart LR
 | 5 | RTX 4090 推論與發布 | 完成；4090 acceptance、hosted CI、HF 私人發布與 receipt 驗證通過 |
 | 6 | v0.1.0 可重現發布驗收 | 完成；tag、Release、artifacts 與 hosted CI 均驗證通過 |
 | 7 | HF adapter public gated 發布 | 完成；4 個最小檔案、automatic gate、遠端雜湊與匿名下載拒絕均驗證通過 |
+| 8 | v0.2.0 收尾發布、citation 與公開入口 | 本機候選驗收完成；待 hosted CI、tag 與 Release |
 
 每個 Phase 都必須先展示測試與產物，經確認後才進入下一階段。可公開的實測結果、限制與重現方式收斂於本 README，機器可驗證的內容安全證據則歸檔於 [`reports/`](reports/)。
 
@@ -65,6 +78,19 @@ uv run python scripts/smoke_release_install.py outputs/release-v0.1.0 `
 ```
 
 Phase 6 首次 hosted release gate 綁定 commit `2ecc327ca72e16b0b48d4a219aebc3e1759bef9d`；[GitHub Actions run #15](https://github.com/kuotunyu/tw-med-llm-qlora/actions/runs/30015837112) 的 `windows-latest` 與 `ubuntu-latest` jobs 均成功。內容安全摘要保存於 [`reports/phase6/`](reports/phase6/)。
+
+### v0.2.0 發布候選驗收
+
+`v0.2.0` 把 Phase 7 已驗證的 public gated 發布與獨立驗證器正式納入 package，並新增 citation、changelog 與第五個 console script。它不包含新訓練或新權重；release archives 仍由 Windows／Linux CI 重建，並以 allowlist 與全新 Python 3.11 `--no-deps` 安裝驗收：
+
+```powershell
+uv build --no-sources --clear --out-dir outputs/release-v0.2.0 --no-create-gitignore
+uv run python scripts/audit_release_artifacts.py outputs/release-v0.2.0
+uv run python scripts/smoke_release_install.py outputs/release-v0.2.0 `
+  --venv outputs/release-v0.2.0-venv
+```
+
+本機候選版已通過 211 項 pytest、Ruff、`uv lock --check`、四份 notebook freshness 與 Citation CFF 1.2.0 schema 驗證。wheel／sdist 均通過內容 allowlist；五個 console scripts 也都在乾淨 Python 3.11 環境 exit 0。精確檔案數、bytes 與 SHA-256 保存於不進 package 的 [`reports/phase8/`](reports/phase8/)。
 
 ## 快速開始
 
@@ -482,6 +508,10 @@ powershell -ExecutionPolicy Bypass -File scripts\run_ollama_vlm_acceptance.ps1 `
 ```
 
 兩份 Ollama 驗收都會先要求 receipt 具備 PEFT merge 證據，重算主 GGUF、`mmproj` 與 Modelfile 的大小和 SHA-256。文字路徑以主 GGUF 建立本機模型；VLM 路徑則用兩個 `FROM` 同時匯入主 GGUF 與 projector，並要求 `/api/show` 回報 `completion`、`vision`、CLIP projector 與兩筆來源。Windows 實測使用 Ollama 0.32.0 與 RTX 4090：文字模型固定 probe 於 4.658 秒回傳單一 `C`；VLM 模型以程式產生的紅色方塊圖片測試，warm run 於 0.717 秒回傳單一 `RED`，兩者皆顯示 100% GPU。receipt 只保存雜湊、耗時與驗證欄位，不保存 raw output、測試圖片、匯入後 Modelfile 或 `ollama ps` 正文，也不會推送到外部服務。內容安全的 [GGUF export receipt](reports/phase5/20260723T080232Z-gguf-export-receipt.json)、[文字 acceptance](reports/phase5/20260723T081846Z-ollama-acceptance.json)與 [VLM acceptance](reports/phase5/20260723T104400Z-ollama-vlm-acceptance.json)已歸檔。歸檔與測試完成後，本機兩個驗收模型及 9,019,384,339-byte 暫存資料夾均已移除；大型 GGUF 僅保留於 Drive。
+
+## 引用
+
+若在研究、報告或衍生實驗中使用本專案，請引用對應的軟體版本；GitHub 可直接從 [`CITATION.cff`](CITATION.cff) 產生 APA／BibTeX，版本差異則見 [`CHANGELOG.md`](CHANGELOG.md)。
 
 ## 授權
 
