@@ -214,6 +214,25 @@ requires_explicit_repo_id = true
 requires_explicit_visibility_confirmation = true
 
 [export.gguf]
-enabled = false
+enabled = true
+approved_at = "2026-07-23"
+approval_phrase = "確認解鎖 GGUF Q4_K_M A100 匯出，上限 6.36 CU；產物只存 Google Drive，不上傳外部，完成後執行 Windows Ollama 驗收"
+required_approval_code = "GGUF_Q4_K_M_A100_APPROVED_20260723"
 quantization_method = "q4_k_m"
 run_environment = "colab_linux"
+required_gpu_name_contains = "A100"
+minimum_vram_gib = 38.0
+minimum_local_disk_gib = 100.0
+minimum_drive_disk_gib = 20.0
+maximum_memory_usage = 0.5
+compute_units_per_hour = 5.3
+projected_hours_lower = 0.5
+projected_hours_upper = 1.0
+projected_compute_units_lower = 2.65
+projected_compute_units_upper = 5.3
+approved_compute_units_with_20pct_buffer = 6.36
+expected_gguf_gib_lower = 7.0
+expected_gguf_gib_upper = 9.0
+drive_root = "/content/drive/MyDrive/tw-med-llm-qlora/phase5/gguf-q4-k-m/runs"
+ollama_model_name = "tw-med-taide-12b-q4-k-m"
+external_upload_allowed = false
