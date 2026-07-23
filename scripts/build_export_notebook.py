@@ -84,6 +84,7 @@ def build_notebook() -> nbformat.NotebookNode:
 
     import torch
     from google.colab import drive, userdata
+    from huggingface_hub import HfApi, snapshot_download
 
     PROJECT_CONFIG = json.loads({config_literal})
     export_config = PROJECT_CONFIG["export"]["gguf"]
@@ -218,23 +219,181 @@ def build_notebook() -> nbformat.NotebookNode:
     '''
 
     model_load = r'''
-    from peft import PeftModel
+    # ruff: noqa: I001  # Unsloth must patch Transformers before PEFT imports it.
     from unsloth import FastModel
+    from peft import PeftModel
+
+    model_id = str(model_config["model_id"])
+    model_revision = str(model_config["revision"])
+    model_info = HfApi(token=HF_TOKEN).model_info(
+        repo_id=model_id,
+        revision=model_revision,
+        files_metadata=True,
+    )
+    if model_info.sha != model_revision:
+        raise RuntimeError(
+            "Resolved model revision mismatch: "
+            f"expected={model_revision}, actual={model_info.sha}"
+        )
+
+    model_siblings = model_info.siblings or []
+    remote_weight_files = sorted(
+        sibling.rfilename
+        for sibling in model_siblings
+        if sibling.rfilename.endswith(".safetensors")
+    )
+    remote_weight_bytes = sum(
+        int(sibling.size or 0)
+        for sibling in model_siblings
+        if sibling.rfilename.endswith(".safetensors")
+    )
+    if not remote_weight_files or remote_weight_bytes <= 0:
+        raise RuntimeError(
+            "Hugging Face model metadata has no sized safetensors weights."
+        )
+
+    free_disk_bytes_before_download = shutil.disk_usage("/content").free
+    required_disk_bytes = remote_weight_bytes + 8 * 1024**3
+    if free_disk_bytes_before_download < required_disk_bytes:
+        raise RuntimeError(
+            "Colab local disk is too small for the pinned model snapshot: "
+            f"free={free_disk_bytes_before_download / 1024**3:.2f} GiB, "
+            f"required={required_disk_bytes / 1024**3:.2f} GiB. "
+            "Factory-reset the runtime or choose a runtime with more local disk."
+        )
+
+    snapshot_path = Path(
+        snapshot_download(
+            repo_id=model_id,
+            revision=model_revision,
+            token=HF_TOKEN,
+            allow_patterns=[
+                "*.json",
+                "*.jinja",
+                "*.model",
+                "*.safetensors",
+                "*.txt",
+            ],
+            max_workers=8,
+        )
+    )
+    if snapshot_path.name != model_revision:
+        raise RuntimeError(
+            "Downloaded snapshot revision mismatch: "
+            f"expected={model_revision}, actual={snapshot_path.name}"
+        )
+
+    missing_remote_weights = [
+        filename
+        for filename in remote_weight_files
+        if not (snapshot_path / filename).is_file()
+        or (snapshot_path / filename).stat().st_size <= 0
+    ]
+    if missing_remote_weights:
+        raise RuntimeError(
+            "Incomplete model snapshot; missing or empty weights: "
+            f"{missing_remote_weights}"
+        )
+
+    index_path = snapshot_path / "model.safetensors.index.json"
+    single_weight_path = snapshot_path / "model.safetensors"
+    if index_path.is_file():
+        weight_index = json.loads(index_path.read_text(encoding="utf-8"))
+        indexed_shards = sorted(set(weight_index.get("weight_map", {}).values()))
+        if not indexed_shards:
+            raise RuntimeError("model.safetensors.index.json has an empty weight_map")
+        unsafe_shards = [
+            filename
+            for filename in indexed_shards
+            if Path(filename).name != filename
+            or not filename.endswith(".safetensors")
+        ]
+        if unsafe_shards:
+            raise RuntimeError(f"Unsafe shard names in model index: {unsafe_shards}")
+        missing_indexed_shards = [
+            filename
+            for filename in indexed_shards
+            if not (snapshot_path / filename).is_file()
+            or (snapshot_path / filename).stat().st_size <= 0
+        ]
+        if missing_indexed_shards:
+            raise RuntimeError(
+                "Model index references missing or empty shards: "
+                f"{missing_indexed_shards}"
+            )
+    elif single_weight_path.is_file() and single_weight_path.stat().st_size > 0:
+        indexed_shards = [single_weight_path.name]
+    else:
+        raise RuntimeError(
+            "Pinned snapshot has neither model.safetensors nor "
+            "model.safetensors.index.json"
+        )
+
+    snapshot_config_path = snapshot_path / "config.json"
+    tokenizer_config_path = snapshot_path / "tokenizer_config.json"
+    if not snapshot_config_path.is_file() or not tokenizer_config_path.is_file():
+        raise RuntimeError(
+            "Pinned snapshot is missing config.json or tokenizer_config.json"
+        )
+    if not any(
+        (snapshot_path / filename).is_file()
+        and (snapshot_path / filename).stat().st_size > 0
+        for filename in ("tokenizer.json", "tokenizer.model")
+    ):
+        raise RuntimeError(
+            "Pinned snapshot has neither a usable tokenizer.json nor tokenizer.model"
+        )
+    snapshot_config = json.loads(snapshot_config_path.read_text(encoding="utf-8"))
+    snapshot_architectures = snapshot_config.get("architectures") or []
+    snapshot_is_vlm = bool(snapshot_config.get("vision_config")) or any(
+        str(architecture).endswith("ForConditionalGeneration")
+        for architecture in snapshot_architectures
+    )
+    if snapshot_is_vlm:
+        missing_processor_files = [
+            filename
+            for filename in ("processor_config.json", "preprocessor_config.json")
+            if not (snapshot_path / filename).is_file()
+            or (snapshot_path / filename).stat().st_size <= 0
+        ]
+        if missing_processor_files:
+            raise RuntimeError(
+                "VLM snapshot is missing processor files: "
+                f"{missing_processor_files}"
+            )
+
+    MODEL_SNAPSHOT_AUDIT = {
+        "repo_id": model_id,
+        "revision": model_revision,
+        "snapshot_path": str(snapshot_path),
+        "remote_weight_files": remote_weight_files,
+        "indexed_shards": indexed_shards,
+        "weight_bytes": remote_weight_bytes,
+        "weight_gib": remote_weight_bytes / 1024**3,
+        "free_disk_gib_before_download": free_disk_bytes_before_download / 1024**3,
+        "tokenizer_source": str(snapshot_path),
+        "vlm_processor_required": snapshot_is_vlm,
+        "complete": True,
+    }
+    print(json.dumps(MODEL_SNAPSHOT_AUDIT, ensure_ascii=False, indent=2))
 
     base_model, processor = FastModel.from_pretrained(
-        model_name=model_config["model_id"],
-        revision=model_config["revision"],
+        model_name=str(snapshot_path),
         max_seq_length=2048,
         load_in_4bit=True,
         load_in_8bit=False,
         full_finetuning=False,
         token=HF_TOKEN,
+        tokenizer_name=str(snapshot_path),
+        local_files_only=True,
+        use_safetensors=True,
     )
     model = PeftModel.from_pretrained(
         base_model,
         str(adapter_dir),
         is_trainable=False,
         low_cpu_mem_usage=True,
+        local_files_only=True,
     )
     model.eval()
     trainable, total = model.get_nb_trainable_parameters()
@@ -333,6 +492,13 @@ def build_notebook() -> nbformat.NotebookNode:
         },
         "base_model_id": model_config["model_id"],
         "base_model_revision": model_config["revision"],
+        "model_snapshot": {
+            "resolved_revision": model_info.sha,
+            "remote_weight_files": len(remote_weight_files),
+            "indexed_shards": len(indexed_shards),
+            "weight_bytes": remote_weight_bytes,
+            "complete": True,
+        },
         "adapter_checkpoint": int(phase3["selected_checkpoint"]),
         "phase3_archive_sha256": archive_sha256,
         "quantization_method": export_config["quantization_method"],
@@ -399,7 +565,16 @@ def build_notebook() -> nbformat.NotebookNode:
             _code(setup),
             _markdown("## 3. Verify and extract only the selected step-700 adapter"),
             _code(extraction),
-            _markdown("## 4. Load the pinned base and frozen adapter"),
+            _markdown(
+                """
+                ## 4. Download, verify, and load the pinned base and frozen adapter
+
+                This cell first completes the exact Hugging Face snapshot and verifies every
+                safetensors shard, tokenizer, and required processor file. It then gives
+                Unsloth the verified local snapshot only, preventing an interrupted cache
+                download from being mistaken for a loadable model.
+                """
+            ),
             _code(model_load),
             _markdown("## 5. Export Q4_K_M and an Ollama Modelfile"),
             _code(export),

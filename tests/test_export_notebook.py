@@ -81,6 +81,28 @@ def test_export_notebook_has_resource_and_evidence_gates() -> None:
     assert 'newline="\\n"' in source
 
 
+def test_export_notebook_verifies_complete_snapshot_before_local_load() -> None:
+    notebook = nbformat.read(NOTEBOOK, as_version=4)
+    source = "\n".join(cell.source for cell in notebook.cells)
+
+    assert "HfApi(token=HF_TOKEN).model_info(" in source
+    assert "files_metadata=True" in source
+    assert "snapshot_download(" in source
+    assert '"model.safetensors.index.json"' in source
+    assert "missing_remote_weights" in source
+    assert "missing_indexed_shards" in source
+    assert "missing_processor_files" in source
+    assert '"complete": True' in source
+    assert "model_name=str(snapshot_path)" in source
+    assert "tokenizer_name=str(snapshot_path)" in source
+    assert "local_files_only=True" in source
+    assert "use_safetensors=True" in source
+    assert '"model_snapshot": {' in source
+    assert source.index("from unsloth import FastModel") < source.index(
+        "from peft import PeftModel"
+    )
+
+
 def test_export_python_cells_compile_top_to_bottom() -> None:
     notebook = nbformat.read(NOTEBOOK, as_version=4)
 
