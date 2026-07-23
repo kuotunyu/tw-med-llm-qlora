@@ -14,7 +14,9 @@ CONSOLE_SCRIPTS = (
     "tw-med-validate-phase5",
     "tw-med-phase5-status",
     "tw-med-publish-adapter",
+    "tw-med-verify-public-adapter",
 )
+EXPECTED_VERSION = "0.2.0"
 
 
 def run(command: list[str]) -> subprocess.CompletedProcess[str]:
@@ -45,7 +47,7 @@ def smoke_install(directory: Path, venv: Path) -> dict[str, Any]:
     )
     package = json.loads(probe.stdout)
     if package != {
-        "version": "0.1.0",
+        "version": EXPECTED_VERSION,
         "module": "tw_med_qlora",
         "distributions": ["tw-med-llm-qlora"],
     }:
