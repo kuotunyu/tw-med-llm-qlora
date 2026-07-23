@@ -1,4 +1,0 @@
-interface:
-  display_name: "TW Med QLoRA Workflow"
-  short_description: "Guide phased medical QLoRA research work"
-  default_prompt: "Use $tw-med-qlora-workflow to continue the current approved project phase and update its evidence."

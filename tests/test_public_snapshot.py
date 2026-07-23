@@ -6,6 +6,7 @@ from urllib.parse import unquote
 
 ROOT = Path(__file__).parents[1]
 SKIPPED_DIRECTORIES = {
+    ".codex",
     ".git",
     ".mypy_cache",
     ".pytest_cache",
@@ -15,6 +16,11 @@ SKIPPED_DIRECTORIES = {
     "artifacts",
     "outputs",
     "private",
+}
+LOCAL_ONLY_PATHS = {
+    Path("AGENTS.md"),
+    Path("PROJECT_PLAN.md"),
+    Path("tests/test_project_skill.py"),
 }
 TEXT_SUFFIXES = {
     ".ipynb",
@@ -67,6 +73,9 @@ def public_files(
         ]
         for filename in filenames:
             path = Path(directory) / filename
+            relative = path.relative_to(ROOT)
+            if relative in LOCAL_ONLY_PATHS:
+                continue
             if path.name == ".env":
                 continue
             if (
@@ -177,5 +186,9 @@ def test_ignore_rules_cover_secrets_and_large_model_artifacts() -> None:
     assert "!.env.example" in ignore
     assert "artifacts/" in ignore
     assert "reports/private/" in ignore
+    assert "AGENTS.md" in ignore
+    assert "PROJECT_PLAN.md" in ignore
+    assert ".codex/" in ignore
+    assert "tests/test_project_skill.py" in ignore
     assert "*.safetensors" in ignore
     assert "*.gguf" in ignore
