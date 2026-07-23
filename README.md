@@ -8,7 +8,7 @@
 
 ## 目前狀態
 
-Phase 0–5 已完成。TAIDE 12B 的 A100 40GB、11,248 筆、1 epoch QLoRA 已跑完，正式 adapter 選用完成 1,409 筆 validation 的 step 700。Phase 4 已完成 28,758 次正式生成與本機證據驗證：adapter 在 MedQA test 達 72.05%，在 13 科 TMMLU+ 達 61.53%，且五個非醫學控制科通過預先定義的 −2 個百分點 non-inferiority 判準。Phase 5 的 Windows RTX 4090 base + adapter acceptance、GitHub hosted Windows／Linux CPU CI 與 Hugging Face 私人發布均已通過；遠端 revision `c2830d37fe6b5e73e6dd07e17efbb858979d0aa4` 的 11 個發布檔案已逐一重算並與 receipt 完全相符。Adapter 權重維持 private，並未公開。
+Phase 0–5 已完成；Phase 6 正在進行 v0.1.0 可重現發布驗收。TAIDE 12B 的 A100 40GB、11,248 筆、1 epoch QLoRA 已跑完，正式 adapter 選用完成 1,409 筆 validation 的 step 700。Phase 4 已完成 28,758 次正式生成與本機證據驗證：adapter 在 MedQA test 達 72.05%，在 13 科 TMMLU+ 達 61.53%，且五個非醫學控制科通過預先定義的 −2 個百分點 non-inferiority 判準。Phase 5 的 Windows RTX 4090 base + adapter acceptance、GitHub hosted Windows／Linux CPU CI 與 Hugging Face 私人發布均已通過；遠端 revision `c2830d37fe6b5e73e6dd07e17efbb858979d0aa4` 的 11 個發布檔案已逐一重算並與 receipt 完全相符。Adapter 權重維持 private，並未公開。
 
 ## 研究架構
 
@@ -46,10 +46,22 @@ flowchart LR
 | 3 | 完整 QLoRA 與 checkpoint | 完成；證據驗證通過 |
 | 4 | MedQA + TMMLU+ 雙軌評估 | 完成；28,758 requests 與證據驗證通過 |
 | 5 | RTX 4090 推論與發布 | 完成；4090 acceptance、hosted CI、HF 私人發布與 receipt 驗證通過 |
+| 6 | v0.1.0 可重現發布驗收 | 進行中；本機 package build／內容稽核／乾淨安裝已通過，待 hosted CI、tag 與 GitHub Release |
 
 每個 Phase 都必須先展示測試與產物，經確認後才進入下一階段。可公開的實測結果、限制與重現方式收斂於本 README，機器可驗證的內容安全證據則歸檔於 [`reports/`](reports/)。
 
 Repository 內含最小權限、無 secrets 的 CPU CI；每次 push／pull request 會在 Windows 與 Linux 的 Python 3.11 環境，以 `uv.lock` 執行 Ruff、完整 pytest 及四份 notebook freshness 檢查。公開 root commit `180e544` 的 [GitHub Actions CI #1](https://github.com/kuotunyu/tw-med-llm-qlora/actions/runs/29937271766)，以及 publication 換行修正 `e804526` 的 [CI #4](https://github.com/kuotunyu/tw-med-llm-qlora/actions/runs/29940013658)，均由 `windows-latest` 與 `ubuntu-latest` 實測通過。GPU smoke、完整訓練、正式評估與 4090 acceptance 不會在 CI 中誤觸。
+
+### v0.1.0 發布驗收
+
+Git tag 對應的 GitHub source snapshot 是完整研究交付；wheel 與 sdist 則是精簡的 Python helper／CLI artifacts，不包含測試、本機管理檔、reports、notebooks、模型權重或私密內容。Windows 與 Linux CI 都會重建並稽核兩種 archive，再把 wheel 以 `--no-deps` 安裝至全新 Python 3.11 環境，確認四個 console scripts 均可顯示 `--help`：
+
+```powershell
+uv build --no-sources --clear --out-dir outputs/release-v0.1.0 --no-create-gitignore
+uv run python scripts/audit_release_artifacts.py outputs/release-v0.1.0
+uv run python scripts/smoke_release_install.py outputs/release-v0.1.0 `
+  --venv outputs/release-v0.1.0-venv
+```
 
 ## 快速開始
 
