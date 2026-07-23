@@ -442,7 +442,7 @@ GGUF 不阻塞 adapter 交付。現行 Unsloth 官方 API 為 `save_pretrained_g
 
 本次已取得 A100 40GB、Q4_K_M 匯出的明確核准：預估 0.5–1.0 小時、2.65–5.30 CU，含 20% 緩衝的核准上限為 6.36 CU；預估 GGUF 約 7–9 GiB。這些仍是執行前估算，不是實測結果。[選配 export notebook](notebooks/export_gguf.ipynb)的 repository gate 已開啟，但每次重建後仍固定 `ENABLE_GGUF_EXPORT=False` 且 approval 欄位留白。只有在 A100 runtime 確認資源面板後，才於第一格填入 notebook 顯示的核准碼；其他格不得手動改動。
 
-notebook 會硬性檢查 A100、BF16、至少 38 GiB VRAM、100 GiB 本機空間、20 GiB Drive 空間、Phase 3 archive 大小與 SHA-256，再載入固定 revision 的 base 與 frozen step-700 adapter。每次執行使用獨立 `run_id` 目錄，GGUF、Modelfile 與內容安全 receipt 只寫入 Drive，不自動發布或上傳外部模型服務。帶回 Windows RTX 4090 後執行：
+notebook 會硬性檢查 A100、BF16、至少 38 GiB VRAM、100 GiB 本機空間、20 GiB Drive 空間、Phase 3 archive 大小與 SHA-256。首次 A100 執行已通過硬體與 archive gate，但直接載入時因部分 Hugging Face cache 讓 Unsloth／Transformers 取得空的權重路徑而停止，未產生 GGUF。修正版會先完整下載固定 revision，逐一驗證遠端 safetensors、index shard、tokenizer 與必要 processor，再以 `local_files_only=True` 從本機 snapshot 載入 base 與 frozen step-700 adapter。每次執行使用獨立 `run_id` 目錄，GGUF、Modelfile 與內容安全 receipt 只寫入 Drive，不自動發布或上傳外部模型服務。帶回 Windows RTX 4090 後執行：
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File scripts\run_ollama_acceptance.ps1 `
