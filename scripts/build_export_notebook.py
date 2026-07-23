@@ -575,6 +575,7 @@ def build_notebook() -> nbformat.NotebookNode:
             "remote_weight_files": len(remote_weight_files),
             "indexed_shards": len(indexed_shards),
             "weight_bytes": remote_weight_bytes,
+            "vlm_processor_required": snapshot_is_vlm,
             "complete": True,
         },
         "adapter_checkpoint": int(phase3["selected_checkpoint"]),

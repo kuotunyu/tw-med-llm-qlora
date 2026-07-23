@@ -129,7 +129,19 @@ $ggufNameDifference = @(
 if ($ggufNameDifference.Count -ne 0 -or $ggufFiles.Count -ne $expectedGgufNames.Count) {
     throw "GGUF files do not match the export receipt."
 }
-if ([bool]$exportReceipt.model_snapshot.vlm_processor_required) {
+$vlmProcessorRequiredProperty = @(
+    $exportReceipt.model_snapshot.PSObject.Properties |
+        Where-Object { $_.Name -eq "vlm_processor_required" }
+)
+if ($vlmProcessorRequiredProperty.Count -gt 1) {
+    throw "Export receipt contains duplicate VLM requirement fields."
+}
+$vlmProcessorRequired = if ($vlmProcessorRequiredProperty.Count -eq 1) {
+    [bool]$vlmProcessorRequiredProperty[0].Value
+} else {
+    $projectorGgufNames.Count -gt 0
+}
+if ($vlmProcessorRequired) {
     if ($projectorGgufNames.Count -ne 1 -or -not [bool]$exportReceipt.gguf.vlm_projector_archived) {
         throw "VLM export receipt must include exactly one archived projector GGUF."
     }
@@ -218,6 +230,7 @@ $receipt = [ordered]@{
     gguf_sha256 = $ggufSha256
     projector_files = $projectorGgufNames
     projector_count = $projectorGgufNames.Count
+    vlm_processor_required = $vlmProcessorRequired
     ollama_import_mode = "text_only_primary_gguf"
     modelfile_sha256 = $modelfileSha256
     imported_modelfile_sha256 = Get-TextSha256 -Text $ollamaModelfile
