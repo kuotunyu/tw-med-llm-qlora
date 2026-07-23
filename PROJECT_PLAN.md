@@ -65,6 +65,7 @@
 | 2026-07-22 | 發布採 GitHub public、Hugging Face adapter private 的分階段策略 | 使用者核准 `kuotunyu/tw-med-llm-qlora` 公開與 `kuotunyu/tw-med-llm-qlora-adapter` 私人；先取得 hosted CI 與私人重載證據，未另行核准前不把 adapter 改為公開 |
 | 2026-07-22 | 公開版清理時重新關閉 HF 發布 gate | 現有 credential 無法寫入原核准的 HF namespace；保留 GitHub 公開 URL，將 `adapter_repo_id` 清空並設 `publication.enabled=false`，待精確可寫入的私人目標再次確認 |
 | 2026-07-23 | HF 私人發布目標改為可寫入 namespace | 使用者建立 `steven0226/tw-med-llm-qlora-adapter` 並確認為 private；本機 `.env` token 的 `whoami` 為 `steven0226`、role 為 write，且可讀取該私人 repository。設定精確目標並重新開啟 publication gate，實際上傳仍須 dry-run 與一次性確認碼 |
+| 2026-07-23 | 解鎖選配 A100 GGUF Q4_K_M 匯出 | 使用者核准 0.5–1.0 小時、2.65–5.30 CU，含 20% 緩衝上限 6.36 CU；只輸出至 Drive，不上傳外部，完成後在 Windows RTX 4090 以 Ollama 驗收。repository gate 開啟，但 notebook 每次重建仍將執行旗標與 approval 欄位重設為關閉 |
 
 ## 固定技術規格
 
@@ -83,6 +84,7 @@
 | --- | --- | --- |
 | 完整訓練 | A100 40GB 實際 session 1.143 小時；依 5.3 CU／小時約 6.06 CU，低於 calibration 的 26.49 CU 保守投影；未提供每 CU 單價，故不估金額 | 已完成並通過證據驗證 |
 | Phase 4 雙軌評估 | 完整 28,758 requests 的完成 session 實測 2.542 小時；依 5.3 CU／小時估算 13.47 CU，低於 15.79 CU 投影與 18.95 CU 緩衝；先前校準／中斷 session 需另計 | 已完成並通過證據驗證 |
+| 選配 GGUF Q4_K_M 匯出 | A100 40GB 預估 0.5–1.0 小時；依 5.3 CU／小時估算 2.65–5.30 CU，含 20% 上限 6.36 CU；GGUF 預估 7–9 GiB，執行時以實際資源面板為準 | 使用者已明確核准；repository gate 已開啟，每次 Colab 執行仍須填入 approval code |
 | 付費 LLM API | v1 不使用 | 若未來新增，先依 token 量與官方費率估價 |
 
 ## 產物連結
@@ -113,7 +115,7 @@
 | Adapter 模型卡 | 已完成並隨 private adapter 發布；包含基底條款、資料授權差異、研究用途、非醫療建議、正式結果與限制 | [model_card/README.md](model_card/README.md) |
 | Adapter 發布工具 | 已完成 dry-run 與實際 private 上傳；allowlist、模型卡渲染、4090 manifest 與綁定 repo/visibility 的確認碼均通過 | [src/tw_med_qlora/cli/publish_adapter.py](src/tw_med_qlora/cli/publish_adapter.py) |
 | Phase 5 publication receipt／遠端驗證 | 已驗證；HF revision `c2830d37…0aa4`、private=true、11/11 檔案共 191,661,898 bytes 逐檔 SHA-256 相符、token 未記錄 | [receipt](reports/phase5/20260722T165957Z-publication-receipt.json)／[validation](reports/phase5/20260722T170446Z-publication-validation.json) |
-| 選配 GGUF／Ollama | 已建立雙重關閉的 A100 export notebook 與 Windows Ollama 驗收；不阻塞 adapter 交付 | [notebooks/export_gguf.ipynb](notebooks/export_gguf.ipynb) |
+| 選配 GGUF／Ollama | 使用者已核准 A100 Q4_K_M 匯出上限 6.36 CU；repository gate 已開啟，每次 notebook gate 仍預設關閉。輸出 receipt 與 Windows Ollama 雜湊驗收已強化，尚未執行付費匯出 | [notebooks/export_gguf.ipynb](notebooks/export_gguf.ipynb)／[Ollama 驗收腳本](scripts/run_ollama_acceptance.ps1) |
 | Phase 4 首次 calibration manifest | 證據完整；結果因協定問題不作成績解讀 | [reports/phase4/calibration/20260722T052039Z-run-manifest.json](reports/phase4/calibration/20260722T052039Z-run-manifest.json) |
 | Phase 4 首次 calibration 驗證摘要 | integrity pass；recalibration required | [reports/phase4/calibration/20260722T052039Z-validation.json](reports/phase4/calibration/20260722T052039Z-validation.json) |
 | Phase 4 parser-v3 calibration manifest | A100 實跑完成，test 未載入 | [reports/phase4/calibration/20260722T061028Z-run-manifest.json](reports/phase4/calibration/20260722T061028Z-run-manifest.json) |
@@ -251,6 +253,8 @@
 | 2026-07-23 | 5 | 修正模型卡換行並完成 private publication 驗證 | HF HEAD 與 receipt 均為 `c2830d37...0aa4`；repository 維持 private。下載指定 revision 後重算 11/11 個 allowlist 檔案、共 191,661,898 bytes，大小與 SHA-256 全部相符；額外 `.gitattributes` 為 HF 自動產生，receipt 未記錄 token | 保存內容安全 receipt 與遠端驗證摘要；執行 Phase 5 完成度稽核 |
 | 2026-07-23 | 5 | 完成 Phase 5 最終稽核 | 在 clean commit `e8045263b1fd7d39e7b7fdff52fe114405cf210e` 執行 `phase5_status --require-complete`；13 項必要條件全數 `pass`，`ready_for_handoff=true`、`ready_for_publication=true`、`phase5_complete=true`；GGUF 明列 optional | 提交 Phase 5 收尾證據並確認 hosted CI；未另行核准前 adapter 維持 private |
 | 2026-07-23 | 5 | 歸檔 publication 證據並完成收尾驗收 | 保存內容安全 receipt 與獨立遠端驗證摘要；publication／readiness 聚焦測試 13 passed、完整 `pytest` 178 passed、Ruff 與 `uv lock --check` 通過，歸檔 receipt 再次由正式驗證器確認 valid、private、11 files、token absent | 由使用者建立聚焦 commit 並 push；確認最後一次 hosted CI |
+| 2026-07-23 | 5 選配 | 重新查核 GGUF／Ollama API 並取得成本核准 | Context7 與官方文件確認 `save_pretrained_gguf(..., q4_k_m)`、OOM 時 `maximum_memory_usage=0.5`、chat template／EOS 一致性，以及 Ollama `FROM ./model.gguf`／`ollama create`；使用者核准 A100 上限 6.36 CU、Drive-only 與 Windows Ollama 驗收 | 開啟 repository gate，強化每次執行閘門、內容安全 receipt 與 Ollama 驗證 |
+| 2026-07-23 | 5 選配 | 完成 GGUF 解鎖與 Ollama 驗收契約的本機驗證 | repository gate 已開啟，但 notebook 每次重建仍固定 `ENABLE_GGUF_EXPORT=False` 且 approval 留白；A100／BF16／VRAM／本機與 Drive 空間、archive 大小與 SHA-256、唯一 run 目錄、GGUF／Modelfile hash receipt 皆有 gate。Windows 以假 Ollama CLI 完整跑過 receipt 驗證、100% GPU 判定、固定 probe 與 UTF-8 LF receipt；`pytest` 183 passed、Ruff、`uv lock --check`、四份 notebook freshness 全數通過。Linux/Python 3.12 依賴解析 371 行，固定 `unsloth 2026.7.4`、`torch 2.10.0`、`transformers 4.56.2`、`peft 0.19.1` | 停在付費執行閘門；由使用者建立聚焦 commit 後，在 A100 runtime 只編輯第一格並逐格執行 |
 
 ## 已知風險
 
@@ -261,7 +265,7 @@
 - Windows 對剛完成的大型 ZIP 或含 safetensors 目錄可能拒絕具 replace-existing 語意的改名；Phase 5 目的地原本就必須不存在，因此改用 no-overwrite `rename`，並只針對 `PermissionError` 做最多 1.25 秒的有限重試。若仍失敗會保留 `.partial`，不會誤標為完成或靜默刪除證據。
 - 接手副本未包含原 `.git`，舊 parent history 只能由移轉時的 hash 證據與本執行簿追溯；目前以新 root commit 保存驗證後快照。若日後找到原機 `.git`，應另行比對，不把兩條歷史直接偽裝成同一條。
 - Windows 未啟用 Developer Mode，Hugging Face cache 以無 symlink 降級模式工作，會增加磁碟用量；本次下載後仍有約 214 GiB 可用，不影響 acceptance 正確性。
-- 選配 GGUF 匯出仍需在執行當下重新確認 Unsloth API 與 A100 可用磁碟；目前雙重 gate 維持關閉，尚無 GGUF 實測證據或成本數據。
+- 選配 GGUF 匯出已重新確認 Unsloth API並取得 6.36 CU 上限核准；repository gate 已開啟，但每次 notebook 的執行旗標與 approval 欄位仍預設關閉。執行當下仍須確認 A100、100 GiB 本機空間、20 GiB Drive 空間與資源面板；目前尚無 GGUF 實測證據或實際成本數據。
 - Colab 的 CUDA/PyTorch 基礎映像由平台管理；notebook 鎖定直接訓練依賴，並把實際 transitive versions 全量寫入 `pip-freeze.txt`。
 - TAIDE 12B 原始 safetensors snapshot 約 27 GB；即使採 4-bit 載入仍需先保留完整下載空間，notebook 會在下載前檢查本機磁碟並保留 8 GiB 餘裕。
 - Premium GPU 類型與可用性仍由 Colab 動態分配，且較高階 GPU 可能更快消耗 compute units；以 smoke manifest 的實測吞吐與帳務數據為準。
@@ -278,4 +282,4 @@
 
 Phase 5 已完成。Windows RTX 4090 base + adapter acceptance、內容安全 manifest、GitHub hosted Windows／Linux CPU CI、HF private publication、publication receipt 與遠端 11 個 allowlist 檔案的逐檔 SHA-256 均已驗證。最終完成度稽核的 13 項必要條件全部通過，`phase5_complete=true`。
 
-GitHub `kuotunyu/tw-med-llm-qlora` 維持公開；Hugging Face `steven0226/tw-med-llm-qlora-adapter` 維持 private，未另行核准前不得改為 public。選配 GGUF／Ollama 不屬於 Phase 5 退出條件，雙重 gate 保持關閉；未來若要執行，須重新查核 API、估算資源並取得新的明確核准。
+選配 GGUF／Ollama 不改變 Phase 5 已完成的結論。使用者已核准 A100 Q4_K_M 匯出上限 6.36 CU；目前先完成 repository gate、notebook、receipt 與 Windows Ollama 驗收契約的本機測試。付費執行仍停在每次 notebook 的手動閘門，下一步是展示本機驗證結果，再由使用者於 A100 runtime 逐格執行。
