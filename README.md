@@ -438,16 +438,19 @@ uv run tw-med-publish-adapter artifacts\phase3-step700-adapter `
 
 ### 選配 GGUF 與 Ollama
 
-GGUF 不阻塞 adapter 交付，而且預設雙重關閉。現行 Unsloth 官方 API 為 `save_pretrained_gguf(..., quantization_method="q4_k_m")`，並強調推論時必須保持相同 chat template；官方 Ollama 文件則支援以 `FROM ./model.gguf` 匯入合併後的 GGUF。由於現行 adapter import 文件未列 Gemma 3，本專案不直接把 QLoRA adapter 掛到 Ollama base，而是在 Colab Linux 合併並匯出 Q4_K_M，再於 Windows 建模。
+GGUF 不阻塞 adapter 交付。現行 Unsloth 官方 API 為 `save_pretrained_gguf(..., quantization_method="q4_k_m")`，並強調推論時必須保持相同 chat template；官方 Ollama 文件則支援以 `FROM ./model.gguf` 匯入合併後的 GGUF。由於現行 adapter import 文件未列 Gemma 3，本專案不直接把 QLoRA adapter 掛到 Ollama base，而是在 Colab Linux 合併並匯出 Q4_K_M，再於 Windows 建模。
 
-[選配 export notebook](notebooks/export_gguf.ipynb)目前 `CONFIG_EXPORT_ENABLED=False` 且 `ENABLE_GGUF_EXPORT=False`，不能誤觸長任務。只有取得明確核准、將 repo gate 打開並重建 notebook 後，才在 A100 從上到下執行；產物與 Modelfile 只寫 Drive，不自動發布。帶回 4090 後可執行：
+本次已取得 A100 40GB、Q4_K_M 匯出的明確核准：預估 0.5–1.0 小時、2.65–5.30 CU，含 20% 緩衝的核准上限為 6.36 CU；預估 GGUF 約 7–9 GiB。這些仍是執行前估算，不是實測結果。[選配 export notebook](notebooks/export_gguf.ipynb)的 repository gate 已開啟，但每次重建後仍固定 `ENABLE_GGUF_EXPORT=False` 且 approval 欄位留白。只有在 A100 runtime 確認資源面板後，才於第一格填入 notebook 顯示的核准碼；其他格不得手動改動。
+
+notebook 會硬性檢查 A100、BF16、至少 38 GiB VRAM、100 GiB 本機空間、20 GiB Drive 空間、Phase 3 archive 大小與 SHA-256，再載入固定 revision 的 base 與 frozen step-700 adapter。每次執行使用獨立 `run_id` 目錄，GGUF、Modelfile 與內容安全 receipt 只寫入 Drive，不自動發布或上傳外部模型服務。帶回 Windows RTX 4090 後執行：
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File scripts\run_ollama_acceptance.ps1 `
-  -ExportDirectory "C:\GGUF輸出資料夾"
+  -ExportDirectory "C:\GGUF輸出資料夾" `
+  -ModelName "tw-med-taide-12b-q4-k-m"
 ```
 
-Ollama 驗收會建立本機模型、跑固定 probe，並保存不含 raw output 的 hash receipt；不會推送到外部服務。
+Ollama 驗收會先重算 export receipt、GGUF 與 Modelfile 的大小和 SHA-256，再建立本機模型、檢查 100% GPU 載入並執行固定 probe。產生的 `ollama-acceptance.json` 只保存雜湊、耗時與驗證欄位，不保存 raw output、匯入後 Modelfile 或 `ollama ps` 正文，也不會推送到外部服務。目前尚未產生 GGUF 或 Ollama 實測結果。
 
 ## 授權
 
