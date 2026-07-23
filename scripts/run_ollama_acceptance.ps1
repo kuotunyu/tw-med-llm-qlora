@@ -63,8 +63,8 @@ if (-not (Test-Path -LiteralPath $exportReceiptPath -PathType Leaf)) {
     throw "gguf-export-receipt.json was not found in the export directory."
 }
 $exportReceipt = Get-Content -LiteralPath $exportReceiptPath -Raw -Encoding UTF8 | ConvertFrom-Json
-if ([int]$exportReceipt.schema_version -lt 2) {
-    throw "Export receipt schema_version must be at least 2."
+if ([int]$exportReceipt.schema_version -lt 3) {
+    throw "Export receipt schema_version must be at least 3."
 }
 if ($exportReceipt.optional_export -ne "gguf_q4_k_m") {
     throw "Export receipt does not describe the approved GGUF Q4_K_M workflow."
@@ -90,22 +90,67 @@ if ([double]$exportReceipt.approval.approved_compute_units_with_20pct_buffer -ne
 if ([bool]$exportReceipt.published -or [bool]$exportReceipt.external_upload_performed) {
     throw "Export receipt indicates an external publication or upload."
 }
+if (-not [bool]$exportReceipt.adapter_merge.peft_detected) {
+    throw "Export receipt does not attest that Unsloth detected a PEFT model."
+}
+if (-not [bool]$exportReceipt.adapter_merge.runtime_base_model_rebound_to_verified_snapshot) {
+    throw "Export receipt does not attest the verified local base-model binding."
+}
+if ([int]$exportReceipt.adapter_merge.lora_parameter_tensors -le 0) {
+    throw "Export receipt has no LoRA parameter evidence."
+}
+if ($exportReceipt.gguf.ollama_import_mode -ne "text_only_primary_gguf") {
+    throw "Export receipt does not describe the approved text-only Ollama import mode."
+}
 
 $modelfile = Join-Path $exportPath "Modelfile"
 if (-not (Test-Path -LiteralPath $modelfile -PathType Leaf)) {
     throw "Modelfile was not found in the export directory."
 }
 $ggufFiles = @(Get-ChildItem -LiteralPath $exportPath -Filter "*.gguf" -File)
-if ($ggufFiles.Count -ne 1) {
-    throw "Expected exactly one GGUF file in the export directory."
+$primaryGgufName = [string]$exportReceipt.gguf.primary_file
+if ([System.IO.Path]::GetFileName($primaryGgufName) -ne $primaryGgufName) {
+    throw "Export receipt primary GGUF must be a plain file name."
 }
-$ggufRecord = Get-ReceiptFileRecord -Receipt $exportReceipt -Name $ggufFiles[0].Name
-$ggufSha256 = Get-FileSha256 -Path $ggufFiles[0].FullName
-if ([int64]$ggufRecord.bytes -ne [int64]$ggufFiles[0].Length) {
-    throw "GGUF byte size does not match the export receipt."
+$projectorGgufNames = @(
+    $exportReceipt.gguf.projector_files |
+        ForEach-Object { [string]$_ }
+)
+foreach ($projectorName in $projectorGgufNames) {
+    if ([System.IO.Path]::GetFileName($projectorName) -ne $projectorName) {
+        throw "Export receipt projector GGUF must be a plain file name."
+    }
 }
-if ([string]$ggufRecord.sha256 -ne $ggufSha256) {
-    throw "GGUF SHA-256 does not match the export receipt."
+$expectedGgufNames = @($primaryGgufName) + $projectorGgufNames
+$actualGgufNames = @($ggufFiles | ForEach-Object { $_.Name })
+$ggufNameDifference = @(
+    Compare-Object -ReferenceObject $expectedGgufNames -DifferenceObject $actualGgufNames
+)
+if ($ggufNameDifference.Count -ne 0 -or $ggufFiles.Count -ne $expectedGgufNames.Count) {
+    throw "GGUF files do not match the export receipt."
+}
+if ([bool]$exportReceipt.model_snapshot.vlm_processor_required) {
+    if ($projectorGgufNames.Count -ne 1 -or -not [bool]$exportReceipt.gguf.vlm_projector_archived) {
+        throw "VLM export receipt must include exactly one archived projector GGUF."
+    }
+}
+$primaryGguf = @($ggufFiles | Where-Object { $_.Name -eq $primaryGgufName })
+if ($primaryGguf.Count -ne 1) {
+    throw "Expected exactly one primary GGUF named by the export receipt."
+}
+$ggufSha256 = $null
+foreach ($ggufFile in $ggufFiles) {
+    $ggufRecord = Get-ReceiptFileRecord -Receipt $exportReceipt -Name $ggufFile.Name
+    $currentSha256 = Get-FileSha256 -Path $ggufFile.FullName
+    if ([int64]$ggufRecord.bytes -ne [int64]$ggufFile.Length) {
+        throw "GGUF byte size does not match the export receipt: $($ggufFile.Name)"
+    }
+    if ([string]$ggufRecord.sha256 -ne $currentSha256) {
+        throw "GGUF SHA-256 does not match the export receipt: $($ggufFile.Name)"
+    }
+    if ($ggufFile.Name -eq $primaryGgufName) {
+        $ggufSha256 = $currentSha256
+    }
 }
 $modelfileRecord = Get-ReceiptFileRecord -Receipt $exportReceipt -Name "Modelfile"
 $modelfileInfo = Get-Item -LiteralPath $modelfile
@@ -116,9 +161,9 @@ if ([int64]$modelfileRecord.bytes -ne [int64]$modelfileInfo.Length) {
 if ([string]$modelfileRecord.sha256 -ne $modelfileSha256) {
     throw "Modelfile SHA-256 does not match the export receipt."
 }
-$fromLine = "FROM ./" + $ggufFiles[0].Name
+$fromLine = "FROM ./" + $primaryGguf[0].Name
 if (-not (Select-String -LiteralPath $modelfile -SimpleMatch $fromLine -Quiet)) {
-    throw "Modelfile does not reference the only GGUF file."
+    throw "Modelfile does not reference the primary GGUF file."
 }
 
 $ollamaVersionLines = @(& ollama --version 2>&1)
@@ -168,9 +213,12 @@ $receipt = [ordered]@{
     quantization_method = "q4_k_m"
     export_receipt_sha256 = Get-FileSha256 -Path $exportReceiptPath
     export_receipt_schema_version = [int]$exportReceipt.schema_version
-    gguf_file = $ggufFiles[0].Name
-    gguf_bytes = [int64]$ggufFiles[0].Length
+    gguf_file = $primaryGguf[0].Name
+    gguf_bytes = [int64]$primaryGguf[0].Length
     gguf_sha256 = $ggufSha256
+    projector_files = $projectorGgufNames
+    projector_count = $projectorGgufNames.Count
+    ollama_import_mode = "text_only_primary_gguf"
     modelfile_sha256 = $modelfileSha256
     imported_modelfile_sha256 = Get-TextSha256 -Text $ollamaModelfile
     ollama_ps_sha256 = Get-TextSha256 -Text $processText

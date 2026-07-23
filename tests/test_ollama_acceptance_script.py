@@ -21,7 +21,13 @@ def test_ollama_acceptance_validates_export_before_local_import() -> None:
     assert "ExpectedPhase3ArchiveSha256" in source
     assert "ExpectedAdapterCheckpoint" in source
     assert "approved_compute_units_with_20pct_buffer" in source
-    assert "GGUF SHA-256 does not match the export receipt." in source
+    assert "adapter_merge.peft_detected" in source
+    assert "runtime_base_model_rebound_to_verified_snapshot" in source
+    assert "lora_parameter_tensors" in source
+    assert "gguf.primary_file" in source
+    assert "gguf.projector_files" in source
+    assert 'ollama_import_mode -ne "text_only_primary_gguf"' in source
+    assert "GGUF SHA-256 does not match the export receipt:" in source
     assert "Modelfile SHA-256 does not match the export receipt." in source
     assert "& ollama create" in source
     assert "& ollama show $ModelName --modelfile" in source
@@ -65,6 +71,8 @@ def test_ollama_acceptance_contract_with_fake_cli(tmp_path: Path) -> None:
 
     gguf = tmp_path / "tw-med-q4-k-m.gguf"
     gguf.write_bytes(b"GGUF-test-payload")
+    projector = tmp_path / "tw-med-BF16-mmproj.gguf"
+    projector.write_bytes(b"GGUF-projector-test-payload")
     modelfile = tmp_path / "Modelfile"
     modelfile.write_text(
         "\n".join(
@@ -89,7 +97,7 @@ def test_ollama_acceptance_contract_with_fake_cli(tmp_path: Path) -> None:
         }
 
     export_receipt = {
-        "schema_version": 2,
+        "schema_version": 3,
         "optional_export": "gguf_q4_k_m",
         "quantization_method": "q4_k_m",
         "base_model_id": "taide/Gemma-3-TAIDE-12b-Chat-2602",
@@ -99,8 +107,21 @@ def test_ollama_acceptance_contract_with_fake_cli(tmp_path: Path) -> None:
         ),
         "adapter_checkpoint": 700,
         "approval": {"approved_compute_units_with_20pct_buffer": 6.36},
+        "model_snapshot": {"vlm_processor_required": True},
+        "adapter_merge": {
+            "peft_detected": True,
+            "runtime_base_model_rebound_to_verified_snapshot": True,
+            "lora_parameter_tensors": 42,
+        },
+        "gguf": {
+            "primary_file": gguf.name,
+            "projector_files": [projector.name],
+            "ollama_import_mode": "text_only_primary_gguf",
+            "vlm_projector_archived": True,
+        },
         "files": {
             gguf.name: file_record(gguf),
+            projector.name: file_record(projector),
             "Modelfile": file_record(modelfile),
         },
         "published": False,
@@ -167,6 +188,9 @@ def test_ollama_acceptance_contract_with_fake_cli(tmp_path: Path) -> None:
     assert acceptance["passed"] is True
     assert acceptance["gpu_fully_loaded"] is True
     assert acceptance["gguf_sha256"] == file_record(gguf)["sha256"]
+    assert acceptance["projector_files"] == [projector.name]
+    assert acceptance["projector_count"] == 1
+    assert acceptance["ollama_import_mode"] == "text_only_primary_gguf"
     assert acceptance["output_sha256"] == hashlib.sha256(b"C").hexdigest()
     assert acceptance["raw_output_recorded"] is False
     assert acceptance["external_upload_performed"] is False
