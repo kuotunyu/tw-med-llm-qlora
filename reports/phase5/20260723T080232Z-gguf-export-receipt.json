@@ -1,0 +1,99 @@
+{
+  "schema_version": 3,
+  "phase": 5,
+  "optional_export": "gguf_q4_k_m",
+  "run_id": "20260723T074001Z",
+  "created_at_utc": "2026-07-23T08:02:32.357202+00:00",
+  "workflow_elapsed_seconds": 1350.680684587,
+  "approval": {
+    "approved_at": "2026-07-23",
+    "required_approval_code": "GGUF_Q4_K_M_A100_APPROVED_20260723",
+    "approved_compute_units_with_20pct_buffer": 6.36
+  },
+  "base_model_id": "taide/Gemma-3-TAIDE-12b-Chat-2602",
+  "base_model_revision": "4de0b93b99f8b61b59c40d019fd593bdd1c42249",
+  "model_snapshot": {
+    "resolved_revision": "4de0b93b99f8b61b59c40d019fd593bdd1c42249",
+    "remote_weight_files": 6,
+    "indexed_shards": 6,
+    "weight_bytes": 27246744536,
+    "complete": true
+  },
+  "adapter_checkpoint": 700,
+  "phase3_archive_sha256": "2c537dfd3049319286c678a3ca3aa72e3f20baa7e0f44bde93ff7ee4dc47e43e",
+  "adapter_merge": {
+    "peft_detected": true,
+    "peft_model_class": "PeftModelForCausalLM",
+    "active_adapters": [
+      "default"
+    ],
+    "lora_parameter_tensors": 672,
+    "original_adapter_config_sha256": "bc062f9d62a5ff8a81ed1d9bb0ce8f777e4f1f5cd3c9d6bcef4f41e9c2813999",
+    "runtime_base_model_rebound_to_verified_snapshot": true
+  },
+  "quantization_method": "q4_k_m",
+  "maximum_memory_usage": 0.5,
+  "gpu": {
+    "name": "NVIDIA A100-SXM4-40GB",
+    "total_vram_gib": 39.4935302734375,
+    "compute_capability": [
+      8,
+      0
+    ],
+    "bf16_supported": true
+  },
+  "resources": {
+    "free_local_disk_gib_before_export": 183.0426254272461,
+    "free_drive_disk_gib_before_export": 173.88751602172852,
+    "gguf_gib": 7.6044096648693085,
+    "expected_gguf_gib": [
+      7.0,
+      9.0
+    ],
+    "expected_size_range_match": true
+  },
+  "tokenizer": {
+    "processor_class": "Gemma3Processor",
+    "tokenizer_class": "GemmaTokenizerFast",
+    "chat_template_sha256": "e0c229b1264963a6eff6619fdc6b2898bc572870f3b7c3914297e637656518b8",
+    "bos_token": "<bos>",
+    "eos_token": "<end_of_turn>"
+  },
+  "gguf": {
+    "primary_file": "4de0b93b99f8b61b59c40d019fd593bdd1c42249.Q4_K_M.gguf",
+    "projector_files": [
+      "4de0b93b99f8b61b59c40d019fd593bdd1c42249.BF16-mmproj.gguf"
+    ],
+    "reported_files": [
+      "4de0b93b99f8b61b59c40d019fd593bdd1c42249.BF16-mmproj.gguf",
+      "4de0b93b99f8b61b59c40d019fd593bdd1c42249.Q4_K_M.gguf"
+    ],
+    "ollama_import_mode": "text_only_primary_gguf",
+    "vlm_projector_archived": true
+  },
+  "packages": {
+    "unsloth": "2026.7.4",
+    "unsloth-zoo": "2026.7.4",
+    "transformers": "4.56.2",
+    "peft": "0.19.1",
+    "bitsandbytes": "0.49.2",
+    "accelerate": "1.14.0"
+  },
+  "files": {
+    "4de0b93b99f8b61b59c40d019fd593bdd1c42249.Q4_K_M.gguf": {
+      "sha256": "f1dece1334c5ca25dfa74f7378a1d0f593ce30fbe23a0556626df69924f11156",
+      "bytes": 8165172704
+    },
+    "4de0b93b99f8b61b59c40d019fd593bdd1c42249.BF16-mmproj.gguf": {
+      "sha256": "105b9a21a4991e0110090792c53ba4cd7e1422ffb8567c32bbafe48d8602f7e0",
+      "bytes": 854200608
+    },
+    "Modelfile": {
+      "sha256": "191a1c889ae4be130fe61e401fa5455a799ee31283e8b776e9f8e15976b5e267",
+      "bytes": 152
+    }
+  },
+  "chat_template_warning": "Validate the exported GGUF in Ollama before use.",
+  "external_upload_performed": false,
+  "published": false
+}
