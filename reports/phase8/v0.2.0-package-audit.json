@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "release": "v0.2.0",
+  "wheel": {
+    "filename": "tw_med_llm_qlora-0.2.0-py3-none-any.whl",
+    "bytes": 101849,
+    "sha256": "c8948174ef4bd91ce93a695efcc76af4a9d563e868e03da6a338e21a0667b288",
+    "files": 40,
+    "metadata": {
+      "name": "tw-med-llm-qlora",
+      "version": "0.2.0",
+      "requires_python": "<3.12,>=3.11",
+      "license_expression": "MIT",
+      "license_files": [
+        "LICENSE"
+      ],
+      "project_urls": {
+        "Homepage": "https://github.com/kuotunyu/tw-med-llm-qlora",
+        "Model": "https://huggingface.co/steven0226/tw-med-llm-qlora-adapter",
+        "Changelog": "https://github.com/kuotunyu/tw-med-llm-qlora/blob/main/CHANGELOG.md",
+        "Issues": "https://github.com/kuotunyu/tw-med-llm-qlora/issues"
+      }
+    },
+    "console_scripts": {
+      "tw-med-local-infer": "tw_med_qlora.local_inference:main",
+      "tw-med-phase5-status": "tw_med_qlora.cli.phase5_status:main",
+      "tw-med-publish-adapter": "tw_med_qlora.cli.publish_adapter:main",
+      "tw-med-validate-phase5": "tw_med_qlora.cli.validate_phase5_evidence:main",
+      "tw-med-verify-public-adapter": "tw_med_qlora.cli.verify_public_adapter:main"
+    }
+  },
+  "sdist": {
+    "filename": "tw_med_llm_qlora-0.2.0.tar.gz",
+    "bytes": 112411,
+    "sha256": "c9e3f949a3bc15be7b4e64911fe279b75abc8368ef58a9e76ff916bd0b4c5d66",
+    "files": 51,
+    "metadata": {
+      "name": "tw-med-llm-qlora",
+      "version": "0.2.0",
+      "requires_python": "<3.12,>=3.11",
+      "license_expression": "MIT",
+      "license_files": [
+        "LICENSE"
+      ],
+      "project_urls": {
+        "Homepage": "https://github.com/kuotunyu/tw-med-llm-qlora",
+        "Model": "https://huggingface.co/steven0226/tw-med-llm-qlora-adapter",
+        "Changelog": "https://github.com/kuotunyu/tw-med-llm-qlora/blob/main/CHANGELOG.md",
+        "Issues": "https://github.com/kuotunyu/tw-med-llm-qlora/issues"
+      }
+    }
+  },
+  "forbidden_content_absent": true
+}

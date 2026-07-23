@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "python": "3.11",
+  "package": {
+    "version": "0.2.0",
+    "module": "tw_med_qlora",
+    "distributions": [
+      "tw-med-llm-qlora"
+    ]
+  },
+  "console_scripts": {
+    "tw-med-local-infer": {
+      "exit_code": 0,
+      "first_line": "usage: tw-med-local-infer [-h]"
+    },
+    "tw-med-validate-phase5": {
+      "exit_code": 0,
+      "first_line": "usage: tw-med-validate-phase5 [-h] [--config CONFIG] manifest"
+    },
+    "tw-med-phase5-status": {
+      "exit_code": 0,
+      "first_line": "usage: tw-med-phase5-status [-h] [--adapter ADAPTER]"
+    },
+    "tw-med-publish-adapter": {
+      "exit_code": 0,
+      "first_line": "usage: tw-med-publish-adapter [-h] [--repo-id REPO_ID]"
+    },
+    "tw-med-verify-public-adapter": {
+      "exit_code": 0,
+      "first_line": "usage: tw-med-verify-public-adapter [-h] --receipt RECEIPT [--config CONFIG]"
+    }
+  },
+  "dependency_isolation": true
+}

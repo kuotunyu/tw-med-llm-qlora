@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "phase": 8,
+  "release": "v0.2.0",
+  "created_at_utc": "2026-07-23T17:14:27.3183478Z",
+  "scope": {
+    "new_training_performed": false,
+    "model_weights_modified": false,
+    "hf_visibility_changed": false,
+    "paid_api_used": false
+  },
+  "quality": {
+    "pytest_passed": 211,
+    "ruff_passed": true,
+    "uv_lock_check_passed": true,
+    "notebook_freshness_passed": 4
+  },
+  "citation": {
+    "schema_version": "1.2.0",
+    "validator": "cffconvert 2.0.0",
+    "valid": true
+  },
+  "release_artifacts": {
+    "audit_report": "reports/phase8/v0.2.0-package-audit.json",
+    "install_smoke_report": "reports/phase8/v0.2.0-install-smoke.json",
+    "forbidden_content_absent": true,
+    "dependency_isolation": true,
+    "console_scripts_verified": 5
+  }
+}
