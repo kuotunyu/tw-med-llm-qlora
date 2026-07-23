@@ -1,4 +1,4 @@
-"""Plan an adapter publication; execute only after every Phase 5 gate passes."""
+"""Plan an adapter publication or gated public transition; execute only after approval."""
 
 from __future__ import annotations
 
@@ -22,6 +22,7 @@ def main() -> int:
     parser.add_argument("adapter_dir", type=Path)
     parser.add_argument("--repo-id")
     parser.add_argument("--visibility", choices=("private", "public"), default="private")
+    parser.add_argument("--gated", choices=("false", "auto", "manual"), default="false")
     parser.add_argument("--github-url")
     parser.add_argument("--model-card", type=Path, default=ROOT / "model_card" / "README.md")
     parser.add_argument("--config", type=Path, default=ROOT / "configs" / "project.toml")
@@ -49,6 +50,7 @@ def main() -> int:
         model_card_template=args.model_card,
         repo_id=repo_id,
         visibility=args.visibility,
+        gated=args.gated,
         github_url=github_url,
         config=config,
     )
