@@ -23,6 +23,7 @@ LOCAL_ONLY_PATHS = {
     Path("tests/test_project_skill.py"),
 }
 TEXT_SUFFIXES = {
+    ".cff",
     ".ipynb",
     ".jinja",
     ".json",
@@ -129,7 +130,20 @@ def test_readme_contains_required_public_sections() -> None:
     assert "## 快速開始" in readme
     assert "## 評估結果" in readme
     assert "## 訓練曲線與成本" in readme
+    assert "## 引用" in readme
     assert "## 授權" in readme
+
+
+def test_public_release_metadata_is_present_and_consistent() -> None:
+    citation = (ROOT / "CITATION.cff").read_text(encoding="utf-8")
+    changelog = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
+
+    assert "cff-version: 1.2.0" in citation
+    assert 'version: "0.2.0"' in citation
+    assert 'date-released: "2026-07-24"' in citation
+    assert "https://github.com/kuotunyu/tw-med-llm-qlora" in citation
+    assert "## [0.2.0] - 2026-07-24" in changelog
+    assert "## [0.1.0] - 2026-07-23" in changelog
 
 
 def test_public_text_files_do_not_contain_live_secret_shapes() -> None:
