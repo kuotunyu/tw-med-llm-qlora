@@ -25,6 +25,21 @@ function Get-TextSha256 {
     }
 }
 
+function Get-FileSha256 {
+    param([Parameter(Mandatory = $true)][string]$Path)
+
+    $resolvedPath = (Resolve-Path -LiteralPath $Path -ErrorAction Stop).Path
+    $sha = [System.Security.Cryptography.SHA256]::Create()
+    $stream = [System.IO.File]::OpenRead($resolvedPath)
+    try {
+        $digest = $sha.ComputeHash($stream)
+        return ([System.BitConverter]::ToString($digest)).Replace("-", "").ToLowerInvariant()
+    } finally {
+        $stream.Dispose()
+        $sha.Dispose()
+    }
+}
+
 function Get-ReceiptFileRecord {
     param(
         [Parameter(Mandatory = $true)]$Receipt,
@@ -85,9 +100,7 @@ if ($ggufFiles.Count -ne 1) {
     throw "Expected exactly one GGUF file in the export directory."
 }
 $ggufRecord = Get-ReceiptFileRecord -Receipt $exportReceipt -Name $ggufFiles[0].Name
-$ggufSha256 = (
-    Get-FileHash -LiteralPath $ggufFiles[0].FullName -Algorithm SHA256
-).Hash.ToLowerInvariant()
+$ggufSha256 = Get-FileSha256 -Path $ggufFiles[0].FullName
 if ([int64]$ggufRecord.bytes -ne [int64]$ggufFiles[0].Length) {
     throw "GGUF byte size does not match the export receipt."
 }
@@ -96,9 +109,7 @@ if ([string]$ggufRecord.sha256 -ne $ggufSha256) {
 }
 $modelfileRecord = Get-ReceiptFileRecord -Receipt $exportReceipt -Name "Modelfile"
 $modelfileInfo = Get-Item -LiteralPath $modelfile
-$modelfileSha256 = (
-    Get-FileHash -LiteralPath $modelfile -Algorithm SHA256
-).Hash.ToLowerInvariant()
+$modelfileSha256 = Get-FileSha256 -Path $modelfile
 if ([int64]$modelfileRecord.bytes -ne [int64]$modelfileInfo.Length) {
     throw "Modelfile byte size does not match the export receipt."
 }
@@ -155,9 +166,7 @@ $receipt = [ordered]@{
     adapter_checkpoint = $ExpectedAdapterCheckpoint
     phase3_archive_sha256 = $ExpectedPhase3ArchiveSha256
     quantization_method = "q4_k_m"
-    export_receipt_sha256 = (
-        Get-FileHash -LiteralPath $exportReceiptPath -Algorithm SHA256
-    ).Hash.ToLowerInvariant()
+    export_receipt_sha256 = Get-FileSha256 -Path $exportReceiptPath
     export_receipt_schema_version = [int]$exportReceipt.schema_version
     gguf_file = $ggufFiles[0].Name
     gguf_bytes = [int64]$ggufFiles[0].Length

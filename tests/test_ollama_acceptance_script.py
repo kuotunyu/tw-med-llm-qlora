@@ -28,6 +28,9 @@ def test_ollama_acceptance_validates_export_before_local_import() -> None:
     assert "& ollama run" in source
     assert "& ollama ps" in source
     assert '100%\\s+GPU' in source
+    assert "function Get-FileSha256" in source
+    assert "[System.IO.File]::OpenRead" in source
+    assert "Get-FileHash" not in source
     assert "raw_output_recorded = $false" in source
     assert "external_upload_performed = $false" in source
     assert "Set-Content" not in source
