@@ -8,7 +8,7 @@
 
 ## 目前狀態
 
-Phase 0–5 已完成；Phase 6 正在進行 v0.1.0 可重現發布驗收。TAIDE 12B 的 A100 40GB、11,248 筆、1 epoch QLoRA 已跑完，正式 adapter 選用完成 1,409 筆 validation 的 step 700。Phase 4 已完成 28,758 次正式生成與本機證據驗證：adapter 在 MedQA test 達 72.05%，在 13 科 TMMLU+ 達 61.53%，且五個非醫學控制科通過預先定義的 −2 個百分點 non-inferiority 判準。Phase 5 的 Windows RTX 4090 base + adapter acceptance、GitHub hosted Windows／Linux CPU CI 與 Hugging Face 私人發布均已通過；遠端 revision `c2830d37fe6b5e73e6dd07e17efbb858979d0aa4` 的 11 個發布檔案已逐一重算並與 receipt 完全相符。Adapter 權重維持 private，並未公開。
+Phase 0–5 已完成；Phase 6 的 v0.1.0 本機與 hosted Windows／Linux release gates 已通過，準備建立 tag 與 GitHub Release。TAIDE 12B 的 A100 40GB、11,248 筆、1 epoch QLoRA 已跑完，正式 adapter 選用完成 1,409 筆 validation 的 step 700。Phase 4 已完成 28,758 次正式生成與本機證據驗證：adapter 在 MedQA test 達 72.05%，在 13 科 TMMLU+ 達 61.53%，且五個非醫學控制科通過預先定義的 −2 個百分點 non-inferiority 判準。Phase 5 的 Windows RTX 4090 base + adapter acceptance、GitHub hosted Windows／Linux CPU CI 與 Hugging Face 私人發布均已通過；遠端 revision `c2830d37fe6b5e73e6dd07e17efbb858979d0aa4` 的 11 個發布檔案已逐一重算並與 receipt 完全相符。Adapter 權重維持 private，並未公開。
 
 ## 研究架構
 
@@ -46,7 +46,7 @@ flowchart LR
 | 3 | 完整 QLoRA 與 checkpoint | 完成；證據驗證通過 |
 | 4 | MedQA + TMMLU+ 雙軌評估 | 完成；28,758 requests 與證據驗證通過 |
 | 5 | RTX 4090 推論與發布 | 完成；4090 acceptance、hosted CI、HF 私人發布與 receipt 驗證通過 |
-| 6 | v0.1.0 可重現發布驗收 | 進行中；本機 package build／內容稽核／乾淨安裝已通過，待 hosted CI、tag 與 GitHub Release |
+| 6 | v0.1.0 可重現發布驗收 | 進行中；本機與 hosted Windows／Linux gates 已通過，待 tag 與 GitHub Release |
 
 每個 Phase 都必須先展示測試與產物，經確認後才進入下一階段。可公開的實測結果、限制與重現方式收斂於本 README，機器可驗證的內容安全證據則歸檔於 [`reports/`](reports/)。
 
@@ -62,6 +62,8 @@ uv run python scripts/audit_release_artifacts.py outputs/release-v0.1.0
 uv run python scripts/smoke_release_install.py outputs/release-v0.1.0 `
   --venv outputs/release-v0.1.0-venv
 ```
+
+Phase 6 首次 hosted release gate 綁定 commit `2ecc327ca72e16b0b48d4a219aebc3e1759bef9d`；[GitHub Actions run #15](https://github.com/kuotunyu/tw-med-llm-qlora/actions/runs/30015837112) 的 `windows-latest` 與 `ubuntu-latest` jobs 均成功。內容安全摘要保存於 [`reports/phase6/`](reports/phase6/)。
 
 ## 快速開始
 
