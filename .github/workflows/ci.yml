@@ -42,6 +42,12 @@ jobs:
       - name: Test
         run: uv run pytest -q
 
+      - name: Build and audit release artifacts
+        run: |
+          uv build --no-sources --clear --out-dir outputs/ci-dist --no-create-gitignore
+          uv run python scripts/audit_release_artifacts.py outputs/ci-dist
+          uv run python scripts/smoke_release_install.py outputs/ci-dist --venv outputs/ci-release-venv
+
       - name: Verify generated notebooks are current
         run: |
           uv run python scripts/build_train_notebook.py --check

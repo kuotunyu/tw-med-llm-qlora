@@ -36,6 +36,15 @@ def test_ci_runs_locked_quality_and_notebook_checks() -> None:
     assert "uv sync --locked --group dev" in text
     assert "uv run ruff check ." in text
     assert "uv run pytest -q" in text
+    assert (
+        "uv build --no-sources --clear --out-dir outputs/ci-dist --no-create-gitignore"
+        in text
+    )
+    assert "uv run python scripts/audit_release_artifacts.py outputs/ci-dist" in text
+    assert (
+        "uv run python scripts/smoke_release_install.py outputs/ci-dist "
+        "--venv outputs/ci-release-venv"
+    ) in text
     for builder in (
         "build_train_notebook.py",
         "build_eval_notebook.py",
