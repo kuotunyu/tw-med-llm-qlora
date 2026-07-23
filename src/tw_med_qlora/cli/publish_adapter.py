@@ -7,8 +7,6 @@ import json
 import os
 from pathlib import Path
 
-from dotenv import load_dotenv
-
 from tw_med_qlora.config import load_project_config
 from tw_med_qlora.publication import (
     assert_publication_execution_gate,
@@ -20,12 +18,11 @@ ROOT = Path(__file__).parents[3]
 
 
 def main() -> int:
-    load_dotenv(ROOT / ".env")
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("adapter_dir", type=Path)
-    parser.add_argument("--repo-id", default=os.getenv("HF_ADAPTER_REPO_ID"))
+    parser.add_argument("--repo-id")
     parser.add_argument("--visibility", choices=("private", "public"), default="private")
-    parser.add_argument("--github-url", default=os.getenv("GITHUB_REPOSITORY_URL"))
+    parser.add_argument("--github-url")
     parser.add_argument("--model-card", type=Path, default=ROOT / "model_card" / "README.md")
     parser.add_argument("--config", type=Path, default=ROOT / "configs" / "project.toml")
     parser.add_argument("--execute", action="store_true")
@@ -33,16 +30,26 @@ def main() -> int:
     parser.add_argument("--acceptance-manifest", type=Path)
     parser.add_argument("--output-dir", type=Path, default=ROOT / "outputs" / "publication")
     args = parser.parse_args()
-    if not args.repo_id or not args.github_url:
+
+    try:
+        from dotenv import load_dotenv
+    except ImportError:
+        load_dotenv = None
+    if load_dotenv is not None:
+        load_dotenv(ROOT / ".env")
+
+    repo_id = args.repo_id or os.getenv("HF_ADAPTER_REPO_ID")
+    github_url = args.github_url or os.getenv("GITHUB_REPOSITORY_URL")
+    if not repo_id or not github_url:
         parser.error("--repo-id and --github-url are required")
 
     config = load_project_config(args.config)
     plan = build_publication_plan(
         adapter_dir=args.adapter_dir,
         model_card_template=args.model_card,
-        repo_id=args.repo_id,
+        repo_id=repo_id,
         visibility=args.visibility,
-        github_url=args.github_url,
+        github_url=github_url,
         config=config,
     )
     if not args.execute:

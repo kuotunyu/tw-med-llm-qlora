@@ -1,0 +1,31 @@
+include LICENSE
+include README.md
+include pyproject.toml
+include MANIFEST.in
+
+prune .codex
+prune artifacts
+prune checkpoints
+prune configs
+prune model_card
+prune notebooks
+prune outputs
+prune private
+prune reports
+prune requirements
+prune runs
+prune scripts
+prune tests
+
+exclude .env
+exclude .env.*
+exclude AGENTS.md
+exclude PROJECT_PLAN.md
+
+global-exclude *.bin
+global-exclude *.gguf
+global-exclude *.pt
+global-exclude *.pth
+global-exclude *.py[cod]
+global-exclude *.safetensors
+global-exclude __pycache__
