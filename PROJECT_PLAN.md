@@ -115,7 +115,7 @@
 | Adapter 模型卡 | 已完成並隨 private adapter 發布；包含基底條款、資料授權差異、研究用途、非醫療建議、正式結果與限制 | [model_card/README.md](model_card/README.md) |
 | Adapter 發布工具 | 已完成 dry-run 與實際 private 上傳；allowlist、模型卡渲染、4090 manifest 與綁定 repo/visibility 的確認碼均通過 | [src/tw_med_qlora/cli/publish_adapter.py](src/tw_med_qlora/cli/publish_adapter.py) |
 | Phase 5 publication receipt／遠端驗證 | 已驗證；HF revision `c2830d37…0aa4`、private=true、11/11 檔案共 191,661,898 bytes 逐檔 SHA-256 相符、token 未記錄 | [receipt](reports/phase5/20260722T165957Z-publication-receipt.json)／[validation](reports/phase5/20260722T170446Z-publication-validation.json) |
-| 選配 GGUF／Ollama | 使用者已核准 A100 Q4_K_M 匯出上限 6.36 CU；首次執行在 base 載入前因部分 HF cache 停止，未產生 GGUF。修正版先完整下載與稽核固定 snapshot，再以本機離線路徑載入；尚待重跑 | [notebooks/export_gguf.ipynb](notebooks/export_gguf.ipynb)／[Ollama 驗收腳本](scripts/run_ollama_acceptance.ps1) |
+| 選配 GGUF／Ollama | 使用者已核准 A100 Q4_K_M 匯出上限 6.36 CU；首次因部分 HF cache 停止，第二次完整載入後暴露 `save_pretrained_gguf` 被委派給 base model 的問題，均未產生可接受的 Drive receipt。現已改為由 Unsloth 直接載入本機重綁 base 的 adapter checkpoint，並要求 PEFT／LoRA／method owner 證據及 VLM 主 GGUF＋`mmproj` 雙產物；重跑前須核對剩餘 CU | [notebooks/export_gguf.ipynb](notebooks/export_gguf.ipynb)／[Ollama 驗收腳本](scripts/run_ollama_acceptance.ps1) |
 | Phase 4 首次 calibration manifest | 證據完整；結果因協定問題不作成績解讀 | [reports/phase4/calibration/20260722T052039Z-run-manifest.json](reports/phase4/calibration/20260722T052039Z-run-manifest.json) |
 | Phase 4 首次 calibration 驗證摘要 | integrity pass；recalibration required | [reports/phase4/calibration/20260722T052039Z-validation.json](reports/phase4/calibration/20260722T052039Z-validation.json) |
 | Phase 4 parser-v3 calibration manifest | A100 實跑完成，test 未載入 | [reports/phase4/calibration/20260722T061028Z-run-manifest.json](reports/phase4/calibration/20260722T061028Z-run-manifest.json) |
@@ -259,6 +259,8 @@
 | 2026-07-23 | 5 選配 | 修正並驗收 GGUF base snapshot 載入契約 | 依 Context7 現行 Hugging Face Hub／Transformers／Unsloth 文件，先以 `model_info(files_metadata=True)` 核對固定 revision 與權重大小，`snapshot_download` 後驗證全部遠端權重、safetensors index、tokenizer 與 VLM processor；Unsloth 改在 PEFT 前匯入，並只從本機 snapshot 以 `local_files_only=True`／`use_safetensors=True` 載入。receipt 增加不含本機路徑的 snapshot 完整性摘要；`pytest` 184 passed、Ruff、`uv lock --check`、四份 notebook freshness 與 skill validator 全數通過 | 由使用者建立聚焦 commit 並 push；在全新 A100 runtime 上傳最新版 notebook，僅編輯第一格後從頭逐格重跑 |
 | 2026-07-23 | 5 選配 | 診斷 hosted Windows Ollama 契約測試失敗 | GitHub CI #6／#7 的 Ubuntu job 成功，Windows job 在 fake Ollama 端到端測試中因 `-NoProfile` 行程找不到 `Get-FileHash` 而失敗；183 個其他測試通過。此錯誤早於 snapshot 修正，且不涉及模型載入或 A100 路徑 | 移除對 PowerShell 模組自動載入的依賴，改用 .NET 串流 SHA-256 |
 | 2026-07-23 | 5 選配 | 修正 Ollama 驗收的 hosted Windows 雜湊相容性 | 新增腳本內建 `Get-FileSha256`，以 `System.IO.File.OpenRead` 與 `System.Security.Cryptography.SHA256` 計算 GGUF、Modelfile 與 export receipt 雜湊；契約測試明確禁止 `Get-FileHash`。聚焦 3 項、完整 `pytest` 184 passed，Ruff、`uv lock --check`、四份 notebook freshness 與 skill validator 全數通過 | 建立聚焦 commit 並由最新 hosted Windows／Ubuntu CI 確認 |
+| 2026-07-23 | 5 選配 | 診斷第二次 GGUF 匯出未採用 adapter | run `20260723T064358Z` 完成 A100、archive、固定 snapshot 6/6 shards 與 frozen adapter 載入；但標準 PEFT wrapper 透過 `__getattr__` 取得底層 base 的 GGUF method，Unsloth 明確回報 `Model is not a PEFT model`，只在 base cache 產生主 Q4_K_M 與 BF16 `mmproj`。notebook 因 requested output 為空而在 Drive 建目錄前停止，沒有 receipt 或外部上傳，cache 產物不採用 | 停止 A100；查核 Unsloth 2026.7.4 實作並修正 PEFT method binding 與 VLM 雙產物契約 |
+| 2026-07-23 | 5 選配 | 修正 PEFT merge 與 VLM GGUF 產物契約 | verified adapter 先複製到 runtime-only 目錄並把 base path 重綁至固定本機 snapshot，再由 Unsloth 直接載入，使 saving patch 綁定 PEFT wrapper；轉檔前要求 `PeftModel`、active adapter、LoRA tensor 與 method owner 全部通過。產物改依 Unsloth 回傳清單驗證一個 Q4_K_M 主檔與一個 `mmproj`，兩者均歸檔；Ollama 只驗文字主模型，receipt schema 升至 3。聚焦 9 項、完整 `pytest` 184 passed，Ruff、`uv lock --check`、四份 notebook freshness 與 skill validator 全數通過 | 由使用者建立聚焦 commit／push；hosted CI 通過且核對剩餘 CU 後才可再啟動 A100 |
 
 ## 已知風險
 
@@ -269,7 +271,7 @@
 - Windows 對剛完成的大型 ZIP 或含 safetensors 目錄可能拒絕具 replace-existing 語意的改名；Phase 5 目的地原本就必須不存在，因此改用 no-overwrite `rename`，並只針對 `PermissionError` 做最多 1.25 秒的有限重試。若仍失敗會保留 `.partial`，不會誤標為完成或靜默刪除證據。
 - 接手副本未包含原 `.git`，舊 parent history 只能由移轉時的 hash 證據與本執行簿追溯；目前以新 root commit 保存驗證後快照。若日後找到原機 `.git`，應另行比對，不把兩條歷史直接偽裝成同一條。
 - Windows 未啟用 Developer Mode，Hugging Face cache 以無 symlink 降級模式工作，會增加磁碟用量；本次下載後仍有約 214 GiB 可用，不影響 acceptance 正確性。
-- 選配 GGUF 匯出已重新確認 Unsloth API並取得 6.36 CU 上限核准；repository gate 已開啟，但每次 notebook 的執行旗標與 approval 欄位仍預設關閉。首次 A100 執行暴露部分 Hugging Face cache 的載入風險，已改為在 Unsloth 載入前完成固定 snapshot 與逐 shard 驗證；修正版仍須在全新 runtime 實測。目前尚無 GGUF 實測證據或完整實際成本數據。
+- 選配 GGUF 匯出已重新確認 Unsloth API 並取得 6.36 CU 上限核准；repository gate 已開啟，但每次 notebook 的執行旗標與 approval 欄位仍預設關閉。首次 A100 暴露部分 Hugging Face cache 風險，第二次則暴露標準 PEFT wrapper 將 GGUF method 委派給 base model 的風險；兩次都在 Drive receipt 前安全停止。現行修正版要求 Unsloth 直接載入 runtime adapter、PEFT／LoRA／method owner 證據與 VLM 雙 GGUF 完整性，但仍須在全新 runtime 實測。再次執行前必須先取得前兩次的實際 CU 消耗，確保沒有超出原核准額度。
 - Colab 的 CUDA/PyTorch 基礎映像由平台管理；notebook 鎖定直接訓練依賴，並把實際 transitive versions 全量寫入 `pip-freeze.txt`。
 - TAIDE 12B 原始 safetensors snapshot 約 27 GB；即使採 4-bit 載入仍需先保留完整下載空間，notebook 會在下載前檢查本機磁碟並保留 8 GiB 餘裕。
 - Premium GPU 類型與可用性仍由 Colab 動態分配，且較高階 GPU 可能更快消耗 compute units；以 smoke manifest 的實測吞吐與帳務數據為準。
