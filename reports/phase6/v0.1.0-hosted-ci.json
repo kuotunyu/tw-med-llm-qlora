@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "release": "v0.1.0",
+  "commit_sha": "2ecc327ca72e16b0b48d4a219aebc3e1759bef9d",
+  "workflow": {
+    "id": 30015837112,
+    "name": "CI",
+    "event": "push",
+    "status": "completed",
+    "conclusion": "success",
+    "url": "https://github.com/kuotunyu/tw-med-llm-qlora/actions/runs/30015837112"
+  },
+  "jobs": [
+    {
+      "id": 89235472555,
+      "name": "Python 3.11 / windows-latest",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 89235472711,
+      "name": "Python 3.11 / ubuntu-latest",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "secrets_present": false,
+  "external_mutation_performed": false
+}
