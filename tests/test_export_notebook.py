@@ -83,6 +83,7 @@ def test_export_notebook_has_resource_and_evidence_gates() -> None:
     assert '"ollama_import_mode": "text_only_primary_gguf"' in source
     assert "expected_size_range_match" in source
     assert '"schema_version": 3' in source
+    assert source.count('"vlm_processor_required": snapshot_is_vlm') == 2
     assert "partial.rename(destination)" in source
     assert 'newline="\\n"' in source
 
