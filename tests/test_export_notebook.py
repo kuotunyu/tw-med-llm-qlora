@@ -56,6 +56,8 @@ def test_export_per_run_gate_is_locked_and_api_is_pinned() -> None:
     assert "GGUF_Q4_K_M_A100_APPROVED_20260723" in source
     assert 'quantization_method=export_config["quantization_method"]' in source
     assert "save_pretrained_gguf" in source
+    assert "conversion_result = gguf_save_method(" in source
+    assert 'conversion_result.get("gguf_files", [])' in source
     assert 'maximum_memory_usage=float(export_config["maximum_memory_usage"])' in source
     assert "push_to_hub" not in source
     assert "upload_folder" not in source
@@ -75,8 +77,12 @@ def test_export_notebook_has_resource_and_evidence_gates() -> None:
     assert "archive_path.stat().st_size" in source
     assert "phase3_archive_sha256" in source
     assert "chat_template_sha256" in source
+    assert '"peft_detected": True' in source
+    assert '"runtime_base_model_rebound_to_verified_snapshot": True' in source
+    assert '"projector_files": [path.name for path in projector_ggufs]' in source
+    assert '"ollama_import_mode": "text_only_primary_gguf"' in source
     assert "expected_size_range_match" in source
-    assert '"schema_version": 2' in source
+    assert '"schema_version": 3' in source
     assert "partial.rename(destination)" in source
     assert 'newline="\\n"' in source
 
@@ -93,10 +99,17 @@ def test_export_notebook_verifies_complete_snapshot_before_local_load() -> None:
     assert "missing_indexed_shards" in source
     assert "missing_processor_files" in source
     assert '"complete": True' in source
-    assert "model_name=str(snapshot_path)" in source
+    assert "shutil.copytree(adapter_dir, runtime_adapter_dir)" in source
+    assert 'runtime_adapter_config["base_model_name_or_path"] = str(snapshot_path)' in source
+    assert "model_name=str(runtime_adapter_dir)" in source
     assert "tokenizer_name=str(snapshot_path)" in source
     assert "local_files_only=True" in source
     assert "use_safetensors=True" in source
+    assert "PeftModel.from_pretrained(" not in source
+    assert "isinstance(model, PeftModel)" in source
+    assert 'model.__dict__.get("save_pretrained_gguf")' in source
+    assert 'getattr(gguf_save_method, "__self__", None) is not model' in source
+    assert '"lora_" in name.casefold()' in source
     assert '"model_snapshot": {' in source
     assert source.index("from unsloth import FastModel") < source.index(
         "from peft import PeftModel"
