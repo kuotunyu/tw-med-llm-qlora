@@ -6,6 +6,15 @@ language:
   - zh
 license: other
 license_name: gemma-version-taide-models-license-agreement
+license_link: https://drive.google.com/file/d/1xMi1P4pjWDjiAQndVTIIinqiTpk2airo/view
+gated: true
+extra_gated_heading: 使用前請確認授權與研究限制
+extra_gated_description: 存取本 adapter 前，請確認下列授權與安全聲明。
+extra_gated_prompt: 申請存取即表示你同意分享 Hugging Face 使用者名稱與電子郵件，並遵守基底模型及本 adapter 的授權條款。
+extra_gated_fields:
+  我已閱讀並同意遵守 TAIDE／Gemma 授權條款: checkbox
+  我了解本 adapter 僅供研究與教育用途，不構成醫療建議: checkbox
+extra_gated_button_content: 同意並申請存取
 tags:
   - gemma3
   - qlora
@@ -26,8 +35,12 @@ datasets:
 
 - 基底：[`taide/Gemma-3-TAIDE-12b-Chat-2602`](https://huggingface.co/taide/Gemma-3-TAIDE-12b-Chat-2602)
 - 固定 revision：`4de0b93b99f8b61b59c40d019fd593bdd1c42249`
-- Adapter 格式：PEFT LoRA，未合併基底權重
-- 基底模型是 gated repository，授權標籤為 `gemma-version-taide-models-license-agreement`；使用者必須自行接受並遵守該模型頁面的現行條款。
+- Adapter 格式：PEFT LoRA，未合併基底權重；這是以固定基底 revision 與本研究 step 700 QLoRA 訓練建立的衍生修改。
+- 基底模型是 gated repository；使用者必須另外取得基底模型的存取權，不能只靠本 adapter 的存取權下載基底。
+- Adapter 與其衍生使用受 [`Gemma 版次－TAIDE 模型授權條款`](TAIDE-GEMMA-LICENSE.pdf) 約束；[官方授權文件](https://drive.google.com/file/d/1xMi1P4pjWDjiAQndVTIIinqiTpk2airo/view)及基底模型頁面的現行條款優先適用。
+- 指定告知文字：**Gemma is provided under and subject to the Gemma Terms of Use found at ai.google.dev/gemma/terms**
+- 本 adapter 基於國家科學及技術委員會所提供的 TAIDE G 類模型；來源資訊請見 [taide.tw](https://taide.tw/)。
+- 國家科學及技術委員會、TAIDE 團隊與基底模型作者未對本 adapter 背書；本研究也不主張擁有 TAIDE G 類模型或基底模型。
 - 本研究 repository 的 MIT License 只涵蓋程式碼，不把 adapter、基底權重或資料重新授權為 MIT。
 
 發布位置：[`{{HF_ADAPTER_REPO_ID}}`](https://huggingface.co/{{HF_ADAPTER_REPO_ID}})
