@@ -19,6 +19,12 @@ from tw_med_qlora.phase7_publication import (
 ROOT = Path(__file__).parents[1]
 REPO_ID = "steven0226/tw-med-llm-qlora-adapter"
 REVISION = "b" * 40
+ARCHIVED_RECEIPT = (
+    ROOT / "reports" / "phase7" / "20260723T163936Z-publication-receipt.json"
+)
+ARCHIVED_VALIDATION = (
+    ROOT / "reports" / "phase7" / "20260723T164059Z-public-validation.json"
+)
 
 
 def receipt_path(tmp_path: Path, remote: Path) -> Path:
@@ -123,3 +129,34 @@ def test_public_verification_checks_both_authenticated_and_anonymous_views(
     assert report["authenticated_hashes_verified"] is True
     assert report["token_recorded"] is False
     assert output.is_file()
+
+
+def test_archived_phase7_evidence_is_complete_and_content_safe() -> None:
+    receipt = validate_phase7_receipt(
+        ARCHIVED_RECEIPT,
+        config=load_project_config(ROOT / "configs" / "project.toml"),
+    )
+    validation = json.loads(ARCHIVED_VALIDATION.read_text(encoding="utf-8"))
+
+    assert receipt["resolved_revision"] == (
+        "b1d8f74291da75d0719b5a3ea0d088ee8236e096"
+    )
+    assert receipt["visibility_before"] == "private"
+    assert receipt["visibility_transition_performed"] is True
+    assert len(receipt["files"]) == 4
+    assert len(receipt["removed_files"]) == 9
+    assert validation == {
+        "schema_version": 1,
+        "phase": 7,
+        "created_at_utc": "2026-07-23T16:40:59.871271+00:00",
+        "repo_id": REPO_ID,
+        "visibility": "public",
+        "gated": "auto",
+        "resolved_revision": receipt["resolved_revision"],
+        "files": 4,
+        "authenticated_hashes_verified": True,
+        "anonymous_metadata_visible": True,
+        "anonymous_download_denied": True,
+        "anonymous_denial_status": 401,
+        "token_recorded": False,
+    }

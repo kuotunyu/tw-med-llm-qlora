@@ -8,7 +8,7 @@
 
 ## 目前狀態
 
-Phase 0–6 已完成，`v0.1.0` annotated tag、GitHub Release、wheel／sdist 與 hosted Windows／Linux release gates 均已驗證。TAIDE 12B 的 A100 40GB、11,248 筆、1 epoch QLoRA 已跑完，正式 adapter 選用完成 1,409 筆 validation 的 step 700。Phase 4 已完成 28,758 次正式生成與本機證據驗證：adapter 在 MedQA test 達 72.05%，在 13 科 TMMLU+ 達 61.53%，且五個非醫學控制科通過預先定義的 −2 個百分點 non-inferiority 判準。Phase 5 的 Windows RTX 4090 base + adapter acceptance、GitHub hosted Windows／Linux CPU CI 與 Hugging Face 私人發布均已通過。Phase 7 正在準備把 adapter 轉為 public + automatic gated；遠端在最終確認前仍維持 private。
+Phase 0–7 已完成，`v0.1.0` annotated tag、GitHub Release、wheel／sdist 與 hosted Windows／Linux release gates 均已驗證。TAIDE 12B 的 A100 40GB、11,248 筆、1 epoch QLoRA 已跑完，正式 adapter 選用完成 1,409 筆 validation 的 step 700。Phase 4 已完成 28,758 次正式生成與本機證據驗證：adapter 在 MedQA test 達 72.05%，在 13 科 TMMLU+ 達 61.53%，且五個非醫學控制科通過預先定義的 −2 個百分點 non-inferiority 判準。Phase 5 的 Windows RTX 4090 base + adapter acceptance 與 GitHub hosted Windows／Linux CPU CI 均已通過。[Hugging Face adapter](https://huggingface.co/steven0226/tw-med-llm-qlora-adapter)現為 public + automatic gated，只保留兩個 PEFT adapter 檔、模型卡與官方授權 PDF；匿名使用者可讀 metadata，但未獲授權時不能下載檔案。
 
 ## 研究架構
 
@@ -47,7 +47,7 @@ flowchart LR
 | 4 | MedQA + TMMLU+ 雙軌評估 | 完成；28,758 requests 與證據驗證通過 |
 | 5 | RTX 4090 推論與發布 | 完成；4090 acceptance、hosted CI、HF 私人發布與 receipt 驗證通過 |
 | 6 | v0.1.0 可重現發布驗收 | 完成；tag、Release、artifacts 與 hosted CI 均驗證通過 |
-| 7 | HF adapter public gated 發布 | 進行中；授權、最小檔案與切換流程準備完成後，才執行外部可見性閘門 |
+| 7 | HF adapter public gated 發布 | 完成；4 個最小檔案、automatic gate、遠端雜湊與匿名下載拒絕均驗證通過 |
 
 每個 Phase 都必須先展示測試與產物，經確認後才進入下一階段。可公開的實測結果、限制與重現方式收斂於本 README，機器可驗證的內容安全證據則歸檔於 [`reports/`](reports/)。
 
@@ -448,16 +448,18 @@ uv run tw-med-publish-adapter artifacts\phase3-step700-adapter `
   --github-url https://github.com/kuotunyu/tw-med-llm-qlora
 ```
 
-Phase 5 的 private 發布已完成。內容安全的 [publication receipt](reports/phase5/20260722T165957Z-publication-receipt.json) 綁定 HF revision `c2830d37…`；[獨立驗證摘要](reports/phase5/20260722T170446Z-publication-validation.json)確認當時 repository 為 private、HEAD 與 receipt revision 相同，且 11/11 個檔案的 SHA-256 全部一致。這些是歷史證據，不表示目前已完成 public 切換。
+Phase 5 的 private 發布已完成。內容安全的 [publication receipt](reports/phase5/20260722T165957Z-publication-receipt.json) 綁定 HF revision `c2830d37…`；[獨立驗證摘要](reports/phase5/20260722T170446Z-publication-validation.json)確認當時 repository 為 private、HEAD 與 receipt revision 相同，且 11/11 個檔案的 SHA-256 全部一致。這兩份檔案保留為切換前的歷史證據。
 
-Phase 7 的執行會先在 private 狀態完成最小檔案上傳、遠端逐檔大小／SHA-256 驗證與舊 tokenizer／processor 清理，最後才以單一設定呼叫切換為 public + automatic gated。執行仍須滿足 4090 acceptance、精確 repo／visibility／gate、write token、dry-run allowlist 與一次性確認碼；任何前置步驟失敗都不會提早公開。程式碼 MIT License 不代表 adapter 權重採 MIT；adapter 的使用與再發布必須遵守基底模型與 TAIDE 的現行條款。
+Phase 7 已依上述順序完成：先在 private 狀態上傳並驗證最小檔案、移除 9 個 tokenizer／processor 衍生檔，最後才切換為 public + automatic gated。[publication receipt](reports/phase7/20260723T163936Z-publication-receipt.json)綁定完整 HF revision [`b1d8f74291da75d0719b5a3ea0d088ee8236e096`](https://huggingface.co/steven0226/tw-med-llm-qlora-adapter/commit/b1d8f74291da75d0719b5a3ea0d088ee8236e096)與 4 個遠端檔案的大小／SHA-256；[獨立驗證摘要](reports/phase7/20260723T164059Z-public-validation.json)確認 authenticated hashes 全部一致、匿名 metadata 可見、automatic gate 生效，且匿名下載以 HTTP 401 拒絕。遠端 weights SHA-256 與 Phase 5 RTX 4090 acceptance 使用的 step-700 adapter 相同，形成可驗證的推論證據鏈。
 
-切換後使用獨立驗證器複核 authenticated 檔案 SHA-256、匿名可見的 public metadata、automatic gated 狀態，以及匿名下載確實遭拒；報告不保存 token、電子郵件或檔案內容：
+獨立驗證器可使用歸檔 receipt 重跑；它不保存 token、電子郵件或檔案內容：
 
 ```powershell
 uv run --group data python -m tw_med_qlora.cli.verify_public_adapter `
-  --receipt outputs\publication\phase7-publication-receipt.json
+  --receipt reports\phase7\20260723T163936Z-publication-receipt.json
 ```
+
+程式碼的 MIT License 不代表 adapter 權重採 MIT；adapter 的存取、使用與再發布仍必須遵守基底模型與 TAIDE 的現行條款。
 
 ### 選配 GGUF 與 Ollama
 
