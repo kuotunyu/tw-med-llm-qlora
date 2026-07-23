@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "release": "v0.1.0",
+  "wheel": {
+    "filename": "tw_med_llm_qlora-0.1.0-py3-none-any.whl",
+    "bytes": 95536,
+    "sha256": "36f92ebc62459695af4277a48f3aa555044a7e6749695b511417bf614e4b34a2",
+    "files": 38,
+    "metadata": {
+      "name": "tw-med-llm-qlora",
+      "version": "0.1.0",
+      "requires_python": "<3.12,>=3.11",
+      "license_expression": "MIT",
+      "license_files": [
+        "LICENSE"
+      ]
+    },
+    "console_scripts": {
+      "tw-med-local-infer": "tw_med_qlora.local_inference:main",
+      "tw-med-phase5-status": "tw_med_qlora.cli.phase5_status:main",
+      "tw-med-publish-adapter": "tw_med_qlora.cli.publish_adapter:main",
+      "tw-med-validate-phase5": "tw_med_qlora.cli.validate_phase5_evidence:main"
+    }
+  },
+  "sdist": {
+    "filename": "tw_med_llm_qlora-0.1.0.tar.gz",
+    "bytes": 104903,
+    "sha256": "a9c171702eff583abc8cd97b1731b7f5f62947b59b5760e894e006abcfc6b2bf",
+    "files": 47,
+    "metadata": {
+      "name": "tw-med-llm-qlora",
+      "version": "0.1.0",
+      "requires_python": "<3.12,>=3.11",
+      "license_expression": "MIT",
+      "license_files": [
+        "LICENSE"
+      ]
+    }
+  },
+  "forbidden_content_absent": true
+}
