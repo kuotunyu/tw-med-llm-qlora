@@ -25,16 +25,16 @@ Phase 0–8 已完成；`v0.2.0` 完成 package、citation 與公開入口收尾
 ## 研究架構
 
 ```mermaid
-flowchart LR
-    A["MedQA 台灣題庫"] --> B["驗證、去重與 split 隔離"]
-    B --> C["Colab GPU 自動路由"]
-    C --> D["12B 台灣模型 QLoRA"]
-    C --> E["T4 時改用 4B 台灣模型"]
-    D --> F["LoRA adapter"]
+flowchart TD
+    A[("MedQA 台灣題庫")] --> B{"驗證、去重與 split 隔離"}
+    B --> C{{"Colab GPU 自動路由"}}
+    C --> D[["12B 台灣模型 QLoRA"]]
+    C --> E[["T4 時改用 4B 台灣模型"]]
+    D --> F(["LoRA adapter"])
     E --> F
-    F --> G["MedQA 嚴格答案評估"]
-    F --> H["TMMLU+ 醫學與控制科評估"]
-    F --> I["Windows RTX 4090 本機推論"]
+    F --> G[/"MedQA 嚴格答案評估"/]
+    F --> H[/"TMMLU+ 醫學與控制科評估"/]
+    F --> I(["Windows RTX 4090 本機推論"])
 ```
 
 ## 模型選型
