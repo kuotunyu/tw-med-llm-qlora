@@ -123,8 +123,8 @@ def test_public_markdown_local_links_resolve() -> None:
 def test_readme_contains_required_public_sections() -> None:
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
 
-    assert "## 個人動機" in readme
-    assert "我一直" in readme
+    assert "## 個人動機" not in readme
+    assert "Windows RTX 4090 實機驗收" not in readme
     assert "```mermaid" in readme
     assert "## 模型選型" in readme
     assert "## 快速開始" in readme
