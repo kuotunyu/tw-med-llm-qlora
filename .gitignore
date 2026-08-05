@@ -11,9 +11,17 @@ __pycache__/
 .mypy_cache/
 .ipynb_checkpoints/
 
-# Local Codex workflow and private execution journal
+# 私人面試筆記與本機開發輔助文檔
+interview*.md
+INTERVIEW_PREP.md
+*.private.md
+.agents/
+.claude/
+CLAUDE.md
 AGENTS.md
 PROJECT_PLAN.md
+PLAN.md
+PROGRESS.md
 .codex/
 tests/test_project_skill.py
 
