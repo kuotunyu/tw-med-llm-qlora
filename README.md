@@ -130,6 +130,8 @@ uv run tw-med-local-infer `
 
 ## 模型發布與 Artifacts
 
+[Portfolio closure and license map](docs/portfolio-closure.md) 集中說明公開 artifact、評估證據、授權鏈與安全／重現邊界。
+
 - **GitHub Release**：[`v0.2.0`](https://github.com/kuotunyu/tw-med-llm-qlora/releases/tag/v0.2.0)（包含經 Package Audit 之 Wheel 與 Sdist）。
 - **Hugging Face Hub**：[`steven0226/tw-med-llm-qlora-adapter`](https://huggingface.co/steven0226/tw-med-llm-qlora-adapter)（Revision [`b1d8f74`](https://huggingface.co/steven0226/tw-med-llm-qlora-adapter/tree/b1d8f74291da75d0719b5a3ea0d088ee8236e096)）。
 - **驗證報告**：包含 [資料驗證](reports/data_validation.json)、[訓練 Manifest](reports/phase3/full/20260722T014216Z-run-manifest.json) 與 [本機推論驗收](reports/phase5/20260722T131736Z-acceptance.json)。
