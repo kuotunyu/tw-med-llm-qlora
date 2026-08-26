@@ -23,7 +23,6 @@ EXPECTED_SCRIPTS = {
     "tw-med-verify-public-adapter": "tw_med_qlora.cli.verify_public_adapter:main",
 }
 EXPECTED_PROJECT_URLS = {
-    "Changelog": "https://github.com/kuotunyu/tw-med-llm-qlora/blob/main/CHANGELOG.md",
     "Homepage": "https://github.com/kuotunyu/tw-med-llm-qlora",
     "Issues": "https://github.com/kuotunyu/tw-med-llm-qlora/issues",
     "Model": "https://huggingface.co/steven0226/tw-med-llm-qlora-adapter",
@@ -57,7 +56,6 @@ FORBIDDEN_SUFFIXES = {
     ".safetensors",
 }
 SDIST_ALLOWED_ROOTS = {
-    "CHANGELOG.md",
     "CITATION.cff",
     "LICENSE",
     "MANIFEST.in",
@@ -209,7 +207,6 @@ def audit_sdist(path: Path) -> dict[str, Any]:
         if unexpected:
             raise ReleaseAuditError(f"unexpected sdist roots: {sorted(unexpected)}")
         required = {
-            PurePosixPath("CHANGELOG.md"),
             PurePosixPath("CITATION.cff"),
             PurePosixPath("LICENSE"),
             PurePosixPath("MANIFEST.in"),

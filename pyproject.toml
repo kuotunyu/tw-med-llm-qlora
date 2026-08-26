@@ -16,7 +16,6 @@ dependencies = []
 [project.urls]
 Homepage = "https://github.com/kuotunyu/tw-med-llm-qlora"
 Model = "https://huggingface.co/steven0226/tw-med-llm-qlora-adapter"
-Changelog = "https://github.com/kuotunyu/tw-med-llm-qlora/blob/main/CHANGELOG.md"
 Issues = "https://github.com/kuotunyu/tw-med-llm-qlora/issues"
 
 [project.scripts]
