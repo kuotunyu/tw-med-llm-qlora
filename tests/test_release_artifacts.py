@@ -23,7 +23,6 @@ Version: 0.2.0
 Requires-Python: >=3.11,<3.12
 License-Expression: MIT
 License-File: LICENSE
-Project-URL: Changelog, https://github.com/kuotunyu/tw-med-llm-qlora/blob/main/CHANGELOG.md
 Project-URL: Homepage, https://github.com/kuotunyu/tw-med-llm-qlora
 Project-URL: Issues, https://github.com/kuotunyu/tw-med-llm-qlora/issues
 Project-URL: Model, https://huggingface.co/steven0226/tw-med-llm-qlora-adapter
@@ -56,7 +55,6 @@ def write_valid_archives(directory: Path, *, extra_sdist: str | None = None) -> 
     sdist = directory / f"{AUDIT.RELEASE_ROOT}.tar.gz"
     with tarfile.open(sdist, mode="w:gz") as archive:
         add_tar_bytes(archive, f"{SDIST_ROOT}/LICENSE", b"MIT")
-        add_tar_bytes(archive, f"{SDIST_ROOT}/CHANGELOG.md")
         add_tar_bytes(archive, f"{SDIST_ROOT}/CITATION.cff")
         add_tar_bytes(archive, f"{SDIST_ROOT}/MANIFEST.in")
         add_tar_bytes(archive, f"{SDIST_ROOT}/PKG-INFO", METADATA.encode())
@@ -77,8 +75,7 @@ def test_release_metadata_and_manifest_use_current_contract() -> None:
     assert project["project"]["license-files"] == ["LICENSE"]
     assert project["project"]["scripts"] == AUDIT.EXPECTED_SCRIPTS
     assert project["project"]["urls"] == AUDIT.EXPECTED_PROJECT_URLS
-    for name in ("CHANGELOG.md", "CITATION.cff"):
-        assert f"include {name}" in manifest
+    assert "include CITATION.cff" in manifest
     for directory in ("tests", "reports", "notebooks", "scripts", ".codex"):
         assert f"prune {directory}" in manifest
     for name in ("AGENTS.md", "PROJECT_PLAN.md", ".env"):
