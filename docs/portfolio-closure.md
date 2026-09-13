@@ -27,6 +27,12 @@ knowledge. The task is multiple-choice research, not clinical use, and the
 frozen metrics do not establish performance on open-ended care or real patient
 records.
 
+A later versioned update (2026-09) rescored the frozen Phase 4 per-question outputs
+under the upstream TMMLU+ v1.1 answer key and question set, with a separately
+labelled local probe on a different backend. It confirms the medical gain and the
+control-subject non-inferiority conclusion and does **not** alter any frozen metric;
+see [TMMLU+ v1.1 limited evaluation](tmmlu-v1.1-limited-evaluation.md).
+
 ## License chain
 
 **MIT covers repository code only**. The **adapter, TAIDE/Gemma base, and datasets retain their own upstream terms**. In particular, adapter use remains
