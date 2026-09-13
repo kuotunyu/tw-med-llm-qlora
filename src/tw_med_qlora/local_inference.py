@@ -122,6 +122,7 @@ class GenerationResult:
     total_generation_seconds: float
     peak_allocated_gib: float
     peak_reserved_gib: float
+    raw_text: str = ""
 
 
 def _parse_capability(value: str) -> tuple[int, int]:
@@ -383,15 +384,19 @@ def build_messages(prompt: str, system_prompt: str | None = None) -> list[dict[s
     return messages
 
 
-def _load_model_stack(
+def load_model_stack(
     *,
     base_model: str,
     base_revision: str,
-    adapter: str,
+    adapter: str | None,
     adapter_revision: str | None,
     token: str | None,
 ) -> tuple[Any, Any, float]:
-    """Load the pinned Gemma 3 base in NF4 and attach a frozen PEFT adapter."""
+    """Load the pinned Gemma 3 base in NF4 and optionally attach a frozen PEFT adapter.
+
+    ``adapter=None`` loads the bare base model; the TMMLU+ v1.1 probe uses that path for
+    the original-instruct and localized-base comparisons.
+    """
 
     try:
         import torch
@@ -430,22 +435,25 @@ def _load_model_stack(
         quantization_config=quantization,
         attn_implementation="sdpa",
     )
-    adapter_kwargs: dict[str, Any] = {
-        "is_trainable": False,
-        "token": token,
-        "low_cpu_mem_usage": True,
-    }
-    if adapter_revision:
-        adapter_kwargs["revision"] = adapter_revision
-    model = PeftModel.from_pretrained(model, adapter, **adapter_kwargs)
-    model.eval()
-    if "default" not in model.peft_config:
-        raise RuntimeError("PEFT model did not activate the default adapter")
-    trainable, adapter_total = model.get_nb_trainable_parameters()
-    if trainable != 0 or adapter_total <= 0:
-        raise RuntimeError(
-            f"adapter parameter audit failed: trainable={trainable}, total={adapter_total}"
-        )
+    if adapter is not None:
+        adapter_kwargs: dict[str, Any] = {
+            "is_trainable": False,
+            "token": token,
+            "low_cpu_mem_usage": True,
+        }
+        if adapter_revision:
+            adapter_kwargs["revision"] = adapter_revision
+        model = PeftModel.from_pretrained(model, adapter, **adapter_kwargs)
+        model.eval()
+        if "default" not in model.peft_config:
+            raise RuntimeError("PEFT model did not activate the default adapter")
+        trainable, adapter_total = model.get_nb_trainable_parameters()
+        if trainable != 0 or adapter_total <= 0:
+            raise RuntimeError(
+                f"adapter parameter audit failed: trainable={trainable}, total={adapter_total}"
+            )
+    else:
+        model.eval()
     tokenizer = processor.tokenizer if hasattr(processor, "tokenizer") else processor
     if not getattr(tokenizer, "chat_template", None):
         raise RuntimeError("the pinned tokenizer has no chat template")
@@ -523,7 +531,8 @@ def generate_one(
         raise RuntimeError("generation failed") from failures[0]
     output_tokens = generated["tokens"]
     completion_tokens = int(output_tokens.shape[-1]) - prompt_tokens
-    text = "".join(chunks).strip()
+    raw_text = "".join(chunks)
+    text = raw_text.strip()
     return GenerationResult(
         text=text,
         parsed_answer=parse_mcq_answer(text),
@@ -533,6 +542,7 @@ def generate_one(
         total_generation_seconds=elapsed,
         peak_allocated_gib=torch.cuda.max_memory_allocated() / GIB,
         peak_reserved_gib=torch.cuda.max_memory_reserved() / GIB,
+        raw_text=raw_text,
     )
 
 
@@ -719,7 +729,7 @@ def main(argv: list[str] | None = None) -> int:
     adapter_load_revision = (
         None if Path(adapter).expanduser().exists() else effective_adapter_revision
     )
-    model, tokenizer, load_seconds = _load_model_stack(
+    model, tokenizer, load_seconds = load_model_stack(
         base_model=base_model,
         base_revision=base_revision,
         adapter=adapter,

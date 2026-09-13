@@ -1,3 +1,4 @@
 # Hash-verified public evidence must remain byte-identical across OS checkouts.
 reports/**/*.json text eol=lf
 reports/**/*.csv text eol=lf
+reports/**/*.jsonl text eol=lf
