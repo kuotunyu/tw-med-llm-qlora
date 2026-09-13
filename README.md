@@ -12,7 +12,7 @@
 
 ![三模型在 MedQA 與 TMMLU+ 的正式評估結果動畫](media/results.gif)
 
-*動畫由 [media/manim/](media/manim/README.md) 的 Manim 腳本產生，數字直接讀取 `reports/` 內的評估證據。*
+*動畫由 [media/manim/](media/manim/README.md) 產生*
 
 ---
 
