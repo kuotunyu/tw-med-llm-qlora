@@ -1,29 +1,21 @@
 {
   "schema_version": 1,
   "run_id": "20260913T170025Z",
-  "created_at_utc": "2026-09-13T17:06:11.505537+00:00",
+  "created_at_utc": "2026-09-13T17:42:20.210218+00:00",
   "purpose": "TMMLU+ v1.1 limited evaluation: historical outputs rescored, plus a separately labelled local probe when present",
   "evidence_kinds": [
-    "historical_outputs_rescored_under_v1_1"
+    "historical_outputs_rescored_under_v1_1",
+    "new_inference_separate_backend_probe"
   ],
   "code": {
-    "git_head": "68f0f0399134bf9bc61edd45133471120f76ddd6",
+    "git_head": "f068ee53afbb095fc1e4ad6f6c920cc0f6f670d3",
     "git_branch": "feat/tmmlu-v1.1-limited-eval",
     "git_dirty_paths": [
-      "M .gitattributes",
-      "M  configs/project.toml",
-      " M src/tw_med_qlora/local_inference.py",
-      " M src/tw_med_qlora/tmmlu_revision.py",
-      " M tests/test_public_snapshot.py",
-      "?? configs/tmmlu_v1_1.toml",
-      "?? docs/tmmlu-v1.1-limited-evaluation.md",
-      "?? reports/tmmlu-v1.1/",
-      "?? src/tw_med_qlora/cli/tmmlu_v1_1_local_eval.py",
-      "?? src/tw_med_qlora/cli/tmmlu_v1_1_report.py",
-      "?? src/tw_med_qlora/tmmlu_local_eval.py",
-      "?? src/tw_med_qlora/tmmlu_v1_1_report.py",
-      "?? tests/test_tmmlu_local_eval.py",
-      "?? tests/test_tmmlu_v1_1_report.py"
+      "M docs/tmmlu-v1.1-limited-evaluation.md",
+      " M reports/tmmlu-v1.1/20260913T170025Z/report.md",
+      "?? reports/tmmlu-v1.1/20260913T170025Z/local-inference/probe-analysis.json",
+      "?? reports/tmmlu-v1.1/20260913T170025Z/local-inference/probe-public-predictions.jsonl",
+      "?? reports/tmmlu-v1.1/20260913T170025Z/local-inference/probe-runtime.json"
     ],
     "python": "3.11.15",
     "platform": "Windows-10-10.0.26200-SP0",
@@ -273,8 +265,12 @@
       "bytes": 102937
     },
     "report.md": {
-      "sha256": "97e701081d6dbbae5849af57949fd6e9d6fd58c2006082109449413c2d2e4e41",
-      "bytes": 8841
+      "sha256": "ba6778173155b026b8d18a29ec2732bbcc4727d68b511818a984abc543c0e63b",
+      "bytes": 11218
+    },
+    "local-inference/probe-analysis.json": {
+      "sha256": "ad3a7794cde5fa54fb7b6a2851c4283603ec0689ebc7fe87037d009e63eb485b",
+      "bytes": 8513
     }
   },
   "config_snapshot": {
