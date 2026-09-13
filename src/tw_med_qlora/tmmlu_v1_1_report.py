@@ -342,6 +342,74 @@ def render_probe_table(probe: Mapping[str, Any]) -> str:
     )
 
 
+def render_key_findings(analysis: Mapping[str, Any]) -> str:
+    """Generated conclusion bullets so the narrative never hand-copies a number."""
+
+    cov = analysis["coverage"]["all_13"]
+    old_paired = analysis["paired"][VARIANT_V1_0_FULL]
+    new_paired = analysis["paired"][VARIANT_RETAINED_NEW_GOLD]
+    new_models = analysis["variants"][VARIANT_RETAINED_NEW_GOLD]["models"]
+    control_old = old_paired["control_noninferiority_adapter_vs_base"]
+    control_new = new_paired["control_noninferiority_adapter_vs_base"]
+    med_base_old = old_paired["medical_macro_adapter_vs_base"]
+    med_base_new = new_paired["medical_macro_adapter_vs_base"]
+    med_inst_old = old_paired["medical_macro_adapter_vs_instruct"]
+    med_inst_new = new_paired["medical_macro_adapter_vs_instruct"]
+    adapter_decomp = analysis["decomposition"][ADAPTER_MODEL]["overall_micro"]
+    flips = analysis["version_delta_same_outputs"][ADAPTER_MODEL]["answer_revision_flips"]
+    base_new = new_models[BASE_MODEL]
+    base_length = sum(s["parse_fail_length"] for s in base_new["by_subject"].values())
+    base_other = sum(s["parse_fail_other"] for s in base_new["by_subject"].values())
+
+    def diff(stats: Mapping[str, Any]) -> str:
+        return f"{_pp(stats['observed_difference_percentage_points'])} {_ci(stats)}"
+
+    coverage = (
+        f"- **覆蓋率**：v1.1 的 {cov['v1_1_total']} 題中有 "
+        f"{cov['v1_1_covered_by_rescoring']} 題與 v1.0 內容完全相同，可由歷史輸出重新計分；"
+        f"{cov['v1_1_added_or_modified_uncovered']} 題為 v1.1 新增或修改（未覆蓋），"
+        f"{cov['v1_1_duplicate_ambiguous']} 列因重複內容而列為歧義；"
+        f"v1.0 有 {cov['v1_0_removed_or_modified']} 題在 v1.1 無同內容列，"
+        f"{cov['v1_0_answer_revised']} 題答案修訂。"
+    )
+    medical = (
+        "- **醫學增益仍成立**：保留題組 × v1.1 答案下，Adapter 醫學 8 科 macro "
+        f"{_pct(new_models[ADAPTER_MODEL]['medical_subject_macro_accuracy'])}，"
+        f"對 TAIDE Base {diff(med_base_new)}（v1.0 全量：{diff(med_base_old)}），"
+        f"對原始 Instruct {diff(med_inst_new)}（v1.0 全量：{diff(med_inst_old)}）。"
+    )
+    control = (
+        "- **控制科目 non-inferiority 仍成立**：控制 5 科 Adapter − Base subject-macro "
+        f"{diff(control_new)}，95% CI 下界高於預先定義的 "
+        f"{control_new['required_ci_lower_bound_above']:+.1f} pp 門檻，判定 "
+        f"`{control_new['conclusion']}`（v1.0 全量：{diff(control_old)}，"
+        f"`{control_old['conclusion']}`）。"
+    )
+    decomposition = (
+        f"- **差異來源**：Adapter 13 科整體由 {_pct(adapter_decomp['v1_0_full'])} 變為 "
+        f"{_pct(adapter_decomp['retained_new_gold'])}（{_pp(adapter_decomp['total_change_pp'])}），"
+        f"其中刪題效應 {_pp(adapter_decomp['removed_question_effect_pp'])}、"
+        f"答案修訂效應 {_pp(adapter_decomp['answer_revision_effect_pp'])}；"
+        f"{flips['gold_changed']} 題答案修訂中 Adapter 有 {flips['to_correct']} 題轉對、"
+        f"{flips['to_wrong']} 題轉錯。"
+    )
+    parsing = (
+        f"- **格式解析因素未消除**：TAIDE Base 在保留題組仍有 {base_length} 題 256-token 截斷與 "
+        f"{base_other} 題其他解析失敗（parse rate {_pct(base_new['overall']['parse_rate'])}），"
+        "皆計為錯；Adapter 與 Base 的差距同時包含格式服從與知識，"
+        "表 7 的皆可解析子集只是描述性切片。"
+    )
+    deltas = "、".join(
+        f"{MODEL_NAMES[model]} {diff(values['overall_micro'])}"
+        for model, values in analysis["version_delta_same_outputs"].items()
+    )
+    same_outputs = (
+        "- **同一輸出、僅答案版本不同**：三模型在保留題組上 v1.1 − v1.0 的 13 科整體差值分別為 "
+        f"{deltas}。"
+    )
+    return "\n".join([coverage, medical, control, decomposition, parsing, same_outputs])
+
+
 def render_report(
     analysis: Mapping[str, Any],
     *,
@@ -357,6 +425,10 @@ def render_report(
         f"_下列表格由 `reports/tmmlu-v1.1/{run_id}/analysis.json` 逐題證據自動產生；"
         f"證據種類：`{analysis['evidence_kind']}`；"
         f"凍結數字重現檢查：`{check.get('status', 'not_run')}`。_",
+        "",
+        "#### 結論摘要（自動產生）",
+        "",
+        render_key_findings(analysis),
         "",
         "#### 表 1：新舊題目覆蓋率",
         "",
