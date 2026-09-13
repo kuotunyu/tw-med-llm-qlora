@@ -1,0 +1,268 @@
+{
+  "schema_version": 1,
+  "evidence_kind": "new_inference_separate_backend_probe",
+  "backend_label": "windows-rtx4090-transformers-bnb-nf4",
+  "note": "Different backend from the Phase 4 run (vLLM 0.25.1 bitsandbytes, A100). Never merge these rows into the historical results.",
+  "runtime": {
+    "schema_version": 1,
+    "evidence_kind": "new_inference_separate_backend_probe",
+    "mode": "probe",
+    "run_id": "20260913T170025Z",
+    "backend_label": "windows-rtx4090-transformers-bnb-nf4",
+    "started_at_utc": "2026-09-13T17:18:19.463316+00:00",
+    "finished_at_utc": "2026-09-13T17:41:46.424571+00:00",
+    "planned_questions_per_model": 196,
+    "plan_reasons": [
+      "agreement_probe_answer_revised",
+      "agreement_probe_unchanged",
+      "uncovered_v1_1_question"
+    ],
+    "generation": {
+      "decoding": "greedy",
+      "max_new_tokens": 256,
+      "token_limit_rule": "completion_tokens >= max_new_tokens -> prediction=None",
+      "system_prompt_sha256": "985c0ecf54a06f727fdd488e6398f546febf268a72f6d85ac103548534b34544",
+      "option_seed": 3407
+    },
+    "quantization": {
+      "load_in_4bit": true,
+      "quant_type": "nf4",
+      "compute_dtype": "bfloat16",
+      "double_quant": true,
+      "attention": "sdpa"
+    },
+    "hardware": {
+      "eligible": true,
+      "failures": [],
+      "os": "Windows",
+      "required": {
+        "gpu_name_contains": "RTX 4090",
+        "minimum_vram_gib": 22.0,
+        "minimum_compute_capability": [
+          8,
+          9
+        ],
+        "bf16": true
+      },
+      "nvidia_smi": {
+        "name": "NVIDIA GeForce RTX 4090",
+        "total_vram_mib": 24564,
+        "compute_capability": [
+          8,
+          9
+        ],
+        "driver_version": "591.86",
+        "total_vram_gib": 23.98828125
+      },
+      "torch": {
+        "torch_version": "2.10.0+cu128",
+        "torch_cuda_version": "12.8",
+        "cuda_available": true,
+        "bf16_supported": true,
+        "device_name": "NVIDIA GeForce RTX 4090",
+        "compute_capability": [
+          8,
+          9
+        ]
+      }
+    },
+    "packages": {
+      "torch": "2.10.0+cu128",
+      "transformers": "5.14.1",
+      "peft": "0.19.1",
+      "bitsandbytes": "0.49.2",
+      "accelerate": "1.14.0",
+      "huggingface-hub": "1.24.0"
+    },
+    "python": "3.11.15",
+    "models": {
+      "original-instruct": {
+        "base_model": "google/gemma-3-12b-it",
+        "base_revision": "96b6f1eccf38110c56df3a15bffe176da04bfd80",
+        "adapter": null,
+        "model_load_seconds": 55.86370420000458,
+        "generation_seconds": 93.79695770000399
+      },
+      "localized-base": {
+        "base_model": "taide/Gemma-3-TAIDE-12b-Chat-2602",
+        "base_revision": "4de0b93b99f8b61b59c40d019fd593bdd1c42249",
+        "adapter": null,
+        "model_load_seconds": 31.66765010000381,
+        "generation_seconds": 1106.3046453999996
+      },
+      "localized-medical-adapter": {
+        "base_model": "taide/Gemma-3-TAIDE-12b-Chat-2602",
+        "base_revision": "4de0b93b99f8b61b59c40d019fd593bdd1c42249",
+        "adapter": {
+          "source": "steven0226/tw-med-llm-qlora-adapter",
+          "resolved_revision": "b1d8f74291da75d0719b5a3ea0d088ee8236e096",
+          "config_sha256": "bc062f9d62a5ff8a81ed1d9bb0ce8f777e4f1f5cd3c9d6bcef4f41e9c2813999",
+          "weights_sha256": null,
+          "peft_type": "LORA"
+        },
+        "model_load_seconds": 33.487802899995586,
+        "generation_seconds": 73.15689550001116
+      }
+    },
+    "dataset": {
+      "dataset_id": "ikala/tmmluplus",
+      "split": "test",
+      "old_revision": "81d53e38340c9ade988f7fed8996da6554b504f3",
+      "new_revision": "94d86f1d013d59f389b710a902af30b7a0aa8c8f",
+      "new_tag": "v1.1",
+      "hub_refs_at_run": {
+        "tags": {
+          "v1.0": "02a54a3953cd17a31b894f1d88fe98d923be2d37",
+          "v1.1": "94d86f1d013d59f389b710a902af30b7a0aa8c8f"
+        },
+        "branches": {
+          "main": "45e7c9b06d417c02a0998b2a6047383b04d608a9"
+        }
+      },
+      "subjects": [
+        "basic_medical_science",
+        "clinical_psychology",
+        "dentistry",
+        "occupational_therapy_for_psychological_disorders",
+        "optometry",
+        "pharmacology",
+        "pharmacy",
+        "traditional_chinese_medicine_clinical_medicine",
+        "chinese_language_and_literature",
+        "geography_of_taiwan",
+        "logic_reasoning",
+        "computer_science",
+        "general_principles_of_law"
+      ]
+    },
+    "outputs": {
+      "public_predictions": "reports\\tmmlu-v1.1\\20260913T170025Z\\local-inference\\probe-public-predictions.jsonl",
+      "public_predictions_sha256": "ea4cb034aad3d456c2479cea38e568a3aa48a807e49f26d0a801ea138f1650ce",
+      "private_predictions": "reports\\private\\tmmlu-v1.1\\20260913T170025Z\\probe-private-predictions.jsonl",
+      "private_predictions_sha256": "a56a593e23e9f0e2e502ea2615bb69daa4a42c46587c343d3e4f2d126eb768b4"
+    }
+  },
+  "models": {
+    "original-instruct": {
+      "probe_questions": 196,
+      "probe_questions_with_historical_prompt": 195,
+      "prediction_agreement_with_historical": {
+        "agree": 192,
+        "total": 195,
+        "rate": 0.9846153846153847,
+        "wilson_ci_lower": 0.955751714526445,
+        "wilson_ci_upper": 0.9947542871944101
+      },
+      "raw_output_hash_agreement_with_historical": 182,
+      "prompt_tokens_identical_to_historical": 195,
+      "in_backend_ceiling_full_vs_stability_3407": null,
+      "accuracy_under_v1_1_gold": {
+        "total": 195,
+        "correct": 107,
+        "accuracy": 0.5487179487179488,
+        "historical_prediction_correct_under_v1_1_gold": 108
+      },
+      "parse_failures": {
+        "length": 0,
+        "other": 1
+      },
+      "uncovered_v1_1_questions": {
+        "total": 1,
+        "correct": 0,
+        "predictions": [
+          {
+            "new_example_id": "bf3bf45203633eef50af",
+            "subject": "pharmacology",
+            "gold": "B",
+            "prediction": "A",
+            "correct": false
+          }
+        ]
+      }
+    },
+    "localized-base": {
+      "probe_questions": 196,
+      "probe_questions_with_historical_prompt": 195,
+      "prediction_agreement_with_historical": {
+        "agree": 190,
+        "total": 195,
+        "rate": 0.9743589743589743,
+        "wilson_ci_lower": 0.941390412471993,
+        "wilson_ci_upper": 0.9889990601119127
+      },
+      "raw_output_hash_agreement_with_historical": 159,
+      "prompt_tokens_identical_to_historical": 195,
+      "in_backend_ceiling_full_vs_stability_3407": {
+        "agree": 1278,
+        "total": 1300,
+        "raw_hash_agree": 1082,
+        "rate": 0.9830769230769231
+      },
+      "accuracy_under_v1_1_gold": {
+        "total": 195,
+        "correct": 97,
+        "accuracy": 0.49743589743589745,
+        "historical_prediction_correct_under_v1_1_gold": 94
+      },
+      "parse_failures": {
+        "length": 32,
+        "other": 1
+      },
+      "uncovered_v1_1_questions": {
+        "total": 1,
+        "correct": 0,
+        "predictions": [
+          {
+            "new_example_id": "bf3bf45203633eef50af",
+            "subject": "pharmacology",
+            "gold": "B",
+            "prediction": null,
+            "correct": false
+          }
+        ]
+      }
+    },
+    "localized-medical-adapter": {
+      "probe_questions": 196,
+      "probe_questions_with_historical_prompt": 195,
+      "prediction_agreement_with_historical": {
+        "agree": 189,
+        "total": 195,
+        "rate": 0.9692307692307692,
+        "wilson_ci_lower": 0.9345077803834483,
+        "wilson_ci_upper": 0.9858234276319828
+      },
+      "raw_output_hash_agreement_with_historical": 189,
+      "prompt_tokens_identical_to_historical": 195,
+      "in_backend_ceiling_full_vs_stability_3407": {
+        "agree": 1271,
+        "total": 1300,
+        "raw_hash_agree": 1271,
+        "rate": 0.9776923076923076
+      },
+      "accuracy_under_v1_1_gold": {
+        "total": 195,
+        "correct": 120,
+        "accuracy": 0.6153846153846154,
+        "historical_prediction_correct_under_v1_1_gold": 118
+      },
+      "parse_failures": {
+        "length": 0,
+        "other": 0
+      },
+      "uncovered_v1_1_questions": {
+        "total": 1,
+        "correct": 0,
+        "predictions": [
+          {
+            "new_example_id": "bf3bf45203633eef50af",
+            "subject": "pharmacology",
+            "gold": "B",
+            "prediction": "A",
+            "correct": false
+          }
+        ]
+      }
+    }
+  }
+}
