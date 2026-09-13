@@ -325,3 +325,44 @@ def mapping_sha256(mapping: Mapping[str, Any]) -> str:
     """Fingerprint a mapping payload deterministically."""
 
     return hashlib.sha256(canonical_json(mapping).encode("utf-8")).hexdigest()
+
+
+def verify_tag_revision(*, dataset_id: str, tag: str, expected_revision: str, token: str | None):
+    """Resolve a Hub tag and fail unless it points at the pinned commit SHA."""
+
+    from huggingface_hub import HfApi
+
+    refs = HfApi(token=token).list_repo_refs(dataset_id, repo_type="dataset")
+    tags = {item.name: item.target_commit for item in refs.tags}
+    branches = {item.name: item.target_commit for item in refs.branches}
+    if tags.get(tag) != expected_revision:
+        raise ValueError(
+            f"tag {tag!r} points at {tags.get(tag)!r}, expected {expected_revision!r}"
+        )
+    return {"tags": tags, "branches": branches}
+
+
+def fetch_subject_tests(
+    *,
+    dataset_id: str,
+    revision: str,
+    subjects: Sequence[str],
+    root: Path,
+    token: str | None,
+) -> Path:
+    """Download only the mapped subject test CSVs of one pinned revision."""
+
+    from huggingface_hub import snapshot_download
+
+    if len(revision) != 40:
+        raise ValueError("revision must be a full 40-character commit SHA")
+    destination = root / revision
+    snapshot_download(
+        repo_id=dataset_id,
+        repo_type="dataset",
+        revision=revision,
+        allow_patterns=[f"data/{name}" for name in expected_test_files(subjects)],
+        local_dir=destination,
+        token=token,
+    )
+    return destination
