@@ -146,6 +146,16 @@ uv run tw-med-local-infer `
 
 ---
 
+## TMMLU+ v1.1 有限評估更新
+
+上游 TMMLU+ 於 2026-09 發布 v1.1 修訂版（tag `v1.1` → `94d86f1d`）。本專案在**不重訓、不改判準、
+不重跑 MedQA** 的前提下，固定原本三組模型，把凍結的 Phase 4 逐題輸出依 v1.1 的答案與題組重新計分，
+並在 Windows RTX 4090 上以獨立標示的新實驗補做少數未覆蓋題與一致性探針。結論、覆蓋率、差異分解與
+限制見 [docs/tmmlu-v1.1-limited-evaluation.md](docs/tmmlu-v1.1-limited-evaluation.md)；所有表格由
+`reports/tmmlu-v1.1/<run-id>/` 的逐題證據自動產生，原 v0.2.0 成果與 `reports/phase4/` 未變動。
+
+---
+
 ## 研究限制
 
 1. **題型範疇**：本研究針對選擇題評估，不直接反映開放式臨床問答能力。
