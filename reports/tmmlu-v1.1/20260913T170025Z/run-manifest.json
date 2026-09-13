@@ -1,0 +1,331 @@
+{
+  "schema_version": 1,
+  "run_id": "20260913T170025Z",
+  "created_at_utc": "2026-09-13T17:06:11.505537+00:00",
+  "purpose": "TMMLU+ v1.1 limited evaluation: historical outputs rescored, plus a separately labelled local probe when present",
+  "evidence_kinds": [
+    "historical_outputs_rescored_under_v1_1"
+  ],
+  "code": {
+    "git_head": "68f0f0399134bf9bc61edd45133471120f76ddd6",
+    "git_branch": "feat/tmmlu-v1.1-limited-eval",
+    "git_dirty_paths": [
+      "M .gitattributes",
+      "M  configs/project.toml",
+      " M src/tw_med_qlora/local_inference.py",
+      " M src/tw_med_qlora/tmmlu_revision.py",
+      " M tests/test_public_snapshot.py",
+      "?? configs/tmmlu_v1_1.toml",
+      "?? docs/tmmlu-v1.1-limited-evaluation.md",
+      "?? reports/tmmlu-v1.1/",
+      "?? src/tw_med_qlora/cli/tmmlu_v1_1_local_eval.py",
+      "?? src/tw_med_qlora/cli/tmmlu_v1_1_report.py",
+      "?? src/tw_med_qlora/tmmlu_local_eval.py",
+      "?? src/tw_med_qlora/tmmlu_v1_1_report.py",
+      "?? tests/test_tmmlu_local_eval.py",
+      "?? tests/test_tmmlu_v1_1_report.py"
+    ],
+    "python": "3.11.15",
+    "platform": "Windows-10-10.0.26200-SP0",
+    "packages": {
+      "huggingface-hub": "1.24.0",
+      "pytest": "8.4.2",
+      "ruff": "0.15.22"
+    }
+  },
+  "dataset": {
+    "dataset_id": "ikala/tmmluplus",
+    "split": "test",
+    "old_revision": "81d53e38340c9ade988f7fed8996da6554b504f3",
+    "new_revision": "94d86f1d013d59f389b710a902af30b7a0aa8c8f",
+    "new_tag": "v1.1",
+    "hub_refs_at_run": {
+      "tags": {
+        "v1.0": "02a54a3953cd17a31b894f1d88fe98d923be2d37",
+        "v1.1": "94d86f1d013d59f389b710a902af30b7a0aa8c8f"
+      },
+      "branches": {
+        "main": "45e7c9b06d417c02a0998b2a6047383b04d608a9"
+      }
+    },
+    "subjects": [
+      "basic_medical_science",
+      "clinical_psychology",
+      "dentistry",
+      "occupational_therapy_for_psychological_disorders",
+      "optometry",
+      "pharmacology",
+      "pharmacy",
+      "traditional_chinese_medicine_clinical_medicine",
+      "chinese_language_and_literature",
+      "geography_of_taiwan",
+      "logic_reasoning",
+      "computer_science",
+      "general_principles_of_law"
+    ]
+  },
+  "dataset_files": {
+    "old": {
+      "basic_medical_science_test.csv": {
+        "rows": 954,
+        "bytes": 229725,
+        "sha256": "477067b4ae7d5d23ce9c2fe3756c3c06036c784dbc5319566e9f59c6b0868d23"
+      },
+      "clinical_psychology_test.csv": {
+        "rows": 125,
+        "bytes": 43176,
+        "sha256": "3a1d08897440f2d6042c32b2b3d6923bf31a55f60d2d7f7062c3a9a1ab1c9623"
+      },
+      "dentistry_test.csv": {
+        "rows": 399,
+        "bytes": 113203,
+        "sha256": "94a035088295151e66abcbb58f524e702f76d9639aa281520078dfe01f37c5d2"
+      },
+      "occupational_therapy_for_psychological_disorders_test.csv": {
+        "rows": 543,
+        "bytes": 190601,
+        "sha256": "54b24ee99a6bdb58f474c3a11a253876c391fceb427e5965cc15b21caebe3d5d"
+      },
+      "optometry_test.csv": {
+        "rows": 920,
+        "bytes": 278303,
+        "sha256": "4de0f5553ccda32aefaa5254573c03ce3aede38fb3b17be52c86c5dc7f56c976"
+      },
+      "pharmacology_test.csv": {
+        "rows": 577,
+        "bytes": 106036,
+        "sha256": "e9ba93ba0745b90772859aa68303d777ddbeaed39c38c0dd52f1f293a4871892"
+      },
+      "pharmacy_test.csv": {
+        "rows": 391,
+        "bytes": 85974,
+        "sha256": "93f8ee6b04a93407532152187648d909e534e1010d10717cd910dfd2d4722cc4"
+      },
+      "traditional_chinese_medicine_clinical_medicine_test.csv": {
+        "rows": 278,
+        "bytes": 75594,
+        "sha256": "d7de41b184ac793174fc19f7481ad93bd4dacc38a40d96c8b6af79dff8370965"
+      },
+      "chinese_language_and_literature_test.csv": {
+        "rows": 199,
+        "bytes": 107385,
+        "sha256": "18ee0c4c8f688e597483c9b9be3edda59870b96050cf2ff7ba54a3d4100359bb"
+      },
+      "geography_of_taiwan_test.csv": {
+        "rows": 768,
+        "bytes": 166957,
+        "sha256": "96b4ab0dbe925a36acbe573b30d940e71554c71bb56feb5f8506f7accd464342"
+      },
+      "logic_reasoning_test.csv": {
+        "rows": 139,
+        "bytes": 26101,
+        "sha256": "841de41d14e3a18358a73146553dbd844037f18302dfce90de2c65b7a6471fe1"
+      },
+      "computer_science_test.csv": {
+        "rows": 174,
+        "bytes": 42249,
+        "sha256": "20957cb8caca30b6494a0cbc4b4300e8de952b2cd15e7adc1c4d8bd086bc4f5f"
+      },
+      "general_principles_of_law_test.csv": {
+        "rows": 106,
+        "bytes": 37860,
+        "sha256": "caaf3cb9f6d5032dd2a9caea54fb6f042182fd61e1130fbc2144697aaaafdfe7"
+      }
+    },
+    "new": {
+      "basic_medical_science_test.csv": {
+        "rows": 944,
+        "bytes": 228331,
+        "sha256": "2eed947dd88cddb58a82b602707f495a44adb01699081e86dee69518eebd1b86"
+      },
+      "clinical_psychology_test.csv": {
+        "rows": 125,
+        "bytes": 43302,
+        "sha256": "080ca79b55a4532e858e5d6fdbc6e2cc20c7fee4c3d4bda79e8bc54d872ed375"
+      },
+      "dentistry_test.csv": {
+        "rows": 397,
+        "bytes": 113091,
+        "sha256": "d6e63812f733fd3176b83e70af6206c53d91fd4eeb175e209b819eab826533bd"
+      },
+      "occupational_therapy_for_psychological_disorders_test.csv": {
+        "rows": 542,
+        "bytes": 190738,
+        "sha256": "028f7107b50e16d87be1c4a2ba56455c40c8a63e8a4e945778af626320afc040"
+      },
+      "optometry_test.csv": {
+        "rows": 915,
+        "bytes": 277533,
+        "sha256": "f5e77bb4334a1f1d311f1c90cabaf48b5c2ec3c2d95367f767b0cfe8153e771f"
+      },
+      "pharmacology_test.csv": {
+        "rows": 572,
+        "bytes": 105535,
+        "sha256": "316899a0b69d1bd7bcd74d94bb2dcbe901dc2830034bfbe8009c41dd30ac30ea"
+      },
+      "pharmacy_test.csv": {
+        "rows": 379,
+        "bytes": 82938,
+        "sha256": "ef4620acdfe8ad40747c3989975924c8bb5ba6d7b7f1ed56dbc249b05b350387"
+      },
+      "traditional_chinese_medicine_clinical_medicine_test.csv": {
+        "rows": 277,
+        "bytes": 75790,
+        "sha256": "abf62e059e749511ecfe18791f7676f1dc71c1613bcce079a7f1cfab7707eee8"
+      },
+      "chinese_language_and_literature_test.csv": {
+        "rows": 195,
+        "bytes": 105208,
+        "sha256": "e794d1997cfb9d0735031a1146d68f4e6970b5c7b9f5c8dd18e8f54c9d4984f4"
+      },
+      "geography_of_taiwan_test.csv": {
+        "rows": 754,
+        "bytes": 165313,
+        "sha256": "95c72cb8c78ab7e0542d432908eb1fdd3142d7852f3283e9846e460f505e146f"
+      },
+      "logic_reasoning_test.csv": {
+        "rows": 130,
+        "bytes": 23941,
+        "sha256": "6039c39055d217bd5781b66440386cf5fcfa766a3b94b6e0c3b2c46cd795fbc0"
+      },
+      "computer_science_test.csv": {
+        "rows": 168,
+        "bytes": 41400,
+        "sha256": "8165c4b05ba91351c7e88252d4a378398936da8785f33d07c311d314a85a979b"
+      },
+      "general_principles_of_law_test.csv": {
+        "rows": 102,
+        "bytes": 37045,
+        "sha256": "5666a583cdb8b92cc80f45f9fce5c539d4d2c05ed3cc6b0ca6d2dcd98705f3d0"
+      }
+    }
+  },
+  "historical_evidence": {
+    "historical_public_archive": "reports/phase4/full/20260722T070936Z-phase4-full-public.zip",
+    "historical_public_archive_sha256": "1804c26d602d49a9c7b48fe611f6f1acb9a6b492eed568c41be50d7bc2284f76",
+    "historical_run_id": "20260722T070936Z",
+    "historical_contract_fingerprint": "bd654c530af218684315b98a25568b046f32a8e768c78489e00f4b69b8c21143",
+    "mapping_sha256": "1123898ac3f4467f50d7e615dbd6827392e37c5258a6ced0c0f82ac464c7036d",
+    "old_revision": "81d53e38340c9ade988f7fed8996da6554b504f3",
+    "new_revision": "94d86f1d013d59f389b710a902af30b7a0aa8c8f"
+  },
+  "prompt_contract": {
+    "system_prompt_sha256": "985c0ecf54a06f727fdd488e6398f546febf268a72f6d85ac103548534b34544",
+    "user_prompt_template": "{question}\\n\\nA. {A}\\nB. {B}\\nC. {C}\\nD. {D}",
+    "option_seed": 3407,
+    "few_shot": false,
+    "parser": "standalone_A-D_or_exactly_one_simple_boxed_A-D",
+    "token_limit_hits_count_as_incorrect": true
+  },
+  "statistics": {
+    "bootstrap_iterations": 10000,
+    "bootstrap_seed": 3407,
+    "noninferiority_margin_percentage_points": 2.0,
+    "macro_definition": "unweighted mean of per-subject accuracy",
+    "parse_failures_count_as_incorrect": true
+  },
+  "coverage": {
+    "all_13": {
+      "v1_0_total": 5573,
+      "v1_0_retained_with_identical_content": 5495,
+      "v1_0_answer_revised": 28,
+      "v1_0_removed_or_modified": 74,
+      "v1_0_duplicate_ambiguous": 4,
+      "v1_1_total": 5500,
+      "v1_1_covered_by_rescoring": 5495,
+      "v1_1_added_or_modified_uncovered": 1,
+      "v1_1_duplicate_ambiguous": 4
+    },
+    "medical_8": {
+      "v1_0_total": 4187,
+      "v1_0_retained_with_identical_content": 4150,
+      "v1_0_answer_revised": 13,
+      "v1_0_removed_or_modified": 37,
+      "v1_0_duplicate_ambiguous": 0,
+      "v1_1_total": 4151,
+      "v1_1_covered_by_rescoring": 4150,
+      "v1_1_added_or_modified_uncovered": 1,
+      "v1_1_duplicate_ambiguous": 0
+    },
+    "control_5": {
+      "v1_0_total": 1386,
+      "v1_0_retained_with_identical_content": 1345,
+      "v1_0_answer_revised": 15,
+      "v1_0_removed_or_modified": 37,
+      "v1_0_duplicate_ambiguous": 4,
+      "v1_1_total": 1349,
+      "v1_1_covered_by_rescoring": 1345,
+      "v1_1_added_or_modified_uncovered": 0,
+      "v1_1_duplicate_ambiguous": 4
+    }
+  },
+  "frozen_reproduction_check": {
+    "status": "passed",
+    "mismatches": []
+  },
+  "artifacts": {
+    "mapping.json": {
+      "sha256": "09cc9787254428d1040c23cf3a0c6fd355036f2a34c95056261eb11013498888",
+      "bytes": 4637805
+    },
+    "analysis.json": {
+      "sha256": "3449c77d9c2a226ba53784f6e4eb1da6d94ae8ad88fe04efd33ade036c75a2a3",
+      "bytes": 102937
+    },
+    "report.md": {
+      "sha256": "97e701081d6dbbae5849af57949fd6e9d6fd58c2006082109449413c2d2e4e41",
+      "bytes": 8841
+    }
+  },
+  "config_snapshot": {
+    "configs/tmmlu_v1_1.toml": {
+      "sha256": "2874b5e82125fcd29d6794b7439b36ff0f96b654e031078a709a83227a41f0dc",
+      "data": {
+        "dataset_id": "ikala/tmmluplus",
+        "tag": "v1.1",
+        "revision": "94d86f1d013d59f389b710a902af30b7a0aa8c8f",
+        "baseline_revision": "81d53e38340c9ade988f7fed8996da6554b504f3"
+      },
+      "evaluation": {
+        "option_seed": 3407,
+        "report_root": "reports/tmmlu-v1.1",
+        "private_root": "reports/private/tmmlu-v1.1",
+        "data_root": "data/raw/tmmluplus",
+        "historical_public_archive": "reports/phase4/full/20260722T070936Z-phase4-full-public.zip",
+        "historical_public_archive_sha256": "1804c26d602d49a9c7b48fe611f6f1acb9a6b492eed568c41be50d7bc2284f76",
+        "historical_run_id": "20260722T070936Z",
+        "historical_contract_fingerprint": "bd654c530af218684315b98a25568b046f32a8e768c78489e00f4b69b8c21143",
+        "expected_v1_0_test_rows": 5573,
+        "local_probe": {
+          "backend_label": "windows-rtx4090-transformers-bnb-nf4",
+          "max_new_tokens": 256,
+          "probe_per_subject": 15,
+          "probe_seed": 3407
+        }
+      }
+    },
+    "configs/project.toml": {
+      "sha256": "3409f80f21379780bafe90a7218383d5acc7ccfec929df32c5f1fe0713ad379b",
+      "evaluation.medical_subjects": [
+        "basic_medical_science",
+        "clinical_psychology",
+        "dentistry",
+        "occupational_therapy_for_psychological_disorders",
+        "optometry",
+        "pharmacology",
+        "pharmacy",
+        "traditional_chinese_medicine_clinical_medicine"
+      ],
+      "evaluation.control_subjects": [
+        "chinese_language_and_literature",
+        "geography_of_taiwan",
+        "logic_reasoning",
+        "computer_science",
+        "general_principles_of_law"
+      ],
+      "evaluation.bootstrap_iterations": 10000,
+      "evaluation.forgetting_margin_percentage_points": 2.0,
+      "evaluation.full_shuffle_seed": 3407
+    }
+  }
+}
