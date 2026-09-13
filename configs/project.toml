@@ -20,6 +20,13 @@ test = "799f6c7881d50b1101f168f31129aea699fec67401e2b8dc9464f1f84dc40c04"
 dataset_id = "ikala/tmmluplus"
 revision = "81d53e38340c9ade988f7fed8996da6554b504f3"
 
+[data.tmmluplus_v1_1]
+# Versioned re-evaluation input. The frozen v0.2.0 evidence keeps [data.tmmluplus] above.
+dataset_id = "ikala/tmmluplus"
+tag = "v1.1"
+revision = "94d86f1d013d59f389b710a902af30b7a0aa8c8f"
+baseline_revision = "81d53e38340c9ade988f7fed8996da6554b504f3"
+
 [models.primary]
 model_id = "taide/Gemma-3-TAIDE-12b-Chat-2602"
 revision = "4de0b93b99f8b61b59c40d019fd593bdd1c42249"
@@ -186,6 +193,25 @@ base_model_id = "taide/Gemma-3-TAIDE-12b-Chat-2602"
 drive_archive = "/content/drive/MyDrive/tw-med-llm-qlora/phase3/141226999eacb67ffd9a/full/runs/20260722T014216Z-phase3-full.zip"
 archive_sha256 = "2c537dfd3049319286c678a3ca3aa72e3f20baa7e0f44bde93ff7ee4dc47e43e"
 archive_bytes = 113079186
+
+[evaluation.tmmlu_v1_1]
+# Limited TMMLU+ v1.1 update: historical outputs rescored under the new answer key and
+# question set, plus a separately labelled local probe. No retraining, no threshold change.
+option_seed = 3407
+report_root = "reports/tmmlu-v1.1"
+private_root = "reports/private/tmmlu-v1.1"
+data_root = "data/raw/tmmluplus"
+historical_public_archive = "reports/phase4/full/20260722T070936Z-phase4-full-public.zip"
+historical_public_archive_sha256 = "1804c26d602d49a9c7b48fe611f6f1acb9a6b492eed568c41be50d7bc2284f76"
+historical_run_id = "20260722T070936Z"
+historical_contract_fingerprint = "bd654c530af218684315b98a25568b046f32a8e768c78489e00f4b69b8c21143"
+expected_v1_0_test_rows = 5573
+
+[evaluation.tmmlu_v1_1.local_probe]
+backend_label = "windows-rtx4090-transformers-bnb-nf4"
+max_new_tokens = 256
+probe_per_subject = 15
+probe_seed = 3407
 
 [inference.windows_4090]
 required_gpu_name = "RTX 4090"
