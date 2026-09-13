@@ -59,6 +59,7 @@ FORBIDDEN_REPORT_KEYS = {
     "prompt",
     "question",
     "raw_output",
+    "system_prompt",
 }
 
 
@@ -175,11 +176,20 @@ def test_public_snapshot_has_no_oversized_files() -> None:
 
 
 def test_public_reports_are_parseable_and_exclude_private_content_keys() -> None:
-    report_files = sorted((ROOT / "reports").rglob("*.json"))
+    reports_root = ROOT / "reports"
+    report_files = sorted(
+        path
+        for path in [*reports_root.rglob("*.json"), *reports_root.rglob("*.jsonl")]
+        if "private" not in path.relative_to(reports_root).parts
+    )
     findings: list[str] = []
 
     for path in report_files:
-        report = json.loads(path.read_text(encoding="utf-8"))
+        text = path.read_text(encoding="utf-8")
+        if path.suffix == ".jsonl":
+            report = [json.loads(line) for line in text.splitlines() if line.strip()]
+        else:
+            report = json.loads(text)
         forbidden = nested_keys(report) & FORBIDDEN_REPORT_KEYS
         if forbidden:
             relative = path.relative_to(ROOT).as_posix()
