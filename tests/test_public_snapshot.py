@@ -78,7 +78,8 @@ def public_files(
             relative = path.relative_to(ROOT)
             if relative in LOCAL_ONLY_PATHS:
                 continue
-            if path.name == ".env":
+            if path.name == ".env" or path.name.endswith(".private.md"):
+                # Gitignored local-only files are not part of the public snapshot.
                 continue
             if (
                 (suffixes is None and names is None)
