@@ -201,7 +201,10 @@ _證據種類：`new_inference_separate_backend_probe`；此表不得與表 2–
 
 ## 8. 未完成事項與 Colab 方案
 
-- **同 backend 全量 v1.1 評估**未執行（Windows 無 vLLM）。若需要：以 Phase 4 相同 Colab A100 +
+- **判定：不需要付費重跑。** 重計分已覆蓋 v1.1 5,500 題中的 5,495 題，且本機探針對歷史 prompt 的
+  prediction 一致率落在同 backend 的非決定性上限附近，核心問題已能回答；同 backend 全量重跑只會
+  多花費用而不改變判定，除非日後需要正式的完整 v1.1 數字才考慮。
+- **同 backend 全量 v1.1 評估**未執行（Windows 無 vLLM）。若日後需要：以 Phase 4 相同 Colab A100 +
   vLLM 0.25.1 + bitsandbytes 契約，只跑 `tmmlu-full` 3 模型 × 5,500 題 = 16,500 次生成。
   以 Phase 4 實測（28,758 次 / 2.542 h / 13.47 CU）等比估算約 1.5 h、約 8 CU；加 20% 緩衝約 10 CU。
   僅補做 1 題未覆蓋題亦需啟動 A100 與載入兩個 12B 模型，約 0.5 h、約 2.7 CU。需另建 v1.1 專用
