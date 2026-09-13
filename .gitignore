@@ -47,3 +47,6 @@ wandb/
 .vscode/
 .DS_Store
 Thumbs.db
+
+# Manim render scratch for the README animation
+media/manim/.media/
