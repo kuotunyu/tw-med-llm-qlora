@@ -10,6 +10,10 @@
 
 > **免責聲明**：本專案僅供研究與教育用途，所有輸出不構成任何臨床診斷、醫療建議或治療依據。
 
+![三模型在 MedQA 與 TMMLU+ 的正式評估結果動畫](media/results.gif)
+
+*動畫由 [media/manim/](media/manim/README.md) 的 Manim 腳本產生，數字直接讀取 `reports/` 內的評估證據。*
+
 ---
 
 ## 研究成果
